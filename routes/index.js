@@ -2,10 +2,14 @@
 var express = require('express');
 var router = express.Router();
 
-var indexController = require("../controllers/indexController");
-/* GET home page. */
-router.get('/', function (req, res) {
-    indexController.getCategoryController(req, res);
+var productsController = require('../controllers/productController');
+
+router.get('/', function(req, res){
+    productsController.getCategoryController(req, res);
+});
+
+router.get('/categories/:parentCategoryId', function(req, res){
+    productsController.getSubCategoriesController(req, res);    
 });
 
 module.exports = router;

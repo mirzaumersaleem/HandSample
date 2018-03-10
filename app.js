@@ -6,25 +6,49 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var expressValidator = require('express-validator');
+var expressSession = require('express-session');
+var hbs = require('express-handlebars');
+var passport = require('passport');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var products = require('./routes/products');
+
 
 var app = express();
 
+//Using passport strategy
+require('./config/passport');
+
 // view engine setup
+app.engine('hbs', hbs({extname: ".hbs", defaultLayout: "layout", layoutsDir: __dirname + "/views/layouts/"}))
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+app.set('view engine', 'hbs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(expressValidator());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(expressSession({secret: "824AE1", saveUninitialized: false, resave: false}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+/*
+	Middleware to check if request is authenticated
+*/
+app.use(function(req, res, next){
+	res.locals.login = req.isAuthenticated();
+	res.locals.session = req.session;
+	next();
+});
 
 app.use('/', routes);
+app.use('/products', products);
 app.use('/users', users);
 
 // catch 404 and forward to error handler
