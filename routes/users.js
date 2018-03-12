@@ -1,6 +1,7 @@
 ﻿'use strict';
 var express = require('express');
 var router = express.Router();
+var passport = require('passport');
 
 var userController = require('../controllers/userController');
 
@@ -9,8 +10,10 @@ router.get('/register', function (req, res) {
     res.render('signup', {});
 });
 
-router.post("/register", function(req, res){
-    userController.registerController(req, res);
-});
+router.post('/register', passport.authenticate({
+    successRedirect: '/',
+    failureRedirect: '/users/register',
+    failureFlash: true
+}));
 
 module.exports = router;
