@@ -41,15 +41,20 @@ app.use(passport.session());
 /*
 	Middleware to check if request is authenticated
 */
+
 app.use(function(req, res, next){
 	res.locals.login = req.isAuthenticated();
 	res.locals.session = req.session;
 	next();
 });
 
+
 app.use('/', routes);
 app.use('/products', products);
 app.use('/users', users);
+
+
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

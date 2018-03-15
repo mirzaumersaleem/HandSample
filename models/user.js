@@ -37,10 +37,27 @@ class user{
         var query = "INSERT into hiksaudi_js.gc_customers" +   
                     "(firstname,  email, phone, password)" +
                     "VALUES" + "(" + "\"" + userData.name + "\"" + "," + "\"" + userData.email + "\"" + "," + "\"" + userData.mobile + "\"" + "," + "\"" + userData.password + "\"" + ")";
+        
+        var findbyemail = this.findByEmail;
 
         mySql.query(query, function(err, result){
-            callback(err, result);
+            if(err){
+                callback(err, result);
+            }
+            else{
+                findbyemail(userData.email, function(err, result){
+                    callback(err, result);
+                });
+            }
         });
+    }
+
+    generatePasswordHash(password){
+        return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+    }
+
+    validPassword(password, localPassword){
+        return bcrypt.compareSync(password, localPassword); 
     }
 }
 

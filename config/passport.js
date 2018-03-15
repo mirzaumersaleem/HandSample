@@ -2,7 +2,8 @@ var passport = require('passport');
 var User = require('../models/user');
 
 //import the local strategy
-var localStrategy = require('passport-strategy').Strategy;
+var localStrategy = require('passport-local').Strategy;
+
 
 //Passport will serialize a unique session with the user id from which the request has been made
 //Serialize the session by user id
@@ -13,43 +14,27 @@ passport.serializeUser(function(user, done){
 
 //Always define the opposite
 passport.deserializeUser(function(id, done){
-    
+    var user = new User();
     user.findById(id, function(err, user){
-        done(err, user);
+        done(err, user[0]);
     });
- 
 });
 
-
 passport.use('local-register', new localStrategy({
-    userNameField: 'email',
+    usernameField: 'email',
     passwordFiled: 'password',
     passReqToCallback: true
-}, function(username, password, done){
-    console.log("\n\n\n\nInside passport.js\n\n\n");
+}, function(req, username, password, done){
     
-    //Server side validation of registration form
-    req.checkBody("name", "Enter name").exists();
-    req.checkBody("mobile", "Mobile number must be digits and cannot be null").isLength({min:1});
-    req.checkBody("fax", "Number must be digits and cannot be null").notEmpty();
-    req.checkBody("email", "Enter a valid email").isEmail();
-    req.checkBody("password", "Password field cannot be empty").notEmpty();
-    
-    var errors = req.validationErrors();
-
-    if(errors){
-
-    }
-
     var user = new User(); 
 
     user.findByEmail(username, function(err, resultUser){
     
         if(err){
-            return done(null, false);
+            console.log(err);
+            return done(err);
         }
-
-        if(resultUser){
+        if(resultUser.length === 1){
             return done(null, false, {message: "Email id already in use"});
         }
 
@@ -64,15 +49,45 @@ passport.use('local-register', new localStrategy({
         }        
 
         //Creating new user
-        user.setNewUser(newUser, function(err, result){
+        user.setNewUser(newUser, function(err, newAddedUser){
             if(err){
+                console.log("err");
                 return done(err);
             } else{
                 //Callback function returned with the new user created
-                return done(null, result);
+                console.log(newAddedUser);
+                return done(null, newAddedUser[0]);
             }
 
         })
     });
     
 }));
+
+passport.use('local-signin', new localStrategy({
+    usernameField: 'email',
+    passwordField: 'password',
+    passReqToCallback: true
+}, 
+function(req, username, password, done){
+
+    console.log("Inside signin function");
+    var user = new User();
+
+    user.findByEmail(username, function(err, result){
+        
+        console.log(result.password);
+        if(err){
+            return done(err);
+        } 
+        if(result.length === 0){
+            return done(null, false, {message: "No user found"});
+        }
+        if(!user.validPassword(password, result.password)){
+            return done(null, false, {message: "Incorrect Password"});
+        }
+
+        return (null, result);
+    });
+
+    }));
