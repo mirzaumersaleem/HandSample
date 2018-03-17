@@ -14,7 +14,7 @@ var passport = require('passport');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var products = require('./routes/products');
-
+var cart = require('./routes/cart');
 
 var app = express();
 
@@ -40,6 +40,7 @@ app.use(passport.session());
 
 /*
 	Middleware to check if request is authenticated
+    Making session available to be accessed in response
 */
 
 app.use(function(req, res, next){
@@ -52,7 +53,7 @@ app.use(function(req, res, next){
 app.use('/', routes);
 app.use('/products', products);
 app.use('/users', users);
-
+app.use('/cart', cart);
 
 
 

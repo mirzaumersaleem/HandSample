@@ -4,13 +4,20 @@ var router = express.Router();
 var passport = require('passport');
 var userController = require('../controllers/userController');
 
+var Product = require('../models/product');
+
+
 /* GET users listing. */
 router.get('/register', function (req, res) {
     res.render('signup', {});
 });
 
 router.get('/test', function(req, res){
-    res.render('signin', {});
+    var product = new Product();
+    product.getProductDetails(2, function(err, result){
+        console.log(result);
+    });
+    res.render('index', {});
 });
 
 router.post('/register', passport.authenticate('local-register',{
@@ -24,7 +31,7 @@ router.get('/signin', function(req, res){
 });
 
 router.post('/signin', passport.authenticate('local-signin', {
-    successRedirect: '/',
+    successRedirect: '/users/test',
     failureRedirect: '/users/signin',
     failureFlash: false
 }));

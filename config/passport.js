@@ -43,7 +43,7 @@ passport.use('local-register', new localStrategy({
                 mobile: req.body.mobile,
                 fax: req.body.fax,
                 email: req.body.email,
-                password: req.body.password,
+                password: user.generatePasswordHash(req.body.password),
                 company: req.body.company,
                 companyNumber: req.body.companyNumber
         }        
@@ -76,18 +76,27 @@ function(req, username, password, done){
 
     user.findByEmail(username, function(err, result){
         
+        console.log("inside find by email");
         console.log(result.password);
         if(err){
+            console.log(err);
             return done(err);
         } 
-        if(result.length === 0){
+        console.log("after error");
+        if(result[0].id === null){
+            console.log("no user found");
             return done(null, false, {message: "No user found"});
         }
-        if(!user.validPassword(password, result.password)){
+        console.log("after if");
+        console.log(result);
+        console.log(result[0]);
+        console.log(password);
+        if(!user.validPassword(password, result[0].password)){
+            console.log("incorrect password");
             return done(null, false, {message: "Incorrect Password"});
         }
-
-        return (null, result);
+        console.log("successfull login");
+        return done(null, result[0]);
     });
 
     }));

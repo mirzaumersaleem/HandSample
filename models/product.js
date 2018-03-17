@@ -6,6 +6,15 @@ class product{
 
     }
 
+    findById(id, callback){
+        var query = "SELECT id, name, arabic_name, price_1\
+                     FROM hiksaudi_js.gc_products\
+                     WHERE id =  " + id;
+        mySql.query(query, function(err, rows){
+            callback(err, rows[0]);
+        })
+    }
+
     getSubCatProd(subCategoryId, callback){
         
         var query = "SELECT id, name, arabic_name, quantity, price_1, images \
@@ -23,7 +32,7 @@ class product{
 	                        a.quantity, a.images, a.price_1, a.arabic_images, b.name as brand_name, \
                             b.arabic_name as brand_arabic_name \
                      FROM hiksaudi_js.gc_products a, hiksaudi_js.gc_brands b \
-                     WHERE a.brand = b.id AND a.id = 1";
+                     WHERE a.brand = b.id AND a.id = " + productId;
         
         mySql.query(query, function(err, rows){
             callback(err, rows);
