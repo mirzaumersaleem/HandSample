@@ -71,31 +71,20 @@ passport.use('local-signin', new localStrategy({
 }, 
 function(req, username, password, done){
 
-    console.log("Inside signin function");
     var user = new User();
 
     user.findByEmail(username, function(err, result){
         
-        console.log("inside find by email");
-        console.log(result.password);
         if(err){
             console.log(err);
             return done(err);
         } 
-        console.log("after error");
         if(result[0].id === null){
-            console.log("no user found");
             return done(null, false, {message: "No user found"});
         }
-        console.log("after if");
-        console.log(result);
-        console.log(result[0]);
-        console.log(password);
         if(!user.validPassword(password, result[0].password)){
-            console.log("incorrect password");
             return done(null, false, {message: "Incorrect Password"});
         }
-        console.log("successfull login");
         return done(null, result[0]);
     });
 

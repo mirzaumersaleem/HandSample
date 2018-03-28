@@ -10,6 +10,8 @@ var expressValidator = require('express-validator');
 var expressSession = require('express-session');
 var hbs = require('express-handlebars');
 var passport = require('passport');
+var socket = require('socket.io');
+
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -93,3 +95,5 @@ app.set('port', process.env.PORT || 3000);
 var server = app.listen(app.get('port'), function () {
     debug('Express server listening on port ' + server.address().port);
 });
+
+//var io = socket(server);

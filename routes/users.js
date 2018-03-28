@@ -36,5 +36,16 @@ router.post('/signin', passport.authenticate('local-signin', {
     failureFlash: false
 }));
 
+router.get('/addresses', function(req, res){
+    userController.getUserAddressController(req, res);    
+});
+
+router.get('/forget-password', function(req, res){
+    res.render('forgetPasswordMain', {});
+});
+
+router.post('/forget-password', function(req, res){
+    userController.forgetPassMailController(req, res);
+});
 
 module.exports = router;

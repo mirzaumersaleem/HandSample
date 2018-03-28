@@ -53,6 +53,21 @@ class user{
         });
     }
 
+    getUserAddresses(userId, callback){
+        var query = "SELECT address.AddressID, address.latitude, address.longitude, address.address\
+                     FROM hiksaudi_js.gc_address AS address\
+                     INNER JOIN hiksaudi_js.gc_customers AS customers\
+                     ON customers.id = address.CustomerId\
+                     WHERE address.CustomerId =  " + userId;
+        mySql.query(query, function(err, rows){
+            callback(err, rows);
+        });
+    }
+
+    addUserAddress(userId, callback){
+        var query = "INSERT INTO hiksaudi_ja.gc_address"
+    }
+
     generatePasswordHash(password){
         return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
     }
@@ -60,6 +75,7 @@ class user{
     validPassword(password, localPassword){
         return bcrypt.compareSync(password, localPassword); 
     }
+
 }
 
 module.exports = user;
