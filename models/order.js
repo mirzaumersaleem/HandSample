@@ -50,6 +50,7 @@ class Order{
             The generate array in Cart class would return
             all the products present in the cart.
          */
+        console.log("Inside add New Order model");
         var productsInCart = cart.generateArray();
 
         var newOrderQuery = "INSERT INTO hiksaudi_js.gc_orders (customer_id, status, total, subtotal, ordered_on, address)\

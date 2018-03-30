@@ -13,7 +13,7 @@ router.get('/register', function (req, res) {
 });
 
 router.post('/register', passport.authenticate('local-register',{
-    successRedirect: '/users/test',
+    successRedirect: '/',
     failureRedirect: '/users/register',
     failureFlash: false
 }));
@@ -23,7 +23,7 @@ router.get('/signin', function(req, res){
 });
 
 router.post('/signin', passport.authenticate('local-signin', {
-    successRedirect: '/users/test',
+    successRedirect: '/',
     failureRedirect: '/users/signin',
     failureFlash: false
 }));

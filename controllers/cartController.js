@@ -26,7 +26,7 @@ exports.addToCartController = function(req, res){
 
             cart.addProductToCart(prod, productId);
             req.session.cart = cart;
-
+            
             console.log("Following items in session cart");
             console.log(req.session.cart);
 
@@ -56,15 +56,24 @@ exports.shoppingCartController = function(req, res){
 }
 
 exports.finalCheckoutController = function(req, res){
-    var addressId = req.body.addressId;
+    //var addressId = req.body.addressId;
+    var addressId = 0;
     var user = new User();    
     var order = new Order();
     var cart = req.session.cart;
 
-    user.getUserAddressById(addressId, function(err, address){
+    if(cart === null) {
+        res.json({
+            status: 500,
+            message: "Cannot proceed with empty cart"
+        })
+    }
+
+    user.getUserAddressById(addressId, function(err, addressRow){
         if(err)
             throw err;
-        order.addNewOrder(cart, req.user.id, address, function(err){
+
+        order.addNewOrder(cart, req.user.id, addressRow[0].address, function(err){
             if(err){
                 res.json({
                     status: 500,

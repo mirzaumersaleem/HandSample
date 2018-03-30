@@ -19,17 +19,9 @@ class Mail{
         return nodemailer.createTransport({
                     service: service,
                     auth: {
-                        xoauth2: xoauth2.createXOAuth2Generator({
-                            user: userEmail,
-                            clientid: '491977458125-9oc89e1cifklghdg8p9b53lsc8icr5ah.apps.googleusercontent.com',
-                            clientSecret: 'pQ_MCT1vuhFHYpiIkctC4u_B',
-                            refreshToken: ''
-                        })
-                    },
-                    /*
-                    tls: {
-                        rejectUnauthorized: false
-                    }*/
+                        user: userEmail,
+                        pass: password 
+                    }
                 });
     }
 

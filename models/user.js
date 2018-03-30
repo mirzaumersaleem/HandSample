@@ -75,11 +75,16 @@ class user{
         });   
     }
 
-    getUserAddressById(adressId, callback){
+    getUserAddressById(addressId, callback){
+        console.log("Inside get user address model123");
         var query = "SELECT address FROM hiksaudi_js.gc_address\
                      WHERE AddressId = " + addressId;
+        console.log("Above query executed");
+
         mySql.query(query, function(err, result){
-            mySql.end();
+            //mySql.end();
+            console.log(err);
+            console.log(result);
             callback(err, result);
         });
     }
