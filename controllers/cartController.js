@@ -1,5 +1,7 @@
 var Product = require('../models/product');
 var Cart = require('../models/cart');
+var User = require('../models/user');
+var Order = require('../models/order');
 
 exports.addToCartController = function(req, res){
     console.log("Inside add to cart controller");
@@ -50,5 +52,31 @@ exports.shoppingCartController = function(req, res){
         cartProducts: cart.generateArray(),
         totalQty: cart.totalQty,
         totalPrice: cart.totalPrice
+    });
+}
+
+exports.finalCheckoutController = function(req, res){
+    var addressId = req.body.addressId;
+    var user = new User();    
+    var order = new Order();
+    var cart = req.session.cart;
+
+    user.getUserAddressById(addressId, function(err, address){
+        if(err)
+            throw err;
+        order.addNewOrder(cart, req.user.id, address, function(err){
+            if(err){
+                res.json({
+                    status: 500,
+                    message: err
+                })
+            } else {
+                res.json({
+                    status: 200,
+                    message: "order placed successfully"
+                })
+            }
+                
+        });
     });
 }

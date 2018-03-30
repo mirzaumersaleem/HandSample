@@ -1,41 +1,54 @@
 var User = require('../models/user');
 var Mail = require('../models/mail');
 
-
-
 exports.getRegisterController = function(req, res){
     res.render('signup', {});
 }
 
-exports.testController = function(req, res){
+exports.getUserAddressController = function(req, res){
+    
     var user = new User();
-
-    user.findById(11, function(err, result){
+    
+    user.getUserAddresses(req.user.id, function(err, rows){
         if(err){
-            console.log(err);
-            throw (err);
-        } else{
-            var array = [];
-            for(var id in result){
-                array.p
-            }
-            console.log(result);
-            res.render('index', {})
+            res.json({
+                status: 500,
+                message: err
+            });
+        } else {
+            res.json({
+                status: 200,
+                data: rows
+            });
         }
     })
 }
 
-exports.getUserAddressController = function(req, res){
+exports.addUserAddressController = function(req, res){
+    
     var user = new User();
-    user.getUserAddresses(50, function(err, rows){
-        console.log(rows[0].AddressID);
-        res.render('index', {});
+
+    var addressData = {
+        latitude: req.body.latitude,
+        longitude: req.body.longitude,
+        addressDesc: req.body.addressDesc
+    }
+
+    user.addUserAddress(50, addressData, function(err, result){
+        if(err){
+            res.json({
+                status: 500,
+                message: err
+            });
+        } else {
+            res.json({
+                status: 200,
+                message: result
+            });
+        }
     })
 }
 
-exports.addLocation = function(req, res){
-
-}
 
 exports.forgetPassMailController = function(req, res){
     var user = new User();

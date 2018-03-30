@@ -27,7 +27,7 @@ class category{
     getSubCategories(parentCategory, callback) {
         var query = "SELECT id, name, arabic_name\
                      FROM hiksaudi_js.gc_categories \
-                     WHERE parent_id = 10" ;
+                     WHERE parent_id = " + parentCategory;
 
         mySql.query(query, function(err, rows, fiels){
             callback(err, rows); //Passing results to callback function

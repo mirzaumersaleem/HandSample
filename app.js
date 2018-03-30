@@ -12,6 +12,9 @@ var hbs = require('express-handlebars');
 var passport = require('passport');
 var socket = require('socket.io');
 
+//Socket files
+var updateProductScoket = require('./controllers/socketController');
+
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -96,4 +99,5 @@ var server = app.listen(app.get('port'), function () {
     debug('Express server listening on port ' + server.address().port);
 });
 
-//var io = socket(server);
+var io = socket(server);
+updateProductScoket.updateProductRealTime(io);

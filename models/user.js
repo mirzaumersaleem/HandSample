@@ -64,8 +64,24 @@ class user{
         });
     }
 
-    addUserAddress(userId, callback){
-        var query = "INSERT INTO hiksaudi_ja.gc_address"
+    addUserAddress(userId, addressData, callback){
+        var query = "INSERT INTO hiksaudi_js.gc_address\
+                     (CustomerId, latitude, longitude, address)\
+                     VALUES (" + userId + "," + addressData.latitude + "," + addressData.longitude 
+                     + "," + "\"" + addressData.addressDesc + "\"" + ")";
+        
+        mySql.query(query, function(err, result){
+            callback(err, result);
+        });   
+    }
+
+    getUserAddressById(adressId, callback){
+        var query = "SELECT address FROM hiksaudi_js.gc_address\
+                     WHERE AddressId = " + addressId;
+        mySql.query(query, function(err, result){
+            mySql.end();
+            callback(err, result);
+        });
     }
 
     generatePasswordHash(password){
