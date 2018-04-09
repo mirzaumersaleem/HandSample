@@ -1,4 +1,4 @@
-var scoket = io.connect('http://localhost:3000');
+/*var scoket = io.connect('http://localhost:3000');
 
 var name = document.getElementsByName('name');
 var arabic_name = document.getElementsByName('arabic_name');
@@ -15,4 +15,4 @@ submitBtn.addEventListener('click', function(){
         arabic_description: arabic_description.value,
         model: model.value
     });
-});
+});*/

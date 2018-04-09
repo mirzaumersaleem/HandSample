@@ -1,6 +1,8 @@
 var passport = require('passport');
 var User = require('../models/user');
 
+//import mail class to send verification code using mail
+var Mail = require('../models/mail');
 //import the local strategy
 var localStrategy = require('passport-local').Strategy;
 
@@ -38,12 +40,17 @@ passport.use('local-register', new localStrategy({
             return done(null, false, {message: "Email id already in use"});
         }
 
+        //Generate a random number between 1 and 10000 and assign it as a verification
+        var verificationCode = ((Math.random() * 10000) + 1); 
+        //Data of the new user
         var newUser = {
                 name: req.body.name,
                 mobile: req.body.mobile,
                 fax: req.body.fax,
                 email: req.body.email,
                 password: user.generatePasswordHash(req.body.password),
+                verificationCode: verificationCode,
+                verificationStatus: false,
                 company: req.body.company,
                 companyNumber: req.body.companyNumber
         }        
@@ -56,7 +63,17 @@ passport.use('local-register', new localStrategy({
             } else{
                 //Callback function returned with the new user created
                 console.log(newAddedUser);
-                return done(null, newAddedUser[0]);
+                //Send verification code in email after the user is created
+                var mail = new Mail();
+                var emailContent = "Welcome to Sadaliah. Please user the following verification code = " + verificationCode +
+                            "on your next login. Thanks";
+                //Instantiating mail transporter that will send mail to customers
+                var transporter = mail.getTransporter("gmail", "sadaliahiksaudi@gmail.com", "SadaliaH789");
+                //Sending mail using the instantiated transporter
+                mail.sendMail(newUser.email, "sadaliahiksaudi@gmail.com", "Sadaliah Verification Code", emailContent, transporter);
+                //Set the authentication to false since user has to verify it registration
+                return done(null, false);
+                //return done(null, newAddedUser[0]);
             }
 
         })
@@ -70,7 +87,7 @@ passport.use('local-signin', new localStrategy({
     passReqToCallback: true
 }, 
 function(req, username, password, done){
-
+    console.log("Inside passport Strategy");
     var user = new User();
 
     user.findByEmail(username, function(err, result){
@@ -80,11 +97,14 @@ function(req, username, password, done){
             return done(err);
         } 
         if(result[0].id === null){
+            console.log("No user found");
             return done(null, false, {message: "No user found"});
         }
         if(!user.validPassword(password, result[0].password)){
+            console.log("Incorrect password entered");
             return done(null, false, {message: "Incorrect Password"});
         }
+        console.log("Every thing is correct in signin");
         return done(null, result[0]);
     });
 

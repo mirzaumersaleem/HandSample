@@ -17,9 +17,17 @@ class user{
         });
     }
 
+    updateVerificationStatus(userId, status, callback){
+        var query = "UPDATE hiksaudi_js.gc_customers SET verification_status = " + status + " WHERE id = " + userId; //+ userId;
+
+        mySql.query(query, function(err, result){
+            callback(err, result);
+        });
+    }
+
     findByEmail(email, callback){
 
-        var query = "SELECT id, firstname, lastname, email, phone, password \
+        var query = "SELECT id, firstname, lastname, email, phone, password, verification_code, verification_status \
                      FROM hiksaudi_js.gc_customers\
                      WHERE email = " + "\"" + email + "\"";
 
@@ -36,8 +44,8 @@ class user{
         console.log("inside set new user");
         console.log(userData);
         var query = "INSERT into hiksaudi_js.gc_customers" +   
-                    "(firstname,  email, phone, password)" +
-                    "VALUES" + "(" + "\"" + userData.name + "\"" + "," + "\"" + userData.email + "\"" + "," + "\"" + userData.mobile + "\"" + "," + "\"" + userData.password + "\"" + ")";
+                    "(firstname,  email, phone, password, verification_status, verification_code)" +
+                    "VALUES" + "(" + "\"" + userData.name + "\"" + "," + "\"" + userData.email + "\"" + "," + "\"" + userData.mobile + "\"" + "," + "\"" + userData.password + "\"" + "," + "\"" + userData.verificationStatus + "\"" + ","+ userData.verificationCode +")";
         
         var findbyemail = this.findByEmail;
 
@@ -85,6 +93,26 @@ class user{
             //mySql.end();
             console.log(err);
             console.log(result);
+            callback(err, result);
+        });
+    }
+
+    setForgotPassTokenAndTime(userId, token, time, callback){
+        console.log(typeof token);
+        console.log(typeof time);
+        console.log(typeof userId);
+
+        var query = "UPDATE  hiksaudi_js.gc_customers SET resetPasswordToken = " + "\"" + token + "\"" + "," + "resetPasswordDate = " + time + " WHERE id = " + userId;
+
+        mySql.query(query, function(err, result){
+            callback(err, result);
+        });
+    }
+
+    setUserPassword(id, password, callback){
+        var query = "UPDATE  hiksaudi_js.gc_customers SET password = " + "\"" + password + "\"" + " WHERE id = " + userId;
+
+        mySql.query(query, function(err, result){
             callback(err, result);
         });
     }
