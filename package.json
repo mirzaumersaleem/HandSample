@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node app.js"
+    "start": "nodemon app.js"
   },
   "description": "Aidaliah",
   "author": {
@@ -23,6 +23,7 @@
     "morgan": "^1.7.0",
     "mysql": "^2.15.0",
     "nodemailer": "^4.6.3",
+    "nodemon": "^1.17.3",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "pug": "^2.0.0-beta6",
