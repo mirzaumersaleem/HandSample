@@ -30,8 +30,8 @@ exports.addToCartController = function(req, res){
             console.log("Following items in session cart");
             console.log(req.session.cart);
 
-            var backurl = req.header('Referer') || '/';
-            res.redirect(backurl);
+          //  var backurl = req.header('Referer') || '/';
+          //  res.redirect(backurl);
         }
     })    
 }

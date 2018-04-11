@@ -21,7 +21,7 @@ exports.getCategoryController = function(req, res) {
             });
         }
         console.log("Inside category controller");
-        res.render('index', {title: 'Express'});
+       // res.render('index', {title: 'Express'});
     });
 }
 
@@ -68,7 +68,7 @@ exports.getSubCatProductsController = function(req, res){
             });
         }
         console.log(result);
-        res.render('index', {title: "Express"});
+      //  res.render('index', {title: "Express"});
     });
 }
 
