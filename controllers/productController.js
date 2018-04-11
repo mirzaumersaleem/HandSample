@@ -20,8 +20,8 @@ exports.getCategoryController = function(req, res) {
                 data: result
             });
         }
-        console.log("Inside category controller");
-        res.render('index', {title: 'Express'});
+        //console.log("Inside category controller");
+        //res.render('index', {title: 'Express'});
     });
 }
 
