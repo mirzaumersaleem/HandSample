@@ -10,9 +10,16 @@ class product{
         var query = "SELECT id, name, arabic_name, price_1\
                      FROM hiksaudi_js.gc_products\
                      WHERE id =  " + id;
-        mySql.query(query, function(err, rows){
-            callback(err, rows[0]);
-        })
+        mySql.getConnection(function(err, connection){
+            if(err){
+                throw err;
+            }
+            connection.query(query, function(err, rows, fields){
+                connection.release()
+                console.log(rows);
+                callback(err, rows[0]); //Passing results to callback function
+            });
+        });
     }
 
     getSubCatProd(subCategoryId, callback){
@@ -21,8 +28,15 @@ class product{
                      FROM hiksaudi_js.gc_products \
                      WHERE secondary_category = " + subCategoryId;
 
-        mySql.query(query, function(err, rows){
-            callback(err, rows);
+        mySql.getConnection(function(err, connection){
+            if(err){
+                throw err;
+            }
+            connection.query(query, function(err, rows, fields){
+                connection.release()
+                console.log(rows);
+                callback(err, rows); //Passing results to callback function
+            });
         });
     }
 
@@ -34,8 +48,15 @@ class product{
                      FROM hiksaudi_js.gc_products a, hiksaudi_js.gc_brands b \
                      WHERE a.brand = b.id AND a.id = " + productId;
         
-        mySql.query(query, function(err, rows){
-            callback(err, rows);
+        mySql.getConnection(function(err, connection){
+            if(err){
+                throw err;
+            }
+            connection.query(query, function(err, rows, fields){
+                connection.release()
+                console.log(rows);
+                callback(err, rows); //Passing results to callback function
+            });
         });
 
     }
