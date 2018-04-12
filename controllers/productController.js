@@ -32,7 +32,7 @@ exports.getCategoryController = function(req, res) {
  */
 exports.getSubCategoriesController = function(req, res){
     var categories = new category();
-    categories.getSubCategories(req.query.id, function(err, result){
+    categories.getSubCategories(req.query.parentCategoryId, function(err, result){
 
         if(err){
             res.json({
@@ -78,7 +78,7 @@ exports.getProductDetailsController = function(req, res){
     var products = new product();
 
     console.log("Product id entered " + req.query.productId);
-    products.getProductDetails(req.params.productId, function(err, result){
+    products.getProductDetails(req.query.productId, function(err, result){
         if(err){
             res.json({
                 status: 500,
