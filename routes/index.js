@@ -9,8 +9,8 @@ router.get('/', function(req, res){
     productsController.getCategoryController(req, res);
 });
 
-router.get('/categories/:parentCategoryId', function(req, res){
+router.get('/categories', function(req, res){
     productsController.getSubCategoriesController(req, res);    
-});
+})
 
 module.exports = router;
