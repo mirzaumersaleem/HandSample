@@ -5,7 +5,7 @@ var Order = require('../models/order');
 
 exports.addToCartController = function(req, res){
     console.log("Inside add to cart controller");
-    var productId = req.params.id;
+    var productId = req.query.id;
     console.log("The value of product id is" + productId);
     /*
       If cart is already present in session then pass that old cart
@@ -30,8 +30,8 @@ exports.addToCartController = function(req, res){
             console.log("Following items in session cart");
             console.log(req.session.cart);
 
-          //  var backurl = req.header('Referer') || '/';
-          //  res.redirect(backurl);
+            var backurl = req.header('Referer') || '/';
+            res.redirect(backurl);
         }
     })    
 }
