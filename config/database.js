@@ -1,7 +1,9 @@
 const mySql = require('mysql');
 
 //Providing parameter of user and database to establish connection
-var connection = mySql.createConnection({
+
+var pool = mySql.createPool({
+    connectionLimit: 30,
     host: "192.185.155.25",
     user: "hiksaudi_hassam",
     password: "MujeeB789",
@@ -11,9 +13,4 @@ var connection = mySql.createConnection({
 });
 
 
-connection.connect(function(err){
-    if(err) throw err;
-    console.log("Database connected successfully\n");
-});
-
-module.exports = connection;
+module.exports = pool;
