@@ -100,7 +100,7 @@ exports.getProductDetailsController = function(req, res){
     var products = new product();
 
     console.log("Product id entered " + req.query.productId);
-    products.getProductDetails(req.params.productId, function(err, result){
+    products.getProductDetails(req.query.productId, function(err, result){
         if(err){
             res.json({
                 status: 500,
