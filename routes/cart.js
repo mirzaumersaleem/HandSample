@@ -3,7 +3,7 @@ var router = express.Router();
 
 var cartController = require('../controllers/cartController');
 
-router.get('/addtocart/:id', function(req, res){
+router.get('/addtocart', function(req, res){
     cartController.addToCartController(req, res);
 })
 
