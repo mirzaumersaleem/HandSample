@@ -24,7 +24,7 @@ class product{
 
     getSubCatProd(subCategoryId, callback){
         
-        var query = "SELECT id, name, arabic_name, quantity, price_1, images \
+        var query = "SELECT id, name, model, arabic_name, quantity, price_1, images \
                      FROM hiksaudi_js.gc_products \
                      WHERE secondary_category = " + subCategoryId;
 
