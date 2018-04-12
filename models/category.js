@@ -5,6 +5,25 @@ class category{
 
     }
 
+    getSubCatPromise(parentCategory){
+        return new Promise(function(resolve){
+            var query = "SELECT id, name, arabic_name\
+                     FROM hiksaudi_js.gc_categories \
+                     WHERE parent_id = " + parentCategory;
+            
+            mySql.getConnection(function(err, connection){
+                if(err){
+                    throw err;
+                }
+                connection.query(query, function(err, rows, fields){
+                    connection.release();
+                    resolve(rows); //Passing results to callback function
+                });
+            })
+        });
+    }
+
+
     /*
         This Function will return categories
         that does'nt have any parent id
@@ -14,10 +33,17 @@ class category{
                      FROM hiksaudi_js.gc_categories\
                      WHERE parent_id = 0";
 
-        mySql.query(query, function(err, rows, fields){
-            callback(err, rows); //Passing results to callback function
-        });
-
+        mySql.getConnection(function(err, connection){
+            if(err){
+                throw err;
+            }
+            connection.query(query, function(err, rows, fields){
+                connection.release()
+                callback(err, rows); //Passing results to callback function
+            });
+        })
+        
+    
     }
 
     /*
@@ -29,8 +55,15 @@ class category{
                      FROM hiksaudi_js.gc_categories \
                      WHERE parent_id = " + parentCategory;
 
-        mySql.query(query, function(err, rows, fiels){
-            callback(err, rows); //Passing results to callback function
+        mySql.getConnection(function(err, connection){
+            if(err){
+                throw err;
+            }
+            connection.query(query, function(err, rows, fields){
+                connection.release()
+                console.log(rows);
+                callback(err, rows); //Passing results to callback function
+            });
         });
     }
 }
