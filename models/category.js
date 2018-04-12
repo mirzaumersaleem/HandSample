@@ -5,6 +5,25 @@ class category{
 
     }
 
+    getSubCatPromise(parentCategory){
+        return new Promise(function(resolve){
+            var query = "SELECT id, name, arabic_name\
+                     FROM hiksaudi_js.gc_categories \
+                     WHERE parent_id = " + parentCategory;
+            
+            mySql.getConnection(function(err, connection){
+                if(err){
+                    throw err;
+                }
+                connection.query(query, function(err, rows, fields){
+                    connection.release();
+                    resolve(rows); //Passing results to callback function
+                });
+            })
+        });
+    }
+
+
     /*
         This Function will return categories
         that does'nt have any parent id
