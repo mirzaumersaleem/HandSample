@@ -10,7 +10,7 @@ router.get('/', function(req, res){
 });
 
 router.get('/categories', function(req, res){
-    productsController.getSubCategoriesController(req, res);    
+    productsController.getAllCategoriesController(req, res);    
 })
 
 module.exports = router;
