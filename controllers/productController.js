@@ -1,4 +1,4 @@
-﻿var mySql = require("../config/database");
+var mySql = require("../config/database");
 
 var category = require("../models/category");
 var product = require("../models/product");
@@ -20,7 +20,9 @@ exports.getCategoryController = function(req, res) {
                 data: result
             });
         }
-      });
+        //console.log("Inside category controller");
+        //res.render('index', {title: 'Express'});
+    });
 }
 
 /*
@@ -65,8 +67,6 @@ exports.getSubCatProductsController = function(req, res){
                 data: result
             });
         }
-        console.log(result);
-      //  res.render('index', {title: "Express"});
     });
 }
 
@@ -75,8 +75,9 @@ exports.getSubCatProductsController = function(req, res){
     and returns all the details of that product
  */
 exports.getProductDetailsController = function(req, res){
-    var products = product();
+    var products = new product();
 
+    console.log("Product id entered " + req.params.productId);
     products.getProductDetails(req.params.productId, function(err, result){
         if(err){
             res.json({
