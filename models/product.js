@@ -42,7 +42,7 @@ class product{
 
     getProductDetails(productId, callback) {
 
-        var query = "SELECT a.id, a.name, a.arabic_name, a.description, a.arabic_description, \
+        var query = "SELECT a.id, a.name, a.model, a.arabic_name, a.description, a.arabic_description, \
 	                        a.quantity, a.images, a.price_1, a.arabic_images, b.name as brand_name, \
                             b.arabic_name as brand_arabic_name \
                      FROM hiksaudi_js.gc_products a, hiksaudi_js.gc_brands b \
