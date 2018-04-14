@@ -41,7 +41,7 @@ passport.use('local-register', new localStrategy({
         }
 
         //Generate a random number between 1 and 10000 and assign it as a verification
-        var verificationCode = ((Math.random() * 10000) + 1); 
+        var verificationCode = Math.floor((Math.random() * 10000) + 1); 
         //Data of the new user
         var newUser = {
                 name: req.body.name,
@@ -58,22 +58,30 @@ passport.use('local-register', new localStrategy({
         //Creating new user
         user.setNewUser(newUser, function(err, newAddedUser){
             if(err){
-                console.log("err");
+                console.log("There is an error ");
+                console.log(err);
                 return done(err);
             } else{
                 //Callback function returned with the new user created
                 console.log(newAddedUser);
+                console.log("Inside else block");
                 //Send verification code in email after the user is created
                 var mail = new Mail();
                 var emailContent = "Welcome to Sadaliah. Please user the following verification code = " + verificationCode +
-                            "on your next login. Thanks";
+                            " on your next login. Thanks";
                 //Instantiating mail transporter that will send mail to customers
                 var transporter = mail.getTransporter("gmail", "sadaliahiksaudi@gmail.com", "SadaliaH789");
                 //Sending mail using the instantiated transporter
                 mail.sendMail(newUser.email, "sadaliahiksaudi@gmail.com", "Sadaliah Verification Code", emailContent, transporter);
                 //Set the authentication to false since user has to verify it registration
-                return done(null, false);
-                //return done(null, newAddedUser[0]);
+                //done(null, false);
+          /*      res.json({
+                    status: 200,
+                    message: "User registered successfully.\nA verification code has been sent to email " + newUser.email
+                })*/
+               
+               // return done(null, false);
+                return done(null, newAddedUser[0]);
             }
 
         })
@@ -94,18 +102,18 @@ function(req, username, password, done){
         
         if(err){
             console.log(err);
-            return done(err);
+            done(err);
         } 
         if(result[0].id === null){
             console.log("No user found");
-            return done(null, false, {message: "No user found"});
+            done(null, false, {message: "No user found"});
         }
         if(!user.validPassword(password, result[0].password)){
             console.log("Incorrect password entered");
-            return done(null, false, {message: "Incorrect Password"});
+            done(null, false, {message: "Incorrect Password"});
         }
         console.log("Every thing is correct in signin");
-        return done(null, result[0]);
+        done(null, result[0]);
     });
 
-    }));
+}));
