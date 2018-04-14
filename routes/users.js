@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
@@ -13,21 +13,78 @@ router.get('/register', function (req, res) {
     res.render('signup', {});
 });
 
+router.post('/register', function(req, res, next){
+    console.log("Inside user-register post route");
+    passport.authenticate('local-register', function(err, user, info){
+        if(err){
+            res.json({
+                status:500,
+                message: err
+            });
+            return;
+        }
+        if (!user) { 
+            return res.json({
+                status:500,
+                message: "Registration Failed. User with this email is already registered"
+            });
+        }
+
+        return res.json({
+            status:200,
+            message: "Registered successfully. A confirmation code has been sent to your email"
+        });
+    })(req, res, next);
+});
+
+/*
 router.post('/register', passport.authenticate('local-register',{
     successRedirect: '/users/verification',
-    failureRedirect: '/users/register',
+    failureRedirect: '/users/verification',
     failureFlash: false
 }));
-
+*/
 router.get('/signin', function(req, res){
     res.render('signin', {});
 });
 
-router.post('/signin', isVerified, passport.authenticate('local-signin', {
-    successRedirect: '/',
-    failureRedirect: '/users/signin',
-    failureFlash: false
-}));
+router.post('/signin', isVerified, function(req, res, next){
+    passport.authenticate('local-signin', function(err, user, info){
+        if (err) {
+            return res.json({
+                status: 500,
+                message: err
+            });
+        }
+        if (!user) {
+            return res.json({
+                status: 500,
+                message: info.message
+            });
+        }
+
+        req.logIn(user, function(err){
+            if(err){
+                return res.json({
+                    status: 500,
+                    message: err
+                });
+            }
+            return res.json({
+                status:200,
+                message: "User successfully logged in"
+            })
+        });
+    })(req, res, next);
+});
+
+router.get('/logout', function(req, res){
+    req.logout();
+    res.json({
+        status:200,
+        message: "User logged out successfully"
+    });
+});
 
 router.get('/addresses', function(req, res){
     userController.getUserAddressController(req, res);    
@@ -117,11 +174,37 @@ router.get('/verification', function(req, res){
     res.render('verification', {});
 });
 
-router.post('/verification', verificationMiddleWare, passport.authenticate('local-signin', {
-    successRedirect: '/',
-    failureRedirect: '/users/signin',
-    failureFlash: false
-}));
+router.post('/verification', verificationMiddleWare, function(req, res, next){
+    console.log("Inside verification post");
+    passport.authenticate('local-signin', function(err, user, info){
+        console.log("Inside passport authenticate callback");
+        if (err) {
+            return res.json({
+                status: 500,
+                message: err
+            });
+        }
+        if (!user) {
+            return res.json({
+                status: 500,
+                message: info.message
+            });
+        }
+
+        req.logIn(user, function(err){
+            if(err){
+                return res.json({
+                    status: 500,
+                    message: err
+                });
+            }
+            return res.json({
+                status:200,
+                message: "User successfully logged in"
+            })
+        });
+    })(req, res, next);
+});
 
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){
@@ -181,7 +264,10 @@ function isVerified(req, res, next){
             next();
         }
         else{
-            res.redirect('/users/verification');
+            res.json({
+                status:500,
+                message: "User Not Verified"
+            });
         }
     });
 }
