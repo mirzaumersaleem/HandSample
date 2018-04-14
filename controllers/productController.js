@@ -31,21 +31,14 @@ async function getMainAndSubCat(parentCategories){
     This controller returns all the parent categories
  */
 exports.getCategoryController = function(req, res) {
-    var categories = new category();
-    categories.getCategories(function(err, result){
-        if(err){
-            res.json({
-                status: 500,
-                message: err
-            });
-        } else{
-            res.json({
-                status: 200,
-                data: result
-            });
-        }
-        //console.log("Inside category controller");
-        //res.render('index', {title: 'Express'});
+    var mainCatImages = ["/sadaliaCats/Beauty&Care.png",
+                         "/sadaliaCats/Care.png",
+                         "/sadaliaCats/ElectricalDevices.png",
+                         "/sadaliaCats/Medicines&Treatment.png",
+                         "/sadaliaCats/Perfumes.png",
+                         "/sadaliaCats/Supplement.png"];
+    res.json({
+        mainCatImages: mainCatImages
     });
 }
 
