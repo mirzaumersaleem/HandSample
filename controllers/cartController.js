@@ -24,14 +24,20 @@ exports.addToCartController = function(req, res){
             });
         } else {
 
-            cart.addProductToCart(prod, productId);
+            if(req.query.quantity == null){
+                cart.addProductToCart(prod, productId);
+            } else {
+                cart.addProductToCart(prod, productId, req.query.quantity);
+            }
             req.session.cart = cart;
             
             console.log("Following items in session cart");
             console.log(req.session.cart);
 
-            var backurl = req.header('Referer') || '/';
-            res.redirect(backurl);
+            res.json({
+                status: 200,
+                message: "Product added successfully"
+            })
         }
     })    
 }
