@@ -28,11 +28,17 @@ exports.getUserAddressController = function(req, res){
 exports.addUserAddressController = function(req, res){
     
     var user = new User();
-
+    /*
     var addressData = {
         latitude: req.body.latitude,
         longitude: req.body.longitude,
         addressDesc: req.body.addressDesc
+    }
+    */
+    var addressData = {
+        latitude: 22.3,
+        longitude: 25.5,
+        addressDesc: "req.body.addressDesc"
     }
 
     user.addUserAddress(50, addressData, function(err, result){
