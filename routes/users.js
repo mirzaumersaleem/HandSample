@@ -14,25 +14,41 @@ router.get('/register', function (req, res) {
 });
 
 router.post('/register', function(req, res, next){
-    console.log("Inside user-register post route");
     passport.authenticate('local-register', function(err, user, info){
+    console.log("Inside user-register post route");
+        
         if(err){
-            res.json({
+            return res.json({
                 status:500,
                 message: err
             });
-            return;
+
+        }
+        if(info.message[0] == 422){
+            return res.json({
+                status: 422,
+                message: info.message[1]
+            })
         }
         if (!user) { 
             return res.json({
                 status:500,
-                message: "Registration Failed. User with this email is already registered"
+                message: info.message
             });
         }
 
-        return res.json({
-            status:200,
-            message: "Registered successfully. A confirmation code has been sent to your email"
+        req.logIn(user, function(err){
+            if(err){
+                return res.json({
+                    status: 500,
+                    message: err
+                });
+            }
+            return res.json({
+                status:200,
+                message: "User successfully logged in",
+                user: user
+            })
         });
     })(req, res, next);
 });
@@ -48,7 +64,7 @@ router.get('/signin', function(req, res){
     res.render('signin', {});
 });
 
-router.post('/signin', isVerified, function(req, res, next){
+router.post('/signin', function(req, res, next){
     passport.authenticate('local-signin', function(err, user, info){
         if (err) {
             return res.json({
@@ -56,6 +72,14 @@ router.post('/signin', isVerified, function(req, res, next){
                 message: err
             });
         }
+        
+        if(info.message[0] == 422){
+            return res.json({
+                status: 422,
+                message: info.message[1]
+            })
+        }
+        
         if (!user) {
             return res.json({
                 status: 500,
@@ -72,7 +96,8 @@ router.post('/signin', isVerified, function(req, res, next){
             }
             return res.json({
                 status:200,
-                message: "User successfully logged in"
+                message: "User successfully logged in",
+                user: req.user
             })
         });
     })(req, res, next);
