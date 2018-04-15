@@ -29,7 +29,7 @@ class category{
         that does'nt have any parent id
     */
     getCategories(callback) {
-        var query = "SELECT id, name, arabic_name\
+        var query = "SELECT id, name, arabic_name, image\
                      FROM hiksaudi_js.gc_categories\
                      WHERE parent_id = 0";
 
