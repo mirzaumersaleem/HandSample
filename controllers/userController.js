@@ -107,7 +107,7 @@ exports.forgotPassController = function(req, res){
 
             });
 
-                //Set token expiration time one hour after current time
+                //Set token expiration time one hour after current timea
             
     });
 
