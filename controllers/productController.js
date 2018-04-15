@@ -16,6 +16,7 @@ async function getMainAndSubCat(parentCategories){
         for(i = 0; i < parentCategories.length; i++){
                 var subCategories = await categories1.getSubCatPromise(parentCategories[i].id); //The execution would wait until subcategories are fetched
                 //Populating array with parent and subcategories
+                parentCategories[i].images = "http://hikvisionsaudi.com/9/uploads/images/full/" + parentCategories[i].images;
                 catMainAndSub.push({
                                 "parentCategory": parentCategories[i],
                                 "childCategories": subCategories
@@ -31,21 +32,14 @@ async function getMainAndSubCat(parentCategories){
     This controller returns all the parent categories
  */
 exports.getCategoryController = function(req, res) {
-    var categories = new category();
-    categories.getCategories(function(err, result){
-        if(err){
-            res.json({
-                status: 500,
-                message: err
-            });
-        } else{
-            res.json({
-                status: 200,
-                data: result
-            });
-        }
-        //console.log("Inside category controller");
-        //res.render('index', {title: 'Express'});
+    var mainCatImages = ["/sadaliaCats/Beauty&Care.png",
+                         "/sadaliaCats/Care.png",
+                         "/sadaliaCats/ElectricalDevices.png",
+                         "/sadaliaCats/Medicines&Treatment.png",
+                         "/sadaliaCats/Perfumes.png",
+                         "/sadaliaCats/Supplement.png"];
+    res.json({
+        mainCatImages: mainCatImages
     });
 }
 
@@ -100,7 +94,7 @@ exports.getProductDetailsController = function(req, res){
     var products = new product();
 
     console.log("Product id entered " + req.query.productId);
-    products.getProductDetails(req.params.productId, function(err, result){
+    products.getProductDetails(req.query.productId, function(err, result){
         if(err){
             res.json({
                 status: 500,
