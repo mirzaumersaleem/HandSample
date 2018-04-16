@@ -29,25 +29,7 @@ passport.use('local-register', new localStrategy({
 }, function(req, username, password, done){
             console.log("inside errors1");
   
-    req.checkBody("name", "Enter a valid user name").matches(/^[a-zA-Z\s]*$/).notEmpty();
-    req.checkBody("password", "Enter a valid password").notEmpty();
-    req.assert("email", "Enter a valid email").isEmail().notEmpty();
-    req.assert("mobile", "Enter a valid mobile no").matches(/^[0-9]*$/);
-    req.assert("companyNumber", "Enter a valid company number").matches(/^[0-9]*$/);
-    req.assert("company", "Enter a valid company name").matches(/^[a-zA-Z\s]*$/).notEmpty();
-    console.log("Inside errors2");
     
-    var error = req.validationErrors(true);
-
-    var errorValues = Object.keys(error);
-    
-    console.log("error length " + errorValues.length);
-
-    if(errorValues.length > 0){
-        console.log("inside if");
-        done(null, false, {message: [422, error]});
-    }
-    else{
         var user = new User(); 
 
         user.findByEmail(username, function(err, resultUser){
@@ -106,7 +88,7 @@ passport.use('local-register', new localStrategy({
 
             })
         });
-    }
+    
     
     
 }));
@@ -119,17 +101,7 @@ passport.use('local-signin', new localStrategy({
 function(req, username, password, done){
     console.log("Inside passport Strategy");
 
-    req.checkBody("passowrd", "Password length cannot be less 4").isLength({min: 4}).isEmpty();
-    req.assert("email", "Enter a valid email").isEmail().isEmpty();
-
-
     var user = new User();
-
-    if(errorValues.length > 0){
-        console.log("inside if");
-        return done(null, false, {message: [422, error]});
-    }
-
     user.findByEmail(username, function(err, result){
         
         if(err){
@@ -142,10 +114,11 @@ function(req, username, password, done){
         }
         if(!user.validPassword(password, result[0].password)){
             console.log("Incorrect password entered");
-            return done(null, false, {message: "Incorrect Password"});
+            return done(null, false, {message: "Incorrect password"});
         }
         console.log("Every thing is correct in signin");
-            return done(null, result[0]);
+            done(null, result[0]);
     });
 
+    
 }));
