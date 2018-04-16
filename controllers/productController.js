@@ -23,7 +23,7 @@ async function getMainAndSubCat(parentCategories){
                 var subCategories = await categories1.getSubCatPromise(parentCategories[i].id); //The execution would wait until subcategories are fetched
                 //Populating array with parent and subcategories
                 //parentCategories[i].image = "http://hikvisionsaudi.com/9/uploads/images/full/" + mainCatImages[i];
-                parentCategories[i].image = mainCatImages[i];
+                parentCategories[i].image = "https://saidaliah.herokuapp.com" + mainCatImages[i];
                 catMainAndSub.push({
                                 "parentCategory": parentCategories[i],
                                 "childCategories": subCategories
