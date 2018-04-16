@@ -5,7 +5,17 @@ var Order = require('../models/order');
 
 exports.addToCartController = function(req, res){
     console.log("Inside add to cart controller");
+    
+    //req.assert("");
+    
     var productId = req.query.id;
+    var quantity = req.query.quantity;
+    if( !(/^[0-9]+$/.test(quantity)) ){
+        return res.json({
+            status: 500,
+            message:"Invalid quantity"
+        })
+    }
     console.log("The value of product id is" + productId);
     /*
       If cart is already present in session then pass that old cart
@@ -23,6 +33,8 @@ exports.addToCartController = function(req, res){
                 message: err
             });
         } else {
+            
+
 
             if(req.query.quantity == null){
                 cart.addProductToCart(prod, productId);
@@ -59,6 +71,7 @@ exports.shoppingCartController = function(req, res){
         totalQty: cart.totalQty,
         totalPrice: cart.totalPrice
     });
+    return;
 }
 
 exports.finalCheckoutController = function(req, res){
