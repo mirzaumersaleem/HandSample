@@ -8,7 +8,13 @@ var product = require("../models/product");
     for each parent category. THe fetching of sub categories is synchronous
 */
 async function getMainAndSubCat(parentCategories){
-    
+    var mainCatImages = ["/sadaliaCats/Beauty&Care.png",
+    "/sadaliaCats/Care.png",
+    "/sadaliaCats/ElectricalDevices.png",
+    "/sadaliaCats/Medicines&Treatment.png",
+    "/sadaliaCats/Perfumes.png",
+    "/sadaliaCats/Supplement.png"];
+
     //Return a promise when all subcategories are fetched for parent categories
     return new Promise(async function(resolve){
         var catMainAndSub = []; //Array to save parent and their sub categories
@@ -16,7 +22,8 @@ async function getMainAndSubCat(parentCategories){
         for(i = 0; i < parentCategories.length; i++){
                 var subCategories = await categories1.getSubCatPromise(parentCategories[i].id); //The execution would wait until subcategories are fetched
                 //Populating array with parent and subcategories
-                parentCategories[i].image = "http://hikvisionsaudi.com/9/uploads/images/full/" + parentCategories[i].image;
+                //parentCategories[i].image = "http://hikvisionsaudi.com/9/uploads/images/full/" + mainCatImages[i];
+                parentCategories[i].image = mainCatImages[i];
                 catMainAndSub.push({
                                 "parentCategory": parentCategories[i],
                                 "childCategories": subCategories
