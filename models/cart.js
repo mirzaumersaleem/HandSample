@@ -40,7 +40,7 @@ class Cart{
 		storedItem.price = item.price_1 * storedItem.qty;
 		
 		this.totalQty += quantity;
-		this.totalPrice += storedItem.price;
+		this.totalPrice += (item.price_1 * quantity);
 		
 	}
 
