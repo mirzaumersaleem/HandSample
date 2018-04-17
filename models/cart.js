@@ -27,6 +27,23 @@ class Cart{
 		
 	}
 	
+	addProductToCart(item, id, quantity){
+		var storedItem = this.items[id];
+		
+		//Create a new item if its not present in items list
+		if(!storedItem){
+			storedItem = this.items[id] = {item: item, qty: 0, price: 0};
+		}
+		
+		//Increment qty by 1 and set price to item price
+		storedItem.qty += quantity;
+		storedItem.price = item.price_1 * storedItem.qty;
+		
+		this.totalQty += quantity;
+		this.totalPrice += (item.price_1 * quantity);
+		
+	}
+
 	generateArray(){
 		var arr = [];
 		
