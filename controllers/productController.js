@@ -8,7 +8,7 @@ var product = require("../models/product");
     for each parent category. THe fetching of sub categories is synchronous
 */
 async function getMainAndSubCat(parentCategories){
-    var mainCatImages = ["/sadaliaCats/Medicines&Treatment.png",
+    var mainCatImages = ["/sadaliaCats/Medicines&Treatments.png",
     "/sadaliaCats/Beauty&Care.png",
     "/sadaliaCats/Care.png",
     "/sadaliaCats/Supplement.png",
