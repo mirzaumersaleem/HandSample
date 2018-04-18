@@ -108,7 +108,8 @@ function(req, username, password, done){
             console.log(err);
             return done(err);
         } 
-        if(result[0].id === null){
+        console.log("executed tille here");
+        if(result.length == 0){
             console.log("No user found");
             return done(null, false, {message: "No user found"});
         }
