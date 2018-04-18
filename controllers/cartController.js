@@ -5,7 +5,17 @@ var Order = require('../models/order');
 
 exports.addToCartController = function(req, res){
     console.log("Inside add to cart controller");
-    var productId = req.params.id;
+    
+    //req.assert("");
+    
+    var productId = req.query.id;
+    var quantity = Number(req.query.quantity);
+    if( !(/^[0-9]+$/.test(quantity)) ){
+        return res.json({
+            status: 500,
+            message:"Invalid quantity"
+        })
+    }
     console.log("The value of product id is" + productId);
     /*
       If cart is already present in session then pass that old cart
@@ -23,15 +33,23 @@ exports.addToCartController = function(req, res){
                 message: err
             });
         } else {
+            
 
-            cart.addProductToCart(prod, productId);
+
+            if(req.query.quantity == null){
+                cart.addProductToCart(prod, productId);
+            } else {
+                cart.addProductToCart(prod, productId, req.query.quantity);
+            }
             req.session.cart = cart;
             
             console.log("Following items in session cart");
             console.log(req.session.cart);
 
-            var backurl = req.header('Referer') || '/';
-            res.redirect(backurl);
+            res.json({
+                status: 200,
+                message: "Product added successfully"
+            })
         }
     })    
 }
@@ -53,14 +71,16 @@ exports.shoppingCartController = function(req, res){
         totalQty: cart.totalQty,
         totalPrice: cart.totalPrice
     });
+    return;
 }
 
 exports.finalCheckoutController = function(req, res){
     //var addressId = req.body.addressId;
-    var addressId = 0;
+    var addressId = 2;
     var user = new User();    
     var order = new Order();
-    var cart = req.session.cart;
+    //var cart = req.session.cart;
+    var cart = new Cart(req.session.cart);
 
     if(cart === null) {
         res.json({
