@@ -36,10 +36,10 @@ class Cart{
 		}
 		
 		//Increment qty by 1 and set price to item price
-		storedItem.qty += quantity;
+		storedItem.qty += Number(quantity);
 		storedItem.price = item.price_1 * storedItem.qty;
 		
-		this.totalQty += quantity;
+		this.totalQty += Number(quantity);
 		this.totalPrice += (item.price_1 * quantity);
 		
 	}
