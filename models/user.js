@@ -88,7 +88,7 @@ class user{
     }
 
     getUserAddresses(userId, callback){
-        var query = "SELECT address.AddressID, address.latitude, address.longitude, address.address\
+        var query = "SELECT address.AdressID, address.latitude, address.longitude, address.address\
                      FROM hiksaudi_js.gc_address AS address\
                      INNER JOIN hiksaudi_js.gc_customers AS customers\
                      ON customers.id = address.CustomerId\
@@ -126,7 +126,7 @@ class user{
     getUserAddressById(addressId, callback){
         console.log("Inside get user address model123");
         var query = "SELECT address FROM hiksaudi_js.gc_address\
-                     WHERE AddressId = " + addressId;
+                     WHERE AdressID = " + addressId;
         console.log("Above query executed");
 
         mySql.getConnection(function(err, connection){
