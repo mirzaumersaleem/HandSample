@@ -9,8 +9,8 @@ exports.getRegisterController = function(req, res){
 exports.getUserAddressController = function(req, res){
     
     var user = new User();
-    
     user.getUserAddresses(req.user.id, function(err, rows){
+        console.log("Get address callback");
         if(err){
             res.json({
                 status: 500,
@@ -28,14 +28,15 @@ exports.getUserAddressController = function(req, res){
 exports.addUserAddressController = function(req, res){
     
     var user = new User();
-
+    
     var addressData = {
         latitude: req.body.latitude,
         longitude: req.body.longitude,
         addressDesc: req.body.addressDesc
     }
-
-    user.addUserAddress(50, addressData, function(err, result){
+    
+    console.log("Printing req.user.id" + req.user.id);
+    user.addUserAddress(req.user.id, addressData, function(err, result){
         if(err){
             res.json({
                 status: 500,
@@ -67,7 +68,6 @@ exports.forgotPassController = function(req, res){
                 });
                 return;
             }
-            
             //Generate Reset Password Token
             var resetPassToken = null;
             crypto.randomBytes(20, function(err, buff){
@@ -101,7 +101,7 @@ exports.forgotPassController = function(req, res){
 
             });
 
-                //Set token expiration time one hour after current time
+                //Set token expiration time one hour after current timea
             
     });
 
