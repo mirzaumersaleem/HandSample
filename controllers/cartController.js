@@ -9,7 +9,7 @@ exports.addToCartController = function(req, res){
     //req.assert("");
     
     var productId = req.query.id;
-    var quantity = req.query.quantity;
+    var quantity = Number(req.query.quantity);
     if( !(/^[0-9]+$/.test(quantity)) ){
         return res.json({
             status: 500,
@@ -76,10 +76,11 @@ exports.shoppingCartController = function(req, res){
 
 exports.finalCheckoutController = function(req, res){
     //var addressId = req.body.addressId;
-    var addressId = 0;
+    var addressId = 2;
     var user = new User();    
     var order = new Order();
-    var cart = req.session.cart;
+    //var cart = req.session.cart;
+    var cart = new Cart(req.session.cart);
 
     if(cart === null) {
         res.json({
