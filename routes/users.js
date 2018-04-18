@@ -149,11 +149,11 @@ router.get('/logout', function(req, res){
     });
 });
 
-router.get('/addresses', function(req, res){
+router.get('/addresses', isLoggedIn, function(req, res){
     userController.getUserAddressController(req, res);    
 });
 
-router.post('/addresses', function(req, res){
+router.post('/addresses', isLoggedIn, function(req, res){
     userController.addUserAddressController(req, res);
 });
 
@@ -274,7 +274,10 @@ function isLoggedIn(req, res, next){
         next();
     }
     else{
-        res.redirect('/users/signin');
+        res.json({
+            status: 200,
+            message: "User must be logged in"
+        });
     }
 }
 
