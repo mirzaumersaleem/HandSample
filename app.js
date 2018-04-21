@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 var debug = require('debug');
 var express = require('express');
 var path = require('path');
@@ -12,10 +12,11 @@ var hbs = require('express-handlebars');
 var passport = require('passport');
 var socket = require('socket.io');
 var http = require('http');
+var mySql = require("./config/database");
+var mySqlStore = require('express-mysql-session')(expressSession);
 
-//Socket files
+//Controller Files
 var updateProductScoket = require('./controllers/socketController');
-
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -23,6 +24,10 @@ var products = require('./routes/products');
 var cart = require('./routes/cart');
 
 var app = express();
+
+//Initializing session store
+//var connection = await sessionController.getSessionStore();
+var sessionStore = new mySqlStore({}, mySql)
 
 //Using passport strategy
 require('./config/passport');
@@ -40,7 +45,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressValidator());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(expressSession({secret: "824AE1", saveUninitialized: false, resave: false}));
+app.use(expressSession({
+    secret: "824AE1",
+    saveUninitialized: false, 
+    resave: false
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -60,7 +69,6 @@ app.use('/', routes);
 app.use('/products', products);
 app.use('/users', users);
 app.use('/cart', cart);
-
 
 
 // catch 404 and forward to error handler
