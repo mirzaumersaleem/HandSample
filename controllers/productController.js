@@ -130,4 +130,3 @@ exports.getProductDetailsController = function(req, res){
         }
     });
 }
- 

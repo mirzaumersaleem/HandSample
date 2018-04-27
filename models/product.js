@@ -63,4 +63,3 @@ class product{
 }
 
 module.exports = product;
- 
