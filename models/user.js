@@ -12,16 +12,28 @@ class user{
                      FROM hiksaudi_js.gc_customers\
                      WHERE id = " + "\"" + id + "\"";
 
-        mySql.query(query, function(err, result){
-            callback(err, result);
+        mySql.getConnection(function(err, connection){
+            if(err){
+                throw err;
+            }
+            connection.query(query, function(err, rows){
+                connection.release()
+                callback(err, rows); //Passing results to callback function
+            });
         });
     }
 
     updateVerificationStatus(userId, status, callback){
         var query = "UPDATE hiksaudi_js.gc_customers SET verification_status = " + status + " WHERE id = " + userId; //+ userId;
 
-        mySql.query(query, function(err, result){
-            callback(err, result);
+        mySql.getConnection(function(err, connection){
+            if(err){
+                throw err;
+            }
+            connection.query(query, function(err, rows){
+                connection.release()
+                callback(err, rows); //Passing results to callback function
+            });
         });
     }
 
@@ -31,8 +43,14 @@ class user{
                      FROM hiksaudi_js.gc_customers\
                      WHERE email = " + "\"" + email + "\"";
 
-        mySql.query(query, function(err, result){
-            callback(err, result);
+        mySql.getConnection(function(err, connection){
+            if(err){
+                throw err;
+            }
+            connection.query(query, function(err, rows){
+                connection.release()
+                callback(err, rows); //Passing results to callback function
+            });
         });
     }
 
@@ -49,26 +67,41 @@ class user{
         
         var findbyemail = this.findByEmail;
 
-        mySql.query(query, function(err, result){
+        mySql.getConnection(function(err, connection){
             if(err){
-                callback(err, result);
+                throw err;
             }
-            else{
-                findbyemail(userData.email, function(err, result){
-                    callback(err, result);
-                });
-            }
-        });
+            connection.query(query, function(err, rows){
+                connection.release()
+                if(err){
+                    callback(err, rows);
+                }
+                else{
+                    findbyemail(userData.email, function(err, result){
+                        callback(err, result);
+                    });    
+                }
+
+            });
+        })
+
     }
 
     getUserAddresses(userId, callback){
-        var query = "SELECT address.AddressID, address.latitude, address.longitude, address.address\
+        var query = "SELECT address.AdressID, address.latitude, address.longitude, address.address\
                      FROM hiksaudi_js.gc_address AS address\
                      INNER JOIN hiksaudi_js.gc_customers AS customers\
                      ON customers.id = address.CustomerId\
                      WHERE address.CustomerId =  " + userId;
-        mySql.query(query, function(err, rows){
-            callback(err, rows);
+       
+        mySql.getConnection(function(err, connection){
+            if(err){
+                throw err;
+            }
+            connection.query(query, function(err, rows){
+                connection.release()
+                callback(err, rows); //Passing results to callback function
+            });
         });
     }
 
@@ -78,22 +111,32 @@ class user{
                      VALUES (" + userId + "," + addressData.latitude + "," + addressData.longitude 
                      + "," + "\"" + addressData.addressDesc + "\"" + ")";
         
-        mySql.query(query, function(err, result){
-            callback(err, result);
+        mySql.getConnection(function(err, connection){
+            if(err){
+                throw err;
+            }
+            connection.query(query, function(err, rows){
+                connection.release()
+                console.log(rows);
+                callback(err, rows); //Passing results to callback function
+            });
         });   
     }
 
     getUserAddressById(addressId, callback){
         console.log("Inside get user address model123");
         var query = "SELECT address FROM hiksaudi_js.gc_address\
-                     WHERE AddressId = " + addressId;
+                     WHERE AdressID = " + addressId;
         console.log("Above query executed");
 
-        mySql.query(query, function(err, result){
-            //mySql.end();
-            console.log(err);
-            console.log(result);
-            callback(err, result);
+        mySql.getConnection(function(err, connection){
+            if(err){
+                throw err;
+            }
+            connection.query(query, function(err, rows){
+                connection.release()
+                callback(err, rows); //Passing results to callback function
+            });
         });
     }
 
@@ -104,16 +147,28 @@ class user{
 
         var query = "UPDATE  hiksaudi_js.gc_customers SET resetPasswordToken = " + "\"" + token + "\"" + "," + "resetPasswordDate = " + time + " WHERE id = " + userId;
 
-        mySql.query(query, function(err, result){
-            callback(err, result);
+        mySql.getConnection(function(err, connection){
+            if(err){
+                throw err;
+            }
+            connection.query(query, function(err, rows){
+                connection.release()
+                callback(err, rows); //Passing results to callback function
+            });
         });
     }
 
     setUserPassword(id, password, callback){
         var query = "UPDATE  hiksaudi_js.gc_customers SET password = " + "\"" + password + "\"" + " WHERE id = " + userId;
 
-        mySql.query(query, function(err, result){
-            callback(err, result);
+        mySql.getConnection(function(err, connection){
+            if(err){
+                throw err;
+            }
+            connection.query(query, function(err, rows){
+                connection.release()
+                callback(err, rows); //Passing results to callback function
+            });
         });
     }
 
