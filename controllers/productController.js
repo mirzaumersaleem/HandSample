@@ -86,6 +86,20 @@ exports.getSubCatProductsController = function(req, res){
                 message: err
             });
         } else{
+            console.log(result);
+            for(var i = 0; i < result.length; ++i){
+                //Data object contains the list of products
+                //Replace [0] with the iterating variable through which you are listing all products
+                var productImageObj = result[i].images;
+                //Parse the productImageObj
+                var productImageObj = JSON.parse(productImageObj);
+                //Get the value of first property from image object
+                var imageFirstProp = productImageObj[Object.keys(productImageObj)[0]]
+                //Extract image filename from image first property object
+                var imageLink = imageFirstProp.filename;
+                //Concatenate image name with remote repository url
+                result[i].images = "http://hikvisionsaudi.com/9/uploads/images/full/" + imageLink;
+            }
             res.json({
                 status: 200,
                 data: result
@@ -116,4 +130,3 @@ exports.getProductDetailsController = function(req, res){
         }
     });
 }
- 
