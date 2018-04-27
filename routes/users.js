@@ -14,43 +14,63 @@ router.get('/register', function (req, res) {
 });
 
 router.post('/register', function(req, res, next){
-    passport.authenticate('local-register', function(err, user, info){
-    console.log("Inside user-register post route");
-        
-        if(err){
-            return res.json({
-                status:500,
-                message: err
-            });
 
-        }
-        if(info.message[0] == 422){
-            return res.json({
-                status: 422,
-                message: info.message[1]
-            })
-        }
-        if (!user) { 
-            return res.json({
-                status:500,
-                message: info.message
-            });
-        }
+    req.checkBody("name", "Enter a valid user name").matches(/^[a-zA-Z\s]*$/).notEmpty();
+    req.checkBody("password", "Enter a valid password").notEmpty();
+    req.assert("email", "Enter a valid email").isEmail().notEmpty();
+    req.assert("mobile", "Enter a valid mobile no").matches(/^[0-9]*$/);
+    req.assert("companyNumber", "Enter a valid company number").matches(/^[0-9]*$/);
+    req.assert("company", "Enter a valid company name").matches(/^[a-zA-Z\s]*$/).notEmpty();
+    console.log("Inside errors2");
+    
+    var error = req.validationErrors(true);
 
-        req.logIn(user, function(err){
-            if(err){
-                return res.json({
-                    status: 500,
-                    message: err
-                });
-            }
-            return res.json({
-                status:200,
-                message: "User successfully logged in",
-                user: user
-            })
+    var errorValues = Object.keys(error);
+    
+    console.log("error length " + errorValues.length);
+
+    if(errorValues.length > 0){
+        console.log("inside if");
+        return res.json({
+            status: 422,
+            message: "Validation errors",
+            errors: error
         });
-    })(req, res, next);
+    }
+    else{
+        passport.authenticate('local-register', function(err, user, info){
+            console.log("Inside user-register post route");
+                
+                if(err){
+                    return res.json({
+                        status:500,
+                        message: err
+                    });
+        
+                }
+                if (!user) { 
+                    return res.json({
+                        status:500,
+                        message: info.message
+                    });
+                }
+        
+                req.logIn(user, function(err){
+                    if(err){
+                        return res.json({
+                            status: 500,
+                            message: err
+                        });
+                    }
+                    return res.json({
+                        status:200,
+                        message: "User successfully logged in",
+                        user: user
+                    })
+                });
+            })(req, res, next);
+    }
+
 });
 
 /*
@@ -65,42 +85,60 @@ router.get('/signin', function(req, res){
 });
 
 router.post('/signin', function(req, res, next){
-    passport.authenticate('local-signin', function(err, user, info){
-        if (err) {
-            return res.json({
-                status: 500,
-                message: err
-            });
-        }
-        
-        if(info.message[0] == 422){
-            return res.json({
-                status: 422,
-                message: info.message[1]
-            })
-        }
-        
-        if (!user) {
-            return res.json({
-                status: 500,
-                message: info.message
-            });
-        }
+    
+    req.assert("password", "Password field cannot be empty").notEmpty();
+    req.assert("email", "Enter a valid email").isEmail().notEmpty();
 
-        req.logIn(user, function(err){
-            if(err){
+    var error = req.validationErrors(true);
+
+    var errorValues = Object.keys(error);
+    
+    console.log("error length " + errorValues.length);
+
+    if(errorValues.length > 0){
+        console.log("inside if");
+        return res.json({
+            status: 422,
+            message: "Validation errors",
+            errors: error
+        });
+    }
+    else{
+        passport.authenticate('local-signin', function(err, user, info){
+            console.log("Authentication");
+            if (err) {
+                console.log("Inside first if");
                 return res.json({
                     status: 500,
                     message: err
                 });
             }
-            return res.json({
-                status:200,
-                message: "User successfully logged in",
-                user: req.user
-            })
-        });
-    })(req, res, next);
+            
+            if (!user) {
+                console.log("Inside second if");
+                return res.json({
+                    status: 500,
+                    message: info.message
+                });
+            }
+    
+            req.logIn(user, function(err1){
+                if(err1){
+                    console.log("Inside error");
+                    return res.json({
+                        status: 500,
+                        message: err1
+                    });
+                }
+                return res.json({
+                    status:200,
+                    message: "Successful login",
+                    user: req.user  
+                })
+            });
+        })(req, res, next);
+    }
+    
 });
 
 router.get('/logout', function(req, res){
@@ -111,11 +149,11 @@ router.get('/logout', function(req, res){
     });
 });
 
-router.get('/addresses', function(req, res){
+router.get('/addresses', isLoggedIn, function(req, res){
     userController.getUserAddressController(req, res);    
 });
 
-router.post('/addresses', function(req, res){
+router.post('/addresses', isLoggedIn, function(req, res){
     userController.addUserAddressController(req, res);
 });
 
@@ -236,7 +274,10 @@ function isLoggedIn(req, res, next){
         next();
     }
     else{
-        res.redirect('/users/signin');
+        res.json({
+            status: 200,
+            message: "User must be logged in"
+        });
     }
 }
 
