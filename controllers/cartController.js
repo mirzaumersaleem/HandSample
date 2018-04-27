@@ -75,8 +75,7 @@ exports.shoppingCartController = function(req, res){
 }
 
 exports.finalCheckoutController = function(req, res){
-    //var addressId = req.body.addressId;
-    var addressId = 2;
+    var addressId = req.body.addressId;
     var user = new User();    
     var order = new Order();
 
