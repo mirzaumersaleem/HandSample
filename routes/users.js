@@ -20,7 +20,6 @@ router.post('/register', function(req, res, next){
     req.assert("email", "Enter a valid email").isEmail().notEmpty();
     req.assert("mobile", "Enter a valid mobile no").matches(/^[0-9]*$/);
     req.assert("companyNumber", "Enter a valid company number").matches(/^[0-9]*$/);
-    req.assert("company", "Enter a valid company name").matches(/^[a-zA-Z\s]*$/).notEmpty();
     console.log("Inside errors2");
     
     var error = req.validationErrors(true);
