@@ -36,6 +36,30 @@ async function getMainAndSubCat(parentCategories){
     
 }
 
+
+function getOffersWithImages(offers){
+    return new Promise(async function(resolve){
+        var products = new product();
+
+        for(var i = 0; i < offers.length; ++i){
+            //Convert time remaining into minuites and hours
+            var timeRemaining = offers[i].time_remaining;
+            var hours = Math.floor(timeRemaining / 60);
+            var mins = timeRemaining % 60;
+            delete offers[i].time_remaining;
+            offers[i].hours = hours;
+            offers[i].minuites = mins;
+            console.log("This offer id " + offers[i].id)
+            
+            var imagesArray = await products.getOfferImagePromise(offers[i].id);
+            console.log("This is images Array" + imagesArray);
+            offers[i].images = imagesArray;
+            //console.log(offers[i]);
+        }
+        
+        resolve(offers);
+    });
+}
 /*
     This controller returns all the parent categories
  */
@@ -86,7 +110,7 @@ exports.getSubCatProductsController = function(req, res){
                 message: err
             });
         } else{
-            console.log(result);
+            //console.log(result);
             for(var i = 0; i < result.length; ++i){
                 //Data object contains the list of products
                 //Replace [0] with the iterating variable through which you are listing all products
@@ -129,4 +153,27 @@ exports.getProductDetailsController = function(req, res){
             });
         }
     });
+}
+
+exports.getOffers = function(req, res){
+    var products = new product();
+
+    console.log("inside offers controller");
+    products.getOffers(async function(err, result){        
+        if(err){
+            res.json({
+                status: 500,
+                message: err
+            });
+        }
+        else {
+            //Fetch images for offers
+            console.log("Inside else");
+            var offerWithImagesProm = await getOffersWithImages(result);
+            res.json({
+                status: 200,
+                message: offerWithImagesProm
+            });
+        }
+    })
 }
