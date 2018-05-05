@@ -1,17 +1,13 @@
 var mySql = require("../config/database");
 var bcrypt = require('bcryptjs');
-
+ 
 class user{
     constructor() {
-        
     }
-
     findById(id, callback){
-
         var query = "SELECT id, firstname, lastname, email, phone, password \
                      FROM hiksaudi_js.gc_customers\
                      WHERE id = " + "\"" + id + "\"";
-
         mySql.getConnection(function(err, connection){
             if(err){
                 throw err;
@@ -36,9 +32,7 @@ class user{
             });
         });
     }
-
     findByEmail(email, callback){
-
         var query = "SELECT id, firstname, lastname, email, phone, password, verification_code, verification_status \
                      FROM hiksaudi_js.gc_customers\
                      WHERE email = " + "\"" + email + "\"";
@@ -53,11 +47,9 @@ class user{
             });
         });
     }
-
     getPrintName() {
         console.log("Hello");
     }
-
     setNewUser(userData, callback){
         console.log("inside set new user");
         console.log(userData);
@@ -81,12 +73,9 @@ class user{
                         callback(err, result);
                     });    
                 }
-
             });
         })
-
     }
-
     getUserAddresses(userId, callback){
         var query = "SELECT address.AdressID, address.latitude, address.longitude, address.address\
                      FROM hiksaudi_js.gc_address AS address\
@@ -139,14 +128,11 @@ class user{
             });
         });
     }
-
     setForgotPassTokenAndTime(userId, token, time, callback){
         console.log(typeof token);
         console.log(typeof time);
         console.log(typeof userId);
-
         var query = "UPDATE  hiksaudi_js.gc_customers SET resetPasswordToken = " + "\"" + token + "\"" + "," + "resetPasswordDate = " + time + " WHERE id = " + userId;
-
         mySql.getConnection(function(err, connection){
             if(err){
                 throw err;
@@ -157,10 +143,8 @@ class user{
             });
         });
     }
-
     setUserPassword(id, password, callback){
         var query = "UPDATE  hiksaudi_js.gc_customers SET password = " + "\"" + password + "\"" + " WHERE id = " + userId;
-
         mySql.getConnection(function(err, connection){
             if(err){
                 throw err;
@@ -171,7 +155,6 @@ class user{
             });
         });
     }
-
     generatePasswordHash(password){
         return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
     }

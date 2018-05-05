@@ -7,6 +7,7 @@ var product = require("../models/product");
     This is an asynchronous function that fetch subcategories
     for each parent category. THe fetching of sub categories is synchronous
 */
+
 async function getMainAndSubCat(parentCategories){
     var mainCatImages = ["/sadaliaCats/Medicines&Treatments.png",
     "/sadaliaCats/Beauty&Care.png",
@@ -31,14 +32,11 @@ async function getMainAndSubCat(parentCategories){
                 });
         }
         resolve(catMainAndSub); //Returning parent and subcategories when every thing executes correctly
-    });
-
-    
+    });    
 }
-
 /*
     This controller returns all the parent categories
- */
+*/
 exports.getCategoryController = function(req, res) {
     var mainCatImages = ["/sadaliaCats/Beauty&Care.png",
                          "/sadaliaCats/Care.png",
@@ -50,7 +48,6 @@ exports.getCategoryController = function(req, res) {
         mainCatImages: mainCatImages
     });
 }
-
 /*
     This controller takes the parent category id and
     return all the ssub categories that are in the parent

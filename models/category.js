@@ -22,8 +22,6 @@ class category{
             })
         });
     }
-
-
     /*
         This Function will return categories
         that does'nt have any parent id
@@ -54,7 +52,6 @@ class category{
         var query = "SELECT id, name, arabic_name\
                      FROM hiksaudi_js.gc_categories \
                      WHERE parent_id = " + parentCategory;
-
         mySql.getConnection(function(err, connection){
             if(err){
                 throw err;
@@ -67,5 +64,4 @@ class category{
         });
     }
 }
-
 module.exports = category;
