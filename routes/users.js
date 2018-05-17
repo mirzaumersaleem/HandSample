@@ -14,18 +14,20 @@ router.get('/register', function (req, res) {
 });
 
 router.post('/register', function(req, res, next){
-
-    req.checkBody("name", "Enter a valid user name").matches(/^[a-zA-Z\s]*$/).notEmpty();
-    req.checkBody("password", "Enter a valid password").notEmpty();
-    req.assert("email", "Enter a valid email").isEmail().notEmpty();
-    req.assert("mobile", "Enter a valid mobile no").matches(/^[0-9]*$/);
-    req.assert("companyNumber", "Enter a valid company number").matches(/^[0-9]*$/);
-    console.log("Inside errors2");
-    
+    console.log("Request Recieved");
+    req.checkBody("name","Enter a valid user name").matches(/^[a-zA-Z\s]*$/).notEmpty();
+    req.checkBody("password","Enter a valid password").notEmpty();
+    req.checkBody("confirm_password","Enter a valid password").notEmpty();
+    req.assert("email","Enter a valid email").isEmail().notEmpty();
+    req.assert("phone_number","Enter a valid phone number").matches(/^[0-9]*$/);
+    req.assert("mobile","Enter a valid mobile no").matches(/^[0-9]*$/);
+    req.assert("identity_number","Enter a valid Identity Number").matches(/^[0-9]*$/);
+    req.checkBody("district","Enter a valid District name").matches(/^[a-zA-Z\s]*$/).notEmpty();
+    req.checkBody("city","Enter a valid City name").matches(/^[a-zA-Z\s]*$/).notEmpty();
+    req.checkBody("address","Enter a valid Address").notEmpty();
+    console.log("req",req.body);
     var error = req.validationErrors(true);
-
     var errorValues = Object.keys(error);
-    
     console.log("error length " + errorValues.length);
 
     if(errorValues.length > 0){
@@ -38,22 +40,19 @@ router.post('/register', function(req, res, next){
     }
     else{
         passport.authenticate('local-register', function(err, user, info){
-            console.log("Inside user-register post route");
-                
+            console.log("Inside user-register post route");  
                 if(err){
                     return res.json({
-                        status:500,
-                        message: err
+                        status:501,
+                        message: err+"yhn error arha hai "
                     });
-        
                 }
                 if (!user) { 
                     return res.json({
-                        status:500,
+                        status:502,
                         message: info.message
                     });
                 }
-        
                 req.logIn(user, function(err){
                     if(err){
                         return res.json({
@@ -63,7 +62,7 @@ router.post('/register', function(req, res, next){
                     }
                     return res.json({
                         status:200,
-                        message: "User successfully logged in",
+                        message: "User successfully registered ",
                         user: user
                     })
                 });
@@ -82,18 +81,12 @@ router.post('/register', passport.authenticate('local-register',{
 router.get('/signin', function(req, res){
     res.render('signin', {});
 });
-
 router.post('/signin', function(req, res, next){
-    
     req.assert("password", "Password field cannot be empty").notEmpty();
     req.assert("email", "Enter a valid email").isEmail().notEmpty();
-
     var error = req.validationErrors(true);
-
     var errorValues = Object.keys(error);
-    
     console.log("error length " + errorValues.length);
-
     if(errorValues.length > 0){
         console.log("inside if");
         return res.json({
@@ -108,24 +101,22 @@ router.post('/signin', function(req, res, next){
             if (err) {
                 console.log("Inside first if");
                 return res.json({
-                    status: 500,
-                    message: err
+                    status: 501,
+                    message: err + "error hai yhn"
                 });
             }
-            
             if (!user) {
                 console.log("Inside second if");
                 return res.json({
-                    status: 500,
+                    status: 502,
                     message: info.message
                 });
             }
-    
             req.logIn(user, function(err1){
                 if(err1){
                     console.log("Inside error");
                     return res.json({
-                        status: 500,
+                        status: 503,
                         message: err1
                     });
                 }
@@ -137,9 +128,7 @@ router.post('/signin', function(req, res, next){
             });
         })(req, res, next);
     }
-    
 });
-
 router.get('/logout', function(req, res){
     req.logout();
     res.json({
@@ -147,24 +136,18 @@ router.get('/logout', function(req, res){
         message: "User logged out successfully"
     });
 });
-
 router.get('/addresses', isLoggedIn, function(req, res){
     userController.getUserAddressController(req, res);    
 });
-
 router.post('/addresses', isLoggedIn, function(req, res){
     userController.addUserAddressController(req, res);
 });
-
-
 router.get('/forgot', function(req, res){
     res.render('forgetPasswordMain', {});
 });
-
 router.post('/forgot', function(req, res){
     userController.forgotPassController(req, res);
 });
-
 router.get('/reset/:id/:token', function(req, res){
     var user = new User();
     user.findById(id, function(err, resultUser){
@@ -187,7 +170,6 @@ router.get('/reset/:id/:token', function(req, res){
         }
     });
 });
-
 router.get('/reset-password/:id/:token', function(req, res){
     var user = new User();
     user.findById(id, function(err, resultUser){
@@ -210,7 +192,6 @@ router.get('/reset-password/:id/:token', function(req, res){
         }
     });
 });
-
 router.post('/reset-password/:id/:token', function(req, res){
     var user = new User();
     if((req.body.password == null) || (req.body.confirmPassword == null)){

@@ -21,13 +21,10 @@ class product{
             });
         });
     }
-
-    getSubCatProd(subCategoryId, callback){
-        
+    getSubCatProd(subCategoryId, callback){   
         var query = "SELECT id, name, model, arabic_name, quantity, price_1, images \
                      FROM hiksaudi_js.gc_products \
                      WHERE secondary_category = " + subCategoryId;
-
         mySql.getConnection(function(err, connection){
             if(err){
                 throw err;
@@ -60,7 +57,7 @@ class product{
         });
 
     }
-
+  
     getOfferImagePromise(offerId){
         return new Promise(function(resolve){
             var query = "SELECT products.images\

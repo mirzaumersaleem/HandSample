@@ -28,10 +28,18 @@ class category{
         This Function will return categories
         that does'nt have any parent id
     */
-    getCategories(callback) {
-        var query = "SELECT id, name, arabic_name, image\
-                     FROM hiksaudi_js.gc_categories\
-                     WHERE parent_id = 0";
+    getCategories(req,callback) {
+        var query = ` select s.id as subcategory_id,
+        s.name as subcategory_name_english,
+        s.arabic_name as subcategory_name_arabic,
+        s.logo as subcategory_logo,b.address,b.city_id,
+        b.phone_number,b.email,b.arabic_address as branch_address,
+        b.description as branch_description,
+        b.lat,b.lng,b.logo as branch_logo,b.photos as branch_photos,
+        b.sliders as slider_image
+        from myraal_raal.subcategories s right join 
+        myraal_raal.branches b on (b.subcategory_id=s.id)
+        where b.city_id= ${req.body.city_id} and s.category_id=${req.body.category_id}`
 
         mySql.getConnection(function(err, connection){
             if(err){

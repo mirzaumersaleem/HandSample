@@ -6,7 +6,7 @@ var product = require("../models/product");
 /*
     This is an asynchronous function that fetch subcategories
     for each parent category. THe fetching of sub categories is synchronous
-*/
+*/ 
 async function getMainAndSubCat(parentCategories){
     var mainCatImages = ["/sadaliaCats/Medicines&Treatments.png",
     "/sadaliaCats/Beauty&Care.png",
@@ -64,15 +64,7 @@ function getOffersWithImages(offers){
     This controller returns all the parent categories
  */
 exports.getCategoryController = function(req, res) {
-    var mainCatImages = ["/sadaliaCats/Beauty&Care.png",
-                         "/sadaliaCats/Care.png",
-                         "/sadaliaCats/ElectricalDevices.png",
-                         "/sadaliaCats/Medicines&Treatment.png",
-                         "/sadaliaCats/Perfumes.png",
-                         "/sadaliaCats/Supplement.png"];
-    res.json({
-        mainCatImages: mainCatImages
-    });
+  
 }
 
 /*
@@ -83,15 +75,10 @@ exports.getCategoryController = function(req, res) {
 exports.getAllCategoriesController = function(req, res){
     var categories = new category();
 
-    categories.getCategories(async function(err, result){
-        //Get parent categories
-        var parentCategories = result;
-        //Now this function will call another async function and await to get the result
-        var catAndTheirSubCat = await getMainAndSubCat(parentCategories);   //execution awaiting until all parent and subcategories are fetched
-        console.log("Outside loop");
+    categories.getCategories(req,async function(err, result){
         res.json({
             status:200,
-            data: catAndTheirSubCat
+            data: result
         });
     });
     
@@ -153,7 +140,7 @@ exports.getProductDetailsController = function(req, res){
             });
         }
     });
-}
+} 
 
 exports.getOffers = function(req, res){
     var products = new product();

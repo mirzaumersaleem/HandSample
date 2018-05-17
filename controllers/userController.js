@@ -5,7 +5,7 @@ var crypto = require('crypto');
 exports.getRegisterController = function(req, res){
     res.render('signup', {});
 }
-
+ 
 exports.getUserAddressController = function(req, res){
     
     var user = new User();
