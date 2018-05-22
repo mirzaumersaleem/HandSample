@@ -75,37 +75,44 @@ exports.shoppingCartController = function(req, res){
 }
 
 exports.finalCheckoutController = function(req, res){
-    //var addressId = req.body.addressId;
-    var addressId = 2;
+    var addressId = req.body.addressId;
     var user = new User();    
     var order = new Order();
-    //var cart = req.session.cart;
-    var cart = new Cart(req.session.cart);
 
-    if(cart === null) {
-        res.json({
-            status: 500,
-            message: "Cannot proceed with empty cart"
-        })
+
+    console.log("executed 1");
+    if(req.session.cart == null) {
+        return res.json({
+                    status: 500,
+                    message: "Cannot proceed with empty cart"
+                });
+
     }
 
-    user.getUserAddressById(addressId, function(err, addressRow){
-        if(err)
-            throw err;
+    var cart = new Cart(req.session.cart);
 
-        order.addNewOrder(cart, req.user.id, addressRow[0].address, function(err){
-            if(err){
-                res.json({
-                    status: 500,
-                    message: err
-                })
-            } else {
-                res.json({
-                    status: 200,
-                    message: "order placed successfully"
-                })
-            }
-                
-        });
+    user.getUserAddressById(addressId, function(err, addressRow){
+        if(err){
+            res.json({
+                status: 500,
+                message: err
+            });
+        }
+        else{
+            order.addNewOrder(cart, req.user.id, addressRow[0].address, function(err){
+                if(err){
+                    res.json({
+                        status: 500,
+                        message: err
+                    })
+                } else {
+                    res.json({
+                        status: 200,
+                        message: "order placed successfully"
+                    })
+                }
+                    
+            });
+        }
     });
 }

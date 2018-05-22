@@ -5,7 +5,7 @@ var crypto = require('crypto');
 exports.getRegisterController = function(req, res){
     res.render('signup', {});
 }
-
+ 
 exports.getUserAddressController = function(req, res){
     
     var user = new User();
@@ -27,6 +27,8 @@ exports.getUserAddressController = function(req, res){
 
 exports.addUserAddressController = function(req, res){
     
+    
+
     var user = new User();
     
     var addressData = {
@@ -45,7 +47,7 @@ exports.addUserAddressController = function(req, res){
         } else {
             res.json({
                 status: 200,
-                message: result
+                message: "Address added successfully"
             });
         }
     })
