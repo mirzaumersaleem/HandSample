@@ -64,7 +64,10 @@ function getOffersWithImages(offers){
     This controller returns all the parent categories
  */
 exports.getCategoryController = function(req, res) {
-  
+    res.send({
+        status:200,
+        message: "Welcome to Raal"
+    });
 }
 
 /*
@@ -83,7 +86,6 @@ exports.getAllCategoriesController = function(req, res){
     });
     
 }
-
 /*
     This controller takes the sub category id of a category
     and return all the products that are in the sub category

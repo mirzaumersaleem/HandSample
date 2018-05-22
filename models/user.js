@@ -62,7 +62,6 @@ class user {
         var query = "INSERT into myraal_raal.users" +
             "(name,  mobile, phone_number, email, password,district,address,city,note,identity_number)" +
             "VALUES" + "(" + "\"" + userData.name + "\"" + "," + "\"" + userData.mobile + "\"" + "," + "\"" + userData.phone_number + "\"" + "," + "\"" + userData.email + "\"" + "," + "\"" + userData.password + "\"" + "," + "\"" + userData.district + "\"" + "," + "\"" + userData.address + "\"" + "," + "\"" + userData.city + "\"" + "," + "\"" + userData.note + "\"" + "," + userData.identity_number + ")";
-
         var findbyemail = this.findByEmail;
 
         mySql.getConnection(function (err, connection) {

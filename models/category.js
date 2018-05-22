@@ -29,6 +29,7 @@ class category{
         that does'nt have any parent id
     */
     getCategories(req,callback) {
+        console.log(req.body.city_id,"category_id",req.body.category_id)
         var query = ` select s.id as subcategory_id,
         s.name as subcategory_name_english,
         s.arabic_name as subcategory_name_arabic,
@@ -40,7 +41,7 @@ class category{
         from myraal_raal.subcategories s right join 
         myraal_raal.branches b on (b.subcategory_id=s.id)
         where b.city_id= ${req.body.city_id} and s.category_id=${req.body.category_id}`
-
+        console.log("query",query);
         mySql.getConnection(function(err, connection){
             if(err){
                 throw err;
@@ -50,10 +51,7 @@ class category{
                 callback(err, rows); //Passing results to callback function
             });
         })
-        
-    
     }
-
     /*
         This function will retrieve categories having a 
         parent id. These categories are known as sub categories

@@ -109,29 +109,28 @@ passport.use('local-signin', new localStrategy({
     usernameField: 'email',
     passwordField: 'password',
     passReqToCallback: true
-},
-    function (req, username, password, done) {
-        console.log("Inside passport Strategy",username);
-       var user = new User();
-        if (errorValues.length > 0) {
-            console.log("inside if");
-            return done(null, false, { message: [422, error] });
+}, 
+function(req, username, password, done){
+    console.log("Inside passport Strategy");
+
+    var user = new User();
+    user.findByEmail(username, function(err, result){
+        
+        if(err){
+            console.log(err);
+            return done(err);
+        } 
+        console.log("executed tille here");
+        if(result.length == 0){
+            console.log("No user found");
+            return done(null, false, {message: "No user found"});
         }
-        user.findByEmail(username, function (err, result) {
-            if (err) {
-                console.log("error aya findbyEmail sy"+err);
-                return done(err);
-            }
-            if (result[0].id === null) {
-                console.log("No user found");
-                return done(null, false, { message: "No user found" });
-            }
-            if (!user.validPassword(req.body.password, result[0].password)) {
-                console.log("Incorrect password entered");
-                return done(null, false, { message: "Incorrect Password" });
-            }
-            console.log("Every thing is correct in signin");
-            return done(null, result[0]);
-        });
-       
-    }));
+        if(!user.validPassword(password, result[0].password)){
+                console.log("password",password,"checking Password",result[0].password)
+            console.log("Incorrect password entered");
+            return done(null, false, {message: "Incorrect password"});
+        }
+        console.log("Every thing is correct in signin");
+            done(null, result[0]);
+    });
+}));
