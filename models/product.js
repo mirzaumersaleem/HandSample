@@ -37,13 +37,9 @@ class product{
         });
     }
 
-    getProductDetails(productId, callback) {
-
-        var query = "SELECT a.id, a.name, a.model, a.arabic_name, a.description, a.arabic_description, \
-	                        a.quantity, a.images, a.price_1, a.arabic_images, b.name as brand_name, \
-                            b.arabic_name as brand_arabic_name \
-                     FROM hiksaudi_js.gc_products a, hiksaudi_js.gc_brands b \
-                     WHERE a.brand = b.id AND a.id = " + productId;
+    getProductDetails(req,callback) {
+        console.log("req.query.city_id",req.query.city_id,"req.query.subcategory_id",req.query.subcategory_id);
+        var query =`select id from myraal_raal.branches where city_id=${req.query.city_id} and subcategory_id=${req.query.subcategory_id} `
         
         mySql.getConnection(function(err, connection){
             if(err){
@@ -55,9 +51,102 @@ class product{
                 callback(err, rows); //Passing results to callback function
             });
         });
+    }
+        getOfferData(product_id) {
+        return new Promise(function(resolve){
+          
+          console.log("id ",product_id)
+            var query = `select s.*,p.price, COALESCE(p.price - ((p.price/100) * s.discount)) AS discounted_price, p._token from myraal_raal.offers s inner join myraal_raal.products p on p.id = ${product_id}
+             where product_id =${product_id}`
+          
+            mySql.getConnection(function(err, connection){
+                if(err){
+                    throw err;
+                }
+                connection.query(query, function(err, rows){
+                    if(err){
+                        throw err;
+                    }
+                    else {
+                        connection.release();
+                        console.log("Promise going to be resolved");
+               
+                        resolve(rows);
+                    }
+                });
+            });
+        });
+    }
+    getSpecificProduct(result) {
+        return new Promise(function(resolve){
+            var branch_id = result[0].id
+            var query = `select * from myraal_raal.products where branch_id =${branch_id}`
+            mySql.getConnection(function(err, connection){
+                if(err){
+                    throw err;
+                }
+                connection.query(query, function(err, rows){
+                    if(err){
+                        throw err;
+                    }
+                    else {
+                        connection.release();
+                        console.log("Promise going to be resolved");
+               
+                        resolve(rows);
+                    }
+                });
+            });
+        });
 
     }
-  
+    getBranchInfo(id) {
+        return new Promise(function(resolve){
+            var ID = id
+            var query = `select * from myraal_raal.branches where id =${ID}`
+            mySql.getConnection(function(err, connection){
+                if(err){
+                    throw err;
+                }
+                connection.query(query, function(err, rows){
+                    if(err){
+                        throw err;
+                    }
+                    else {
+                        connection.release();
+                        console.log("Promise going to be resolved");
+               
+                        resolve(rows);
+                    }
+                });
+            });
+        });
+
+    }
+    getBranchReview(id) {
+        return new Promise(function(resolve){
+            var ID = id
+            var query = `select rating,comment from myraal_raal.comments where id =${ID}`
+            mySql.getConnection(function(err, connection){
+                if(err){
+                    throw err;
+                }
+                connection.query(query, function(err, rows){
+                    if(err){
+                        throw err;
+                    }
+                    else {
+                        connection.release();
+                        console.log("Promise going to be resolved");
+               
+                        resolve(rows);
+                    }
+                });
+            });
+        });
+
+    }
+
     getOfferImagePromise(offerId){
         return new Promise(function(resolve){
             var query = "SELECT products.images\

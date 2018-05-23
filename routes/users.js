@@ -6,7 +6,11 @@ var userController = require('../controllers/userController');
 var User = require('../models/user');
 
 var Product = require('../models/product');
-
+// var nexmo = new Nexmo({
+//     apiKey: '7509c640',
+//     apiSecret: '1DfIoQeZRcWpopSI',
+//   });
+  
 
 /* GET users listing. */
 router.get('/register', function (req, res) {
@@ -217,37 +221,24 @@ router.get('/verification', function(req, res){
     res.render('verification', {});
 });
 
-router.post('/verification', verificationMiddleWare, function(req, res, next){
-    console.log("Inside verification post");
-    passport.authenticate('local-signin', function(err, user, info){
-        console.log("Inside passport authenticate callback");
-        if (err) {
-            return res.json({
-                status: 500,
-                message: err
-            });
+router.post('/verify', (req, res) => {
+    // Checking to see if the code matches
+    let pin = req.body.pin;
+    let requestId = req.body.requestId;
+  
+    nexmo.verify.check({request_id: requestId, code: pin}, (err, result) => {
+      if(err) {
+        res.json({message: 'Server Error'});
+      } else {
+        console.log(result);
+        if(result && result.status == '0') {
+          res.json({message: 'Account verified! 🎉'});
+        } else {
+          res.json({message: result.error_text, requestId: requestId});
         }
-        if (!user) {
-            return res.json({
-                status: 500,
-                message: info.message
-            });
-        }
-
-        req.logIn(user, function(err){
-            if(err){
-                return res.json({
-                    status: 500,
-                    message: err
-                });
-            }
-            return res.json({
-                status:200,
-                message: "User successfully logged in"
-            })
-        });
-    })(req, res, next);
-});
+      }
+    });
+  });
 
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){

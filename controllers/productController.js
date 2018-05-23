@@ -69,7 +69,6 @@ exports.getCategoryController = function(req, res) {
         message: "Welcome to Raal"
     });
 }
-
 /*
     This controller takes the parent category id and
     return all the ssub categories that are in the parent
@@ -121,25 +120,81 @@ exports.getSubCatProductsController = function(req, res){
     });
 }
 
+async function getproduct(result) {
+    //Return a promise when all subcategories are fetched for parent categories
+    return new Promise(async function (resolve) {
+        var products = new product();
+        var productdata=[];      
+        var data = await products.getSpecificProduct(result);     
+        resolve(data); //Returning All offers
+    });
+}
+async function getOffer(data) {
+    //Return a promise when all subcategories are fetched for parent categories
+    return new Promise(async function (resolve) {
+        var products = new product();
+        var productdata=[];
+      //  productdata[0]=data;
+        for(var i=0;i<data.length;i++){
+            console.log(data[i].id);
+            productdata[i] = await products.getOfferData(data[i].id);
+        }  
+        resolve(productdata); //Returning All offers
+    });
+}
+async function getbranchInfo(result) {
+    //Return a promise when all subcategories are fetched for parent categories
+    return new Promise(async function (resolve) {
+        var products = new product();
+        var productdata=[];      
+        var data = await products.getBranchInfo(result);     
+        resolve(data); //Returning All offers
+    });
+}
+async function getbranchReview(result) {
+    //Return a promise when all subcategories are fetched for parent categories
+    return new Promise(async function (resolve) {
+        var products = new product();
+        var productdata=[];      
+        var data = await products.getBranchReview(result);     
+        resolve(data); //Returning All offers
+    });
+}
 /*
     This controller takes a single product id
     and returns all the details of that product
  */
 exports.getProductDetailsController = function(req, res){
     var products = new product();
-
-    console.log("Product id entered " + req.query.productId);
-    products.getProductDetails(req.query.productId, function(err, result){
+    console.log("req.query.city_id",req.query.city_id,"req.query.subcategory_id",req.query.subcategory_id);
+      
+    products.getProductDetails(req, async function(err, result){
+        console.log(err);
         if(err){
+            console.log(err);
             res.json({
                 status: 500,
-                message: err
+                message: "y masla hai "+err
             });
         } else{
-            res.json({
-                status: 200,
-                data: result
-            });
+            if(result.length!=0){
+                   var prod = await  getproduct(result); 
+                   var offer = await getOffer(prod);  
+                   var branchInfo =await getbranchInfo(result[0].id);
+                   var review =await getbranchReview(result[0].id);
+                   res.json({
+                    status: 200,
+                    BranchDetails:branchInfo,
+                    products: prod,
+                    offers:offer,
+                    Review:review
+                });               
+            }else{
+                res.json({
+                    status: 301,
+                    message: "This Branch Has No Products To Offer"
+                });    
+            }
         }
     });
 } 

@@ -19,12 +19,15 @@ router.post('/category', function(req, res){
         productsController.getAllCategoriesController(req, res);
     }
 });
-router.get('/product-details', function(req, res){
+
+router.get('/getAllProductInfo', function(req, res){
     console.log("Inside product details route");
     productsController.getProductDetailsController(req, res);
 });
+
 router.get('/offers', (req, res) => {
     console.log("Inside offers");
     productsController.getOffers(req, res);
 });
+
 module.exports = router;

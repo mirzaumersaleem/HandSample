@@ -24,6 +24,7 @@
     "microtime": "^2.1.7",
     "morgan": "^1.7.0",
     "mysql": "^2.15.0",
+    "nexmo": "^2.2.1",
     "nodemailer": "^4.6.3",
     "nodemon": "^1.17.3",
     "passport": "^0.4.0",
