@@ -64,9 +64,13 @@ function getOffersWithImages(offers){
     This controller returns all the parent categories
  */
 exports.getCategoryController = function(req, res) {
-    res.send({
-        status:200,
-        message: "Welcome to Raal"
+    var categories = new category();
+
+    categories.getMainCategories(req,async function(err, result){
+        res.json({
+            status:200,
+            data: result
+        });
     });
 }
 /*

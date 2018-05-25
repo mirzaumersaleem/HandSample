@@ -22,6 +22,21 @@ class category{
             })
         });
     }
+    getMainCategories(req,callback) {
+        console.log(req.body.city_id,"category_id",req.body.category_id)
+        var query = `select id, name , arabic_name from myraal_raal.categories
+        where active_status=1`;
+        console.log("query",query);
+        mySql.getConnection(function(err, connection){
+            if(err){
+                throw err;
+            }
+            connection.query(query, function(err, rows, fields){
+                connection.release()
+                callback(err, rows); //Passing results to callback function
+            });
+        })
+    }
     /*
         This Function will return categories
         that does'nt have any parent id
