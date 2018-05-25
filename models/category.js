@@ -44,15 +44,12 @@ class category{
     getCategories(req,callback) {
         console.log(req.body.city_id,"category_id",req.body.category_id)
         var query = ` select s.id as subcategory_id,
-        s.name as subcategory_name_english,
+        s.name as subcategory_name_english,b.city_id,
         s.arabic_name as subcategory_name_arabic,
-        s.logo as subcategory_logo,b.address,b.city_id,
-        b.phone_number,b.email,b.arabic_address as branch_address,
-        b.description as branch_description,
-        b.lat,b.lng,b.logo as branch_logo,b.photos as branch_photos,
-        b.sliders as slider_image
+        b.lat,b.lng,b.logo as branch_logo,t.name as Description
         from myraal_raal.subcategories s right join 
         myraal_raal.branches b on (b.subcategory_id=s.id)
+        right join myraal_raal.tags t on (s.tag_id=t.id)
         where b.city_id= ${req.body.city_id} and s.category_id=${req.body.category_id}`
         console.log("query",query);
         mySql.getConnection(function(err, connection){

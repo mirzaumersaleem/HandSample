@@ -82,10 +82,22 @@ exports.getAllCategoriesController = function(req, res){
     var categories = new category();
 
     categories.getCategories(req,async function(err, result){
-        res.json({
-            status:200,
-            data: result
-        });
+        if(result!=0){
+            for (var i=0; i<result.length;i++){
+                var temp=JSON.parse(result[i].branch_logo);
+                result[i].branch_logo=temp.small;
+            }
+            res.json({
+                status:200,
+                data: result
+            });
+        }else{
+            res.json({
+                status:200,
+                Message: "No Branch Avaliable near you"
+            });
+        }
+        
     });
     
 }
