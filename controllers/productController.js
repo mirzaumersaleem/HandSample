@@ -199,7 +199,13 @@ exports.getProductDetailsController = function(req, res){
                     var temp1= JSON.parse(prod[i].image)
                     prod[i].logo=temp1.small;
                 }
-                   var offer = await getOffer(prod);  
+                   var offer = await getOffer(prod); 
+                   for(var i=0;i<offer.length;i++){
+                    var temp = JSON.parse(offer[i].image);
+                   
+                    offer[i].image=temp1.small;
+                
+                } 
                    var branchInfo =await getbranchInfo(result[0].id);
                    var review =await getbranchReview(result[0].id);
                     for(var i=0;i<branchInfo.length;i++){
