@@ -71,7 +71,7 @@ class product{
                         connection.release();
                         console.log("Promise going to be resolved");
                
-                        resolve(rows);
+                        resolve(rows[0]);
                     }
                 });
             });

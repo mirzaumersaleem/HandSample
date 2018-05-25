@@ -153,7 +153,7 @@ async function getOffer(data) {
       //  productdata[0]=data;
         for(var i=0;i<data.length;i++){
             console.log(data[i].id);
-            productdata[i] = await products.getOfferData(data[i].id);
+            productdata[i]= await products.getOfferData(data[i].id);
         }  
         resolve(productdata); //Returning All offers
     });
@@ -195,9 +195,21 @@ exports.getProductDetailsController = function(req, res){
         } else{
             if(result.length!=0){
                    var prod = await  getproduct(result); 
+                   for(var i=0;i<prod.length;i++){
+                    var temp1= JSON.parse(prod[i].image)
+                    prod[i].logo=temp1.small;
+                }
                    var offer = await getOffer(prod);  
                    var branchInfo =await getbranchInfo(result[0].id);
                    var review =await getbranchReview(result[0].id);
+                    for(var i=0;i<branchInfo.length;i++){
+                        var temp = JSON.parse(branchInfo[i].sliders);
+                        var temp1= JSON.parse(branchInfo[i].logo)
+                      //  var temp3= JSON.parse(branchInfo[i].photos)
+                        branchInfo[i].sliders=temp;
+                        branchInfo[i].logo=temp1.small;
+                      //  branchInfo[i].photos=temp3.small;
+                    }
                    res.json({
                     status: 200,
                     BranchDetails:branchInfo,
