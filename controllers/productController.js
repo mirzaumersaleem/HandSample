@@ -203,7 +203,7 @@ exports.getProductDetailsController = function(req, res){
                    for(var i=0;i<offer.length;i++){
                     var temp = JSON.parse(offer[i].image);
                    
-                    offer[i].image=temp1.small;
+                    offer[i].logo=temp1.small;
                 
                 } 
                    var branchInfo =await getbranchInfo(result[0].id);
