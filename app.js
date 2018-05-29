@@ -22,6 +22,8 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var products = require('./routes/products');
 var cart = require('./routes/cart');
+var bank = require('./routes/bank');
+var banks = require('./routes/banks');
 
 var app = express();
 
@@ -68,6 +70,8 @@ app.use('/', routes);
 app.use('/products', products);
 app.use('/users', users);
 app.use('/cart', cart);
+app.use('/bank', bank);
+app.use('/banks', banks);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -180,5 +184,5 @@ function onListening() {
 
 
 
-var io = socket(server);
-updateProductScoket.updateProductRealTime(io);
+//var io = socket(server);
+//updateProductScoket.updateProductRealTime(io);
