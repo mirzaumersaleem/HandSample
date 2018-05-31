@@ -482,7 +482,7 @@ router.post('/addMoneyVerified', (req, res) => {
                         return Promise.using(mysql.getSqlConn(), conn => {
                             accountObj = {
                                 customer_id: req.body.customer_id,
-                                ip_address: req.body.ip_address,
+                                balance: req.body.amount,
                                 status: 1,
                                 updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
                                 created_at: moment().format('YYYY-MM-DD HH:mm:ss')
