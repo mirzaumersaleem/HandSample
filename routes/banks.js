@@ -18,7 +18,7 @@ router.post('/test', (req, res) => {
 });
 
 //Searching friend from List of users on the basis of name
-router.post('/addFriendSearch', (req, res) => {
+router.post('/addFriendSearch', isLoggedIn, (req, res) => {
     req.assert("name", "Enter a name to search").notEmpty();
     //checking validation errors  
     var error = req.validationErrors(true);
@@ -39,7 +39,7 @@ router.post('/addFriendSearch', (req, res) => {
 });
 
 //adding friends from the list received from searching friend  
-router.post('/addFriend', (req, res) => {
+router.post('/addFriend', isLoggedIn, (req, res) => {
     req.checkBody('friend_id').notEmpty();
    //checking validation errors  
     var error = req.validationErrors(true);
@@ -61,7 +61,7 @@ router.post('/addFriend', (req, res) => {
 
 //not appeared in provided screens but this should be added
 //a menu having all the accept money requests
-router.post('/acceptMoneyMenu', (req, res) => {
+router.post('/acceptMoneyMenu', isLoggedIn, (req, res) => {
     customerController.acceptMoneyMenu(req, res);
 });
 
@@ -87,7 +87,7 @@ router.post('/acceptMoneyPage', (req, res) => {
 });
 
 //when user clicks on accept money in accept money page
-router.post('/acceptMoney', (req, res) => {
+router.post('/acceptMoney', isLoggedIn, (req, res) => {
     req.checkBody('id').notEmpty();
     req.checkBody('amount').notEmpty();
     req.checkBody('ip_address').notEmpty();
@@ -113,7 +113,7 @@ router.post('/acceptMoney', (req, res) => {
 
 
 //when user choses to reject the money...
-router.post('/rejectMoney', (req, res) => {
+router.post('/rejectMoney', isLoggedIn, (req, res) => {
     req.checkBody('id').notEmpty();
     req.checkBody('amount').notEmpty();
     req.checkBody('ip_address').notEmpty();
@@ -137,7 +137,7 @@ router.post('/rejectMoney', (req, res) => {
 });
 
 
-router.post('/addMoney', (req, res) => {
+router.post('/addMoney', isLoggedIn, (req, res) => {
     req.checkBody('amount');
 
 
@@ -159,7 +159,7 @@ router.post('/addMoney', (req, res) => {
 });
 
 
-router.post('/addMoneyVerified', (req, res) => {
+router.post('/addMoneyVerified', isLoggedIn, (req, res) => {
     req.checkBody('amount');
     req.checkBody('ip_address');
     req.body.description = "Payment transfered to the account VIA PayTab";
@@ -180,7 +180,7 @@ router.post('/addMoneyVerified', (req, res) => {
 });
 
 
-router.post('/verifyPinAddMoney', (req, res) => {
+router.post('/verifyPinAddMoney', isLoggedIn, (req, res) => {
     req.checkBody('pin');
     var error = req.validationErrors(true);
     var errorValues = Object.keys(error);
@@ -199,7 +199,7 @@ router.post('/verifyPinAddMoney', (req, res) => {
 });
 
 
-router.post('/payTransaction', (req, res) => {
+router.post('/payTransaction', isLoggedIn, (req, res) => {
     req.checkBody('amount');
     req.checkBody('ip_address');
     req.checkBody('account_number');
@@ -222,7 +222,7 @@ router.post('/payTransaction', (req, res) => {
 });
 
 
-router.post('/sendMoney', (req, res) => {
+router.post('/sendMoney', isLoggedIn, (req, res) => {
     req.checkBody('amount');
     req.checkBody('friend_id');
     req.checkBody('description');
@@ -245,7 +245,7 @@ router.post('/sendMoney', (req, res) => {
 });
 
 
-router.post('/sendMoneyPage', (req, res) => {
+router.post('/sendMoneyPage', isLoggedIn, (req, res) => {
 
         console.log("sendMoneyPage controller executed");
         customerController.sendMoneyPage(req, res);
@@ -256,7 +256,7 @@ router.post('/sendMoneyPage', (req, res) => {
 
 
 
-router.post('/sendGift', (req, res) => {
+router.post('/sendGift', isLoggedIn, (req, res) => {
     req.checkBody('amount');
     req.checkBody('friend_id');
     req.checkBody('description');
@@ -279,7 +279,7 @@ router.post('/sendGift', (req, res) => {
 });
 
 
-router.post('/sendGiftPage', (req, res) => {
+router.post('/sendGiftPage', isLoggedIn, (req, res) => {
 
         console.log("sendGiftPage controller executed");
         customerController.sendMoneyPage(req, res);
@@ -288,7 +288,7 @@ router.post('/sendGiftPage', (req, res) => {
 });
 
 
-router.post('/shareMoney', (req, res) => {
+router.post('/shareMoney', isLoggedIn, (req, res) => {
     req.checkBody('amount');
     req.checkBody('friend_id');
     req.checkBody('ip_address');
@@ -311,7 +311,7 @@ router.post('/shareMoney', (req, res) => {
 });
 
 
-router.post('/shareMoneyPage', (req, res) => {
+router.post('/shareMoneyPage', isLoggedIn, (req, res) => {
 
         console.log("sendGiftPage controller executed");
         customerController.shareMoneyPage(req, res);
@@ -320,6 +320,17 @@ router.post('/shareMoneyPage', (req, res) => {
 
 
 
+function isLoggedIn(req, res, next){
+    if(req.isAuthenticated()){
+        next();
+    }
+    else{
+        res.json({
+            status: 200,
+            message: "User must be logged in"
+        });
+    }
+}
 
 
 
