@@ -326,7 +326,7 @@ function isLoggedIn(req, res, next){
     }
     else{
         res.json({
-            status: 200,
+            status: 360,
             message: "User must be logged in"
         });
     }
