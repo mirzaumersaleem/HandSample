@@ -407,7 +407,7 @@ updateBalanceReq(req, balanceUpObj,sta){
 }
 
 
-updateAccount(req, userObj, balanceObj){
+updateAccounts(req, userObj, balanceObj){
     return new Promise(function(resolve){
     var query = `insert accounts set ?`
     let accountObj = {};
@@ -428,6 +428,7 @@ updateAccount(req, userObj, balanceObj){
             created_at: moment().format('YYYY-MM-DD HH:mm:ss')
         }
         
+        console.log("qxxxxx",accountObj);
         connection.query(query,accountObj, function(err, results){
             if(err){
                 throw err;
