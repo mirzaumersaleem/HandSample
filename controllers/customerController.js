@@ -351,7 +351,7 @@ exports.addMoneyVerified = function (req, res){
                 //updating "update_balance_requests" table
                 var balanceReqObj = await customers.updateBalanceReq(req, balanceUpObj,sta);
                 //updating "accounts" table
-                var accountUpObj = await customers.updateAccount(req, userObj[0].id, balanceObj);
+                var accountUpObj = await customers.updateAccounts(req, userObj[0].id, balanceObj);
                 //updating "balances" table
                 var updatedObj = await customers.updateBalanceSet(req, userObj[0].id, balanceObj);
 
