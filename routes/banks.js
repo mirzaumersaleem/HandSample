@@ -6,13 +6,17 @@ var router = express.Router();
 var bankController = require('../controllers/bankController'); 
 var customerController = require('../controllers/customerController'); 
 
+var encry = require("../models/encryption");
+
+
 router.post('/test', (req, res) => {
 
         console.log("test controller executed");
-        bankController.getAllCustomers(req, res);
+        // bankController.getAllCustomers(req, res);
+        encry.encrypt("20000");
         
-        //console.log("test email ",req.user.email);
-
+        console.log("test email ", encry.encrypt("20000"));
+        res.json({message : "yo"});
 // var iid = req.session.passport.user;
 
 });
@@ -68,6 +72,7 @@ router.post('/acceptMoneyMenu', isLoggedIn, (req, res) => {
 //a page containing data related to unique acceptMoney Request that is to be fetched from acceptMoneyMenu
 router.post('/acceptMoneyPage', (req, res) => {
     req.checkBody('id').notEmpty(); // from acceptMoneyMenu
+    req.checkBody('name').notEmpty(); // from acceptMoneyMenu
     //checking validation errors  
      var error = req.validationErrors(true);
      var errorValues = Object.keys(error);
