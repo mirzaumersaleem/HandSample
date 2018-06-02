@@ -194,8 +194,9 @@ class customer{
     acceptMoneyMenu(req, userObj){
         return new Promise(function(resolve){
 
-            var query = `select * from receives where receiver_id = ${userObj[0].id} && status = 0`;
-        
+            // var query = `select * from receives where receiver_id = ${userObj[0].id} && status = 0`;
+            var query = `select receives.id as id, customers.name as sender_name, receives.balance as amount, receives.sender_id as sender_id from receives inner join customers ON receives.sender_id = customers.id && receives.receiver_id = ${userObj[0].id} && receives.status = 0`;
+       
             mySql.getConnection(function(err, connection){
                 if(err){
                     throw err;
@@ -229,6 +230,7 @@ class customer{
                 }
                 else{
                     connection.release();
+                    results[0].name = req.body.name;
                     //console.log(results);
                     callback(results);
                 }
@@ -1051,6 +1053,16 @@ getFriendListDetailed(userObj){
                 }
             });
         });
+});
+
+}
+
+
+
+encryptIt(userObj){
+    return new Promise(function(resolve){
+    
+
 });
 
 }
