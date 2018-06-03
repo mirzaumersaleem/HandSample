@@ -491,8 +491,10 @@ exports.sendMoneyPage = function(req, res){
                 
                 //fetching logged in user's instance by email
                 var userObj =await customers.getCustomerByEmail(req.user.email);
+                console.log("this is obj -> ",userObj[0]);
                 var friendsObj = await customers.getFriendList(userObj[0].id);
-                if(friendsObj[0].pin != 0){
+
+                if(friendsObj.length != 0){
                     res.json({ status: 200, message: friendsObj });
                 }
                 else{
@@ -529,7 +531,7 @@ exports.shareMoneyPage = function(req, res){
                 //fetching logged in user's instance by email
                 var userObj =await customers.getCustomerByEmail(req.user.email);
                 var friendsObj = await customers.getFriendListDetailed(userObj[0].id);
-                if(friendsObj[0].pin != 0){
+                if(friendsObj.length != 0){
                     res.json({ status: 200, message: friendsObj });
                 }
                 else{

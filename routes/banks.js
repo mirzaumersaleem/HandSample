@@ -324,6 +324,28 @@ router.post('/shareMoneyPage', isLoggedIn, (req, res) => {
 });
 
 
+router.post('/withdrawMoney', isLoggedIn, (req, res) => {
+    req.checkBody('amount');
+    req.checkBody('description');
+    req.checkBody('ip_address');
+    req.checkBody('pin');
+    var error = req.validationErrors(true);
+    var errorValues = Object.keys(error);
+    if(errorValues.length > 0){
+        console.log("inside if"); 
+        return res.json({
+            status: 422,
+            message: "Validation errors",
+            errors: error
+        });
+    }else{
+        console.log("withdrawMoney controller executed");
+        customerController.withdrawMoney(req, res);
+    }
+
+});
+
+
 
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){

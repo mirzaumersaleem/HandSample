@@ -1020,7 +1020,7 @@ getFriendList(userObj){
                 }
                 else{
                     connection.release();
-                    //console.log(results);
+                    // console.log(results);
 
                     resolve(results);
                 }
