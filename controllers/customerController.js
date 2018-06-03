@@ -732,3 +732,59 @@ exports.shareMoney = function (req, res){
 
 }
 
+
+exports.withDrawMoney = function (req, res){
+    var customers = new customer();
+    console.log("in withDrawMoney Controller");
+    
+    customers.getEmail(req,async function(result, err){
+        //console.log("type",typeof(err))
+       // console.log(err);
+        if(err){
+            //console.log(err);
+            res.json({
+                status: 500,
+                message: "error in withDrawMoney: "+err
+            });
+        } else{
+            var sta = 0;
+           // console.log(result);
+            if(result.length!=0){
+                
+                //fetching logged in user's instance by email
+                var userObj =await customers.getCustomerByEmail(req.user.email);
+                var pinObj =await customers.getPinVerification(userObj[0].id);
+                if(pinObj[0].pin == req.body.pin){
+                //fetching balance instance from DB of user
+                var balanceObj = await customers.getCustomerBalance(req,userObj[0].id);
+                if(balanceObj[0].balance - req.body.amount < 0 || !balanceObj[0].balance){
+                    
+                    res.json({ status: 200, message: 'Withdrawal Request Failed, insufficient balance' });
+                }else{
+                //updating "update_balances" table
+                var balanceUpObj = await customers.withdrawUpdateUBalance(req, userObj[0].id, balanceObj);
+                //updating "update_balance_requests" table
+                var balanceReqObj = await customers.updateBalanceReq(req, balanceUpObj,sta);
+                //updating "accounts" table
+                var accountUpObj = await customers.updateAccount(req, userObj[0].id, balanceObj, 3);
+                //updating "balances" table
+                var updatedObj = await customers.transUpdateBalanceSet(req, userObj[0].id, balanceObj);
+                //fetched money receive request instance from DB
+                //var reveivedObj = await customers.getObjById(req, userObj[0].id);
+                
+                    res.json({ status: 200, message: 'Withdrawal request send Successfully, you will be contacted shortly for withdrawal' });
+                }
+            }
+                else{
+                    res.json({ status: 500, message: 'Please enter valid pin..!'});
+                }  
+            }else{
+                res.json({
+                    status: 301,
+                    message: "No request found"
+                });    
+            }
+        }
+    });
+
+}

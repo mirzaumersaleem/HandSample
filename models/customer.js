@@ -1003,6 +1003,49 @@ shareUpdateUBalance(req, userObj, balanceObj){
 
 }
 
+withdrawUpdateUBalance(req, userObj, balanceObj){
+    return new Promise(function(resolve){
+    var query = `insert update_balances set ?`
+    let upBalance = {};
+    //var userObj = this.getCustomerByEmail(req.user.email);
+    var customer_id = userObj;
+    mySql.getConnection(function(err, connection){
+        if(err){
+            throw err;
+        }
+        var amount_new = parseInt(req.body.amount, 10);
+        var amount_old = parseInt(balanceObj[0].balance, 10);
+        var new_balance = amount_old - amount_new;
+        var new_balances = JSON.stringify(new_balance);
+        upBalance = {
+            amount: req.body.amount,
+            customer_id: customer_id,
+            previous_balance: balanceObj[0].balance,
+            description: req.body.description,
+            ip_address: req.body.ip_address,
+            type: 3,
+            status: 0,
+            remaining_balance: new_balances,
+            updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+            created_at: moment().format('YYYY-MM-DD HH:mm:ss')
+        }
+        
+        connection.query(query,upBalance, function(err, results){
+            if(err){
+                throw err;
+            }
+            else{
+                //console.log("---------------------------------Upblance result OBJ -> ", results);
+                connection.release();
+                //console.log(results);
+                resolve(results);
+            }
+        });
+    });
+});
+
+}
+
 
 getFriendList(userObj){
     return new Promise(function(resolve){
