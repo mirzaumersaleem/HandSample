@@ -1,6 +1,7 @@
 var passport = require('passport');
 var User = require('../models/user');
 var moment = require('moment');
+var encrypt = require("../models/encryption");
 
 //import mail class to send verification code using mail
 var Mail = require('../models/mail');
@@ -108,7 +109,7 @@ passport.use('local-register', new localStrategy({
                     //Creating account table at the time of registration 
                     var accountTable = {
                         customer_id: bankUsers.insertId,
-                        balance: 0,
+                        balance: encrypt.encrypt(0),
                         account_no: bankUsers.insertId*543123,
                         status: 1,
                         updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),

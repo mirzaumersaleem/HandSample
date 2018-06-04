@@ -6,6 +6,7 @@ const ENCRYPTION_KEY = "SoftjeddahWN27bha45c65jeraalbank";
 const IV_LENGTH = 16;
 
 function encrypt(text) {
+    text = text.toString();
  let iv = crypto.randomBytes(IV_LENGTH);
  let cipher = crypto.createCipheriv('aes-256-cbc', new Buffer(ENCRYPTION_KEY), iv);
  let encrypted = cipher.update(text);
@@ -21,8 +22,9 @@ function decrypt(text) {
  let decrypted = decipher.update(encryptedText);
 
  decrypted = Buffer.concat([decrypted, decipher.final()]);
-
- return decrypted.toString();
+ decrypted = decrypted.toString();
+ decrypted = parseInt(decrypted, 10);
+ return decrypted;
 }
 
 module.exports = { decrypt, encrypt };

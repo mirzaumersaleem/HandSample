@@ -1,6 +1,7 @@
 var bank = require("../models/bank");
 var user = require("../models/user");
 var customer = require("../models/customer");
+var encrypt = require("../models/encryption");
 
 exports.friendSearch = function (req, res){
     var customers = new customer();
@@ -21,13 +22,7 @@ exports.friendSearch = function (req, res){
                 var userObj =await customers.getCustomerByEmail(req.user.email);
                 //fetching balance instance from DB of user
                 var friendsList = await customers.friendSearch(req,userObj[0].id);
-                //updating "update_balances" table
                 
-                //    var prod = await  getproduct(result); 
-                //    var offer = await getOffer(prod);  
-                //    var branchInfo =await getbranchInfo(result[0].id);
-                //    var review =await getbranchReview(result[0].id);
-             // var customer = await banks.getCustomer(result[0].email);
                    res.json({
                     status: 200,
                     Friends: friendsList
@@ -59,11 +54,6 @@ exports.addFriend = function (req, res){
         } else{
            // console.log(result);
                 if(result.length!=0){
-                    
-                    //    var prod = await  getproduct(result); 
-                    //    var offer = await getOffer(prod);  
-                    //    var branchInfo =await getbranchInfo(result[0].id);
-                    //    var review =await getbranchReview(result[0].id);
                     var userObj =await customers.getCustomerByEmail(result);
                     if(userObj[0].id == req.body.friend_id){
                         res.json({
@@ -156,7 +146,7 @@ exports.acceptMoney = function (req, res){
                 //updating "update_balance_requests" table
                 var balanceReqObj = await customers.updateBalanceReq(req, balanceUpObj,sta);
                 //updating "accounts" table
-                var accountUpObj = await customers.updateAccount(req, userObj[0].id, balanceObj);
+                var accountUpObj = await customers.updateAccounts(req, userObj[0].id, balanceObj);
                 //updating "balances" table
                 var updatedObj = await customers.updateBalanceSet(req, userObj[0].id, balanceObj);
                 //fetched money receive request instance from DB
@@ -221,7 +211,7 @@ exports.rejectMoney = function (req, res){
                 //updating "update_balance_requests" table
                 var balanceReqObj = await customers.updateBalanceReq(req, balanceUpObj,sta);
                 //updating "accounts" table
-                var accountUpObj = await customers.updateAccount(req, userObj[0].sender_id, balanceObj);
+                var accountUpObj = await customers.updateAccounts(req, userObj[0].sender_id, balanceObj);
                 //updating "balances" table
                 var updatedObj = await customers.updateBalanceSet(req, userObj[0].sender_id, balanceObj);
                 //fetched money receive request instance from DB
@@ -391,6 +381,7 @@ exports.verifyPinAddMoney = function (req, res){
                 //fetching logged in user's instance by email
                 var userObj =await customers.getCustomerByEmail(req.user.email);
                 var pinObj = await customers.verifyPinAddMoney(req,userObj[0].id);
+                pinObj[0].pin = encrypt.decrypt(pinObj[0].pin);
                 if(pinObj[0].pin == req.body.pin){
                     res.json({ status: 200, message: 'Verified' });
                 }
@@ -786,5 +777,63 @@ exports.withDrawMoney = function (req, res){
             }
         }
     });
+
+}
+
+exports.testController = function (req, res){
+    var customers = new customer();
+    console.log("in testController Controller");
+    
+    // var userObj = await customers.encryptIt();
+    customers.getEmailer(req,async function(result, err){
+        //console.log("type",typeof(err))
+       // console.log(err);
+        if(err){
+            //console.log(err);
+            res.json({
+                status: 500,
+                message: "error in testController: "+err
+            });
+        } else{
+            
+            // console.log(result);
+            //console.log(result);
+            var userObj = await customers.encryptIt(req.body.text);
+            res.json({ 
+                status: 200, 
+                messages: userObj});
+          
+        }
+    });
+
+
+}
+
+exports.testController2 = function (req, res){
+    var customers = new customer();
+    console.log("in testController2 Controller");
+    
+    // var userObj = await customers.encryptIt();
+    customers.getEmailer(req,async function(result, err){
+        //console.log("type",typeof(err))
+       // console.log(err);
+        if(err){
+            //console.log(err);
+            res.json({
+                status: 500,
+                message: "error in testController: "+err
+            });
+        } else{
+            
+            // console.log(result);
+            //console.log(result);
+            var userObj = await customers.decryptIt(req.body.text);
+            res.json({ 
+                status: 200, 
+                messages: userObj});
+          
+        }
+    });
+
 
 }
