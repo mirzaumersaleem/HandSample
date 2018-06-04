@@ -342,13 +342,8 @@ router.post('/withdrawMoney', isLoggedIn, (req, res) => {
 });
 
 
-router.post('/loginCheck', isLoggedIn, (req, res) => {
+router.post('/loginCheck', isLoggedInCheck, (req, res) => {
     
-    return res.json({
-                status: 422,
-                message: "Validation errors",
-                errors: error
-            });
 });
 
 
@@ -356,6 +351,21 @@ router.post('/loginCheck', isLoggedIn, (req, res) => {
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){
         next();
+    }
+    else{
+        res.json({
+            status: 360,
+            message: "User must be logged in"
+        });
+    }
+}
+
+function isLoggedInCheck(req, res, next){
+    if(req.isAuthenticated()){
+        res.json({
+            status: 200,
+            message: "User logged in"
+        });
     }
     else{
         res.json({
