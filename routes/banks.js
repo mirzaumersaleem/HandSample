@@ -143,23 +143,19 @@ router.post('/rejectMoney', isLoggedIn, (req, res) => {
 
 
 router.post('/addMoney', isLoggedIn, (req, res) => {
-    req.checkBody('amount').notEmpty();
 
 
-    
-    var error = req.validationErrors(true);
-    var errorValues = Object.keys(error);
-    if(errorValues.length > 0){
-        console.log("inside if"); 
-        return res.json({
-            status: 422,
-            message: "Validation errors",
-            errors: error
-        });
-    }else{
+    // if(errorValues.length > 0){
+    //     console.log("inside if"); 
+    //     return res.json({
+    //         status: 422,
+    //         message: "Validation errors",
+    //         errors: error
+    //     });
+    // }else{
         console.log("addMoney controller executed");
         customerController.addMoney(req, res);
-    }
+    // }
 
 });
 
@@ -346,10 +342,30 @@ router.post('/withdrawMoney', isLoggedIn, (req, res) => {
 });
 
 
+router.post('/loginCheck', isLoggedInCheck, (req, res) => {
+    
+});
+
+
 
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){
         next();
+    }
+    else{
+        res.json({
+            status: 360,
+            message: "User must be logged in"
+        });
+    }
+}
+
+function isLoggedInCheck(req, res, next){
+    if(req.isAuthenticated()){
+        res.json({
+            status: 200,
+            message: "User logged in"
+        });
     }
     else{
         res.json({

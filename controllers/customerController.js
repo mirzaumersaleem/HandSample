@@ -434,7 +434,7 @@ exports.payTransaction = function (req, res){
                 //fetching balance instance from DB of user
                 // console.log("pinObj ====" , pinObj[0].pin);
                 var balanceObj = await customers.getCustomerBalance(req,userObj[0].id);
-                if(balanceObj[0].balance - req.body.amount < 0){
+                if(balanceObj[0].balance - req.body.amount < 0 || !balanceObj[0].balance){
                     
                     res.json({ status: 200, message: 'Transaction Failed, insufficient balance' });
                 }else{
@@ -574,7 +574,7 @@ exports.sendMoney = function (req, res){
                 if(pinObj[0].pin == req.body.pin){
                 //fetching balance instance from DB of user
                 var balanceObj = await customers.getCustomerBalance(req,userObj[0].id);
-                if(balanceObj[0].balance - req.body.amount < 0){
+                if(balanceObj[0].balance - req.body.amount < 0 || !balanceObj[0].balance){
                     
                     res.json({ status: 200, message: 'Transaction Failed, insufficient balance' });
                 }else{
@@ -635,7 +635,7 @@ exports.sendGift = function (req, res){
                 if(pinObj[0].pin == req.body.pin){
                 //fetching balance instance from DB of user
                 var balanceObj = await customers.getCustomerBalance(req,userObj[0].id);
-                if(balanceObj[0].balance - req.body.amount < 0){
+                if(balanceObj[0].balance - req.body.amount < 0 || !balanceObj[0].balance){
                     
                     res.json({ status: 200, message: 'Transaction Failed, insufficient balance' });
                 }else{
@@ -696,7 +696,7 @@ exports.shareMoney = function (req, res){
                 if(pinObj[0].pin == req.body.pin){
                 //fetching balance instance from DB of user
                 var balanceObj = await customers.getCustomerBalance(req,userObj[0].id);
-                if(balanceObj[0].balance - req.body.amount < 0){
+                if(balanceObj[0].balance - req.body.amount < 0 || !balanceObj[0].balance){
                     
                     res.json({ status: 200, message: 'Transaction Failed, insufficient balance' });
                 }else{
