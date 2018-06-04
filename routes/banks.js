@@ -143,23 +143,19 @@ router.post('/rejectMoney', isLoggedIn, (req, res) => {
 
 
 router.post('/addMoney', isLoggedIn, (req, res) => {
-    req.checkBody('amount').notEmpty();
 
 
-    
-    var error = req.validationErrors(true);
-    var errorValues = Object.keys(error);
-    if(errorValues.length > 0){
-        console.log("inside if"); 
-        return res.json({
-            status: 422,
-            message: "Validation errors",
-            errors: error
-        });
-    }else{
+    // if(errorValues.length > 0){
+    //     console.log("inside if"); 
+    //     return res.json({
+    //         status: 422,
+    //         message: "Validation errors",
+    //         errors: error
+    //     });
+    // }else{
         console.log("addMoney controller executed");
         customerController.addMoney(req, res);
-    }
+    // }
 
 });
 
@@ -343,6 +339,16 @@ router.post('/withdrawMoney', isLoggedIn, (req, res) => {
         customerController.withDrawMoney(req, res);
     }
 
+});
+
+
+router.post('/loginCheck', isLoggedIn, (req, res) => {
+    
+    return res.json({
+                status: 422,
+                message: "Validation errors",
+                errors: error
+            });
 });
 
 
