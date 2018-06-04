@@ -143,7 +143,7 @@ router.post('/rejectMoney', isLoggedIn, (req, res) => {
 
 
 router.post('/addMoney', isLoggedIn, (req, res) => {
-    req.checkBody('amount');
+    req.checkBody('amount').notEmpty();
 
 
     
@@ -165,8 +165,8 @@ router.post('/addMoney', isLoggedIn, (req, res) => {
 
 
 router.post('/addMoneyVerified', isLoggedIn, (req, res) => {
-    req.checkBody('amount');
-    req.checkBody('ip_address');
+    req.checkBody('amount').notEmpty();
+    req.checkBody('ip_address').notEmpty();
     req.body.description = "Payment transfered to the account VIA PayTab";
     var error = req.validationErrors(true);
     var errorValues = Object.keys(error);
@@ -186,7 +186,7 @@ router.post('/addMoneyVerified', isLoggedIn, (req, res) => {
 
 
 router.post('/verifyPinAddMoney', isLoggedIn, (req, res) => {
-    req.checkBody('pin');
+    req.checkBody('pin').notEmpty();
     var error = req.validationErrors(true);
     var errorValues = Object.keys(error);
     if(errorValues.length > 0){
@@ -205,11 +205,11 @@ router.post('/verifyPinAddMoney', isLoggedIn, (req, res) => {
 
 
 router.post('/payTransaction', isLoggedIn, (req, res) => {
-    req.checkBody('amount');
-    req.checkBody('ip_address');
-    req.checkBody('account_number');
-    req.checkBody('description');
-    req.checkBody('pin');
+    req.checkBody('amount').notEmpty();
+    req.checkBody('ip_address').notEmpty();
+    req.checkBody('account_number').notEmpty();
+    req.checkBody('description').notEmpty();
+    req.checkBody('pin').notEmpty();
     var error = req.validationErrors(true);
     var errorValues = Object.keys(error);
     if(errorValues.length > 0){
@@ -228,11 +228,11 @@ router.post('/payTransaction', isLoggedIn, (req, res) => {
 
 
 router.post('/sendMoney', isLoggedIn, (req, res) => {
-    req.checkBody('amount');
-    req.checkBody('friend_id');
-    req.checkBody('description');
-    req.checkBody('ip_address');
-    req.checkBody('pin');
+    req.checkBody('amount').notEmpty();
+    req.checkBody('friend_id').notEmpty();
+    req.checkBody('description').notEmpty();
+    req.checkBody('ip_address').notEmpty();
+    req.checkBody('pin').notEmpty();
     var error = req.validationErrors(true);
     var errorValues = Object.keys(error);
     if(errorValues.length > 0){
@@ -262,11 +262,11 @@ router.post('/sendMoneyPage', isLoggedIn, (req, res) => {
 
 
 router.post('/sendGift', isLoggedIn, (req, res) => {
-    req.checkBody('amount');
-    req.checkBody('friend_id');
-    req.checkBody('description');
-    req.checkBody('ip_address');
-    req.checkBody('pin');
+    req.checkBody('amount').notEmpty();
+    req.checkBody('friend_id').notEmpty();
+    req.checkBody('description').notEmpty();
+    req.checkBody('ip_address').notEmpty();
+    req.checkBody('pin').notEmpty();
     var error = req.validationErrors(true);
     var errorValues = Object.keys(error);
     if(errorValues.length > 0){
@@ -294,10 +294,10 @@ router.post('/sendGiftPage', isLoggedIn, (req, res) => {
 
 
 router.post('/shareMoney', isLoggedIn, (req, res) => {
-    req.checkBody('amount');
-    req.checkBody('friend_id');
-    req.checkBody('ip_address');
-    req.checkBody('pin');
+    req.checkBody('amount').notEmpty();
+    req.checkBody('friend_id').notEmpty();
+    req.checkBody('ip_address').notEmpty();
+    req.checkBody('pin').notEmpty();
     req.body.description = "";
     var error = req.validationErrors(true);
     var errorValues = Object.keys(error);
@@ -321,6 +321,28 @@ router.post('/shareMoneyPage', isLoggedIn, (req, res) => {
         console.log("sendGiftPage controller executed");
         customerController.shareMoneyPage(req, res);
         
+});
+
+
+router.post('/withdrawMoney', isLoggedIn, (req, res) => {
+    req.checkBody('amount').notEmpty();
+    req.checkBody('description').notEmpty();
+    req.checkBody('ip_address').notEmpty();
+    req.checkBody('pin').notEmpty();
+    var error = req.validationErrors(true);
+    var errorValues = Object.keys(error);
+    if(errorValues.length > 0){
+        console.log("inside if"); 
+        return res.json({
+            status: 422,
+            message: "Validation errors",
+            errors: error
+        });
+    }else{
+        console.log("withdrawMoney controller executed");
+        customerController.withDrawMoney(req, res);
+    }
+
 });
 
 
