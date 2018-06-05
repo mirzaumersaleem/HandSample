@@ -11,12 +11,15 @@ var encry = require("../models/encryption");
 
 router.post('/test', (req, res) => {
 
+    req.checkBody('text').notEmpty();
         console.log("test controller executed");
-        // bankController.getAllCustomers(req, res);
-        encry.encrypt("20000");
+        customerController.testController(req, res);
+        // var ac = encry.encrypt("20000");
         
-        console.log("test email ", encry.encrypt("20000"));
-        res.json({message : "yo"});
+        // console.log("test email ", ac);
+        // var dc = encry.decrypt(ac);
+        // console.log("test email ", dc);
+        // res.json({message : "yo"});
 // var iid = req.session.passport.user;
 
 });

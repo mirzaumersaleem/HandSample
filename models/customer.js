@@ -1,5 +1,6 @@
 var mySql = require('../config/bank_db');
 var moment = require('moment');
+var encrypt = require("../models/encryption");
 
 class customer{
     constructor(){
@@ -108,6 +109,9 @@ class customer{
         callback(req.user.email);
     }
 
+    getEmailer(req,callback){
+        callback(req);
+    }
     getPinVerification(id){
         return new Promise(function(resolve){
             var query = `select secret_password as pin from customers where id = ${id}`;
@@ -152,6 +156,17 @@ class customer{
                 }
             });
         });
+    }
+
+    test1(text,callback){
+        
+        var userObj = this.encryptIt(text);
+        callback(userObj);
+
+}
+
+    test2(text,callback){
+        callback(this.decryptIt(text));
     }
 
 
@@ -207,7 +222,12 @@ class customer{
                     }
                     else{
                         connection.release();
-                        //console.log(results);
+                        for(var i = 0;i<results.length;i++){
+                            
+                            results[i].amount = encrypt.decrypt(results[i].amount);
+
+                        }
+                        console.log(results[0]);
                         resolve(results);
                     }
                 });
@@ -231,6 +251,12 @@ class customer{
                 else{
                     connection.release();
                     results[0].name = req.body.name;
+                    
+                    for(var i = 0;i<results.length;i++){
+                            
+                        results[i].balance = encrypt.decrypt(results[i].balance);
+
+                    }
                     //console.log(results);
                     callback(results);
                 }
@@ -280,7 +306,12 @@ getCustomerBalance(req, userObj){
                 else{
                     connection.release();
                     //console.log(results);
+                    
+                    for(var i = 0;i<results.length;i++){
+                            
+                        results[i].balance = encrypt.decrypt(results[i].balance);
 
+                    }
                     resolve(results);
                 }
             });
@@ -303,10 +334,12 @@ updateUBalance(req, userObj, balanceObj){
         var amount_new = parseInt(req.body.amount, 10);
         var amount_old = parseInt(balanceObj[0].balance, 10);
         var new_balance = amount_new + amount_old;
+        new_balance = encrypt.encrypt(new_balance);
+        var prev_balance = encrypt.encrypt(balanceObj[0].balance);
         upBalance = {
-            amount: req.body.amount,
+            amount: encrypt.encrypt(req.body.amount),
             customer_id: customer_id,
-            previous_balance: balanceObj[0].balance,
+            previous_balance: prev_balance,
             description: req.body.description,
             ip_address: req.body.ip_address,
             type: 1,
@@ -346,10 +379,11 @@ AddupdateUBalance(req, userObj, balanceObj){
         var amount_old = parseInt(balanceObj[0].balance, 10);
         var new_balance = amount_new + amount_old;
         var new_balances = JSON.stringify(new_balance);
+        new_balances = encrypt.encrypt(new_balances);
         upBalance = {
-            amount: req.body.amount,
+            amount: encrypt.encrypt(req.body.amount),
             customer_id: customer_id,
-            previous_balance: balanceObj[0].balance,
+            previous_balance: encrypt.encrypt(balanceObj[0].balance),
             description: req.body.description,
             ip_address: req.body.ip_address,
             type: 1,
@@ -384,7 +418,7 @@ updateBalanceReq(req, balanceUpObj,sta){
         if(err){
             throw err;
         }
-        console.log("this is this --> ", balanceUpObj.insertId, "->", req.body.ip_address);
+        console.log("updateBalanceReq-Model - ", balanceUpObj.insertId, "->", req.body.ip_address);
         balanceObj = {
             update_balance_id: balanceUpObj.insertId,
             ip_address: req.body.ip_address,
@@ -393,6 +427,7 @@ updateBalanceReq(req, balanceUpObj,sta){
             created_at: moment().format('YYYY-MM-DD HH:mm:ss')
         }
         
+        // console.log("updateBalanceReq-Model - balanceOBJ ", balanceObj);
         connection.query(query,balanceObj, function(err, results){
             if(err){
                 throw err;
@@ -424,7 +459,7 @@ updateAccounts(req, userObj, balanceObj){
         accountObj = {
 
             customer_id: userObj,
-            balance: new_balances,
+            balance: encrypt.encrypt(new_balances),
             status: 1,
             updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
             created_at: moment().format('YYYY-MM-DD HH:mm:ss')
@@ -463,7 +498,7 @@ updateAccount(req, userObj, balanceObj, stat){
         var new_balances = JSON.stringify(new_balance);
         accountObj = {
             customer_id: userObj,
-            balance: new_balances,
+            balance: encrypt.encrypt(new_balances),
             status: stat,
             updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
             created_at: moment().format('YYYY-MM-DD HH:mm:ss')
@@ -503,7 +538,7 @@ updateBalanceSet(req, userObj, balanceObj){
         blnObj = {
             account_no: balanceObj[0].account_no,
             customer_id: customer_id,
-            balance: new_balance, //gonna call encryption here before addition method
+            balance: encrypt.encrypt(new_balance), //gonna call encryption here before addition method
             status: 1,
             updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
             created_at: balanceObj[0].created_at
@@ -542,7 +577,7 @@ transUpdateBalanceSet(req, userObj, balanceObj){
         blnObj = {
             account_no: balanceObj[0].account_no,
             customer_id: customer_id,
-            balance: new_balances, //gonna call encryption here before addition method
+            balance: encrypt.encrypt(new_balances), //gonna call encryption here before addition method
             status: 1,
             updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
             created_at: balanceObj[0].created_at
@@ -578,7 +613,12 @@ getReceivedObj(req) {
                 }
                 else {
                     connection.release();
-                    console.log("Promise going to be resolved");
+                    for(var i = 0;i<rows.length;i++){
+                        
+                        rows[i].balance = encrypt.decrypt(rows[i].balance);
+
+                    }
+                    console.log("in getReceivedObj");
            
                     resolve(rows);
                 }
@@ -604,7 +644,12 @@ getObjbyAccount(req) {
                 }
                 else {
                     connection.release();
-                    console.log("Promise going to be resolved");
+                    for(var i = 0;i<rows.length;i++){
+                        
+                        rows[i].balance = encrypt.decrypt(rows[i].balance);
+
+                    }
+                    console.log("in getObjByAccount");
            
                     resolve(rows);
                 }
@@ -660,7 +705,7 @@ updateReceiveSet(req, reveivedObj, r_status){
         rcvObj = {
             receiver_id: reveivedObj[0].receiver_id,
             sender_id: reveivedObj[0].sender_id,
-            balance: new_balance, //gonna call encryption here before addition method
+            balance: encrypt.encrypt(new_balance), //gonna call encryption here before addition method
             status: r_status,
             type: reveivedObj[0].type,
             updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -699,7 +744,7 @@ transReceiveSet(req, reveivedObj, userObj){
         rcvObj = {
             sender_id: userObj,
             receiver_id: reveivedObj,
-            balance: new_balance, //gonna call encryption here before addition method
+            balance: encrypt.encrypt(new_balance), //gonna call encryption here before addition method
             status: 0,
             type: 3,
             updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -739,7 +784,7 @@ sendMoneyRec(req, reveivedObj, userObj){
         rcvObj = {
             sender_id: userObj,
             receiver_id: reveivedObj,
-            balance: new_balance, //gonna call encryption here before addition method
+            balance: encrypt.encrypt(new_balance), //gonna call encryption here before addition method
             status: 0,
             type: 1,
             updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -779,7 +824,7 @@ giftMoneyRec(req, reveivedObj, userObj){
         rcvObj = {
             sender_id: userObj,
             receiver_id: reveivedObj,
-            balance: new_balance, //gonna call encryption here before addition method
+            balance: encrypt.encrypt(new_balance), //gonna call encryption here before addition method
             status: 0,
             type: 2,
             updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -817,6 +862,11 @@ addMoney(req, id){
             }
             else{
                 connection.release();
+                for(var i = 0;i<results.length;i++){
+                    
+                    results[i].current_balance = encrypt.decrypt(results[i].current_balance);
+
+                }
                 //console.log(results);
                 resolve(results);
             }
@@ -843,14 +893,14 @@ transUpdateUBalance(req, userObj, balanceObj){
         var new_balance = amount_old - amount_new;
         var new_balances = JSON.stringify(new_balance);
         upBalance = {
-            amount: req.body.amount,
+            amount: encrypt.encrypt(req.body.amount),
             customer_id: customer_id,
-            previous_balance: balanceObj[0].balance,
+            previous_balance: encrypt.encrypt(balanceObj[0].balance),
             description: req.body.description,
             ip_address: req.body.ip_address,
             type: 2,
             status: 0,
-            remaining_balance: new_balances,
+            remaining_balance: encrypt.encrypt(new_balances),
             updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
             created_at: moment().format('YYYY-MM-DD HH:mm:ss')
         }
@@ -888,14 +938,14 @@ sendUpdateUBalance(req, userObj, balanceObj){
         var new_balance = amount_old - amount_new;
         var new_balances = JSON.stringify(new_balance);
         upBalance = {
-            amount: req.body.amount,
+            amount: encrypt.encrypt(req.body.amount),
             customer_id: customer_id,
-            previous_balance: balanceObj[0].balance,
+            previous_balance: encrypt.encrypt(balanceObj[0].balance),
             description: req.body.description,
             ip_address: req.body.ip_address,
             type: 5,
             status: 0,
-            remaining_balance: new_balances,
+            remaining_balance: encrypt.encrypt(new_balances),
             updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
             created_at: moment().format('YYYY-MM-DD HH:mm:ss')
         }
@@ -931,14 +981,14 @@ giftUpdateUBalance(req, userObj, balanceObj){
         var new_balance = amount_old - amount_new;
         var new_balances = JSON.stringify(new_balance);
         upBalance = {
-            amount: req.body.amount,
+            amount: encrypt.encrypt(req.body.amount),
             customer_id: customer_id,
-            previous_balance: balanceObj[0].balance,
+            previous_balance: encrypt.encrypt(balanceObj[0].balance),
             description: req.body.description,
             ip_address: req.body.ip_address,
             type: 6,
             status: 0,
-            remaining_balance: new_balances,
+            remaining_balance: encrypt.encrypt(new_balances),
             updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
             created_at: moment().format('YYYY-MM-DD HH:mm:ss')
         }
@@ -975,14 +1025,14 @@ shareUpdateUBalance(req, userObj, balanceObj){
         var new_balance = amount_old - amount_new;
         var new_balances = JSON.stringify(new_balance);
         upBalance = {
-            amount: req.body.amount,
+            amount: encrypt.encrypt(req.body.amount),
             customer_id: customer_id,
-            previous_balance: balanceObj[0].balance,
+            previous_balance: encrypt.encrypt(balanceObj[0].balance),
             description: req.body.description,
             ip_address: req.body.ip_address,
             type: 4,
             status: 0,
-            remaining_balance: new_balances,
+            remaining_balance: encrypt.encrypt(new_balances),
             updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
             created_at: moment().format('YYYY-MM-DD HH:mm:ss')
         }
@@ -1013,19 +1063,22 @@ withdrawUpdateUBalance(req, userObj, balanceObj){
         if(err){
             throw err;
         }
+        
+        // var enc = encrypt.decrypt("71b80a3b843756ee20b31c6176de3615:ef67468a433010e6425f2965125ddb3f");
+        // console.log("ooooooooooooooo -- ",enc);
         var amount_new = parseInt(req.body.amount, 10);
         var amount_old = parseInt(balanceObj[0].balance, 10);
         var new_balance = amount_old - amount_new;
         var new_balances = JSON.stringify(new_balance);
         upBalance = {
-            amount: req.body.amount,
+            amount: encrypt.encrypt(req.body.amount),
             customer_id: customer_id,
-            previous_balance: balanceObj[0].balance,
+            previous_balance: encrypt.encrypt(balanceObj[0].balance),
             description: req.body.description,
             ip_address: req.body.ip_address,
             type: 3,
             status: 0,
-            remaining_balance: new_balances,
+            remaining_balance: encrypt.encrypt(new_balances),
             updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
             created_at: moment().format('YYYY-MM-DD HH:mm:ss')
         }
@@ -1102,10 +1155,20 @@ getFriendListDetailed(userObj){
 
 
 
-encryptIt(userObj){
+encryptIt(text){
     return new Promise(function(resolve){
+        resolve(encrypt.encrypt(text));
     
+                    // console.log(encrypt.encrypt(text));
+});
 
+}
+
+
+decryptIt(text){
+    return new Promise(function(resolve){
+    resolve(encrypt.decrypt(text));
+    
 });
 
 }
