@@ -1,18 +1,18 @@
 const mySql = require('mysql');
 
 const pool = mySql.createPool({
-    connectionLimit:30,
+    connectionLimit: 30,
     host: "192.185.82.250",
     user: "myraal_MianRoot",
     password: "raal123@",
     database: "myraal_raal",
     port: "3306",
-    connectTimeout:2000
+    connectTimeout: 2000
 });
 // Recreate the connection, since
 // the old one cannot be reused.
 // function handleDisconnect() {
-  
+
 //     pool.connect(function (err) {              // The server is either down
 //         if (err) {                                     // or restarting (takes a while sometimes).
 //             console.log('error when connecting to db:', err);

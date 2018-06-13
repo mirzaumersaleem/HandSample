@@ -1,11 +1,8 @@
 var mySql = require('../config/database');
 
 class product{
-    
     constructor(){
-
     }
-
     findById(id, callback){
         var query = "SELECT id, name, arabic_name, price_1\
                      FROM hiksaudi_js.gc_products\
@@ -66,7 +63,7 @@ class product{
                 connection.query(query, function(err, rows){
                     if(err){
                         throw err;
-                    }
+                    } 
                     else {
                         connection.release();
                         console.log("Promise going to be resolved");

@@ -46,7 +46,7 @@ class category{
         var query = ` select s.id as subcategory_id,
         s.name as subcategory_name_english,b.city_id,
         s.arabic_name as subcategory_name_arabic,
-        b.lat,b.lng,b.logo as branch_logo,t.name as Description
+        b.lat,b.lng,b.logo as branch_logo,t.name as Description,t.arabic_name as arabic_discription
         from myraal_raal.subcategories s right join 
         myraal_raal.branches b on (b.subcategory_id=s.id)
         right join myraal_raal.tags t on (s.tag_id=t.id)
