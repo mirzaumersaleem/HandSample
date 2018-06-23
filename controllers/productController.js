@@ -208,19 +208,18 @@ exports.getProductDetailsController = function (req, res) {
                 }
                 var branchInfo = [];
                 var review = "";
-                for (let j = 0; j < result.length; j++) {
-                    branchInfo[j] = await getbranchInfo(result[j].id);
+               // for (let j = 0; j < result.length; j++) {
+                    branchInfo = await getbranchInfo(result[0].id);
                    // console.log(branchInfo[j],"<-");
-                    // for (var i = 0; i < branchInfo[j].length; i++) {
-                        // var temp = JSON.parse(branchInfo[j].sliders);
-                      //   var temp1 = JSON.parse(branchInfo[j].logo)
-                        // //  var temp3= JSON.parse(branchInfo[i].photos)
-                        // branchInfo[j].sliders = temp;
-                        // branchInfo[j].logo = temp1.small;
-                        //  branchInfo[i].photos=temp3.small;
-                    // }
+                    for (var i = 0; i < branchInfo.length; i++) {
+                        console.log("In for",branchInfo[i].sliders)
+                        branchInfo[i].sliders = JSON.parse(branchInfo[i].sliders);
+                        //  var temp3= JSON.parse(branchInfo[i].photos)
+                      //  branchInfo[i].sliders = temp.slider0;
+                      
+                    }
 
-                }
+              //  }
                 console.log("outside",branchInfo);
                 for (k=0;k<result.length;k++){
                     review =await getbranchReview(result[k].id);
