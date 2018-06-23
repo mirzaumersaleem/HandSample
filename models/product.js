@@ -53,7 +53,7 @@ class product{
         return new Promise(function(resolve){
           
           console.log("id ",product_id)
-            var query = `select s.*,p.price, COALESCE(p.price - ((p.price/100) * s.discount)) AS discounted_price, p._token from myraal_raal.offers s inner join myraal_raal.products p on p.id = ${product_id}
+            var query = `select s.*,p.price, COALESCE(p.price - ((p.price/100) * s.discount)) AS discounted_price, p._token as logo from myraal_raal.offers s inner join myraal_raal.products p on p.id = ${product_id}
              where product_id =${product_id}`
           
             mySql.getConnection(function(err, connection){

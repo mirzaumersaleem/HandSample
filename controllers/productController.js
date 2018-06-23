@@ -201,10 +201,10 @@ exports.getProductDetailsController = function (req, res) {
                 }
                 var offer = await getOffer(prod);
                 if (offer) {
-                    // for(var i=0;i<offer.length;i++){
-                    //     var temp = JSON.parse(offer[i].image);
-                    //     offer[i].logo=temp1.small;
-                    // } 
+                    for(var i=0;i<offer.length;i++){
+                        var temp = JSON.parse(offer[i].image);
+                        offer[i].logo=temp1.small;
+                    } 
                 }
                 var branchInfo = [];
                 var review = "";
