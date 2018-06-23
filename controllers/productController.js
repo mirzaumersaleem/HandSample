@@ -215,8 +215,10 @@ exports.getProductDetailsController = function (req, res) {
                     for (var i = 0; i < branchInfo.length; i++) {
                         console.log("In for",branchInfo[i].sliders)
                         branchInfo[i].sliders = JSON.parse(branchInfo[i].sliders);
-                         arr.push(branchInfo[i].sliders);
-                         branchInfo[i].sliders=arr;
+                        console.log("branchInfo[i].sliders.length",branchInfo[i].sliders.length);
+                     
+                        //  arr.push(branchInfo[i].sliders);
+                         //  branchInfo[i].sliders=arr;
                          //  var temp3= JSON.parse(branchInfo[i].photos)
                       //  branchInfo[i].sliders = temp.slider0;
                       
