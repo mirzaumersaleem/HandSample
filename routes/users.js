@@ -24,12 +24,9 @@ router.post('/register', function(req, res, next){
     req.checkBody("confirm_password","Enter a valid password").notEmpty();
     req.assert("email","Enter a valid email").isEmail().notEmpty();
     req.assert("phone_number","Enter a valid phone number").matches(/^[0-9]*$/);
-    req.assert("mobile","Enter a valid mobile no").matches(/^[0-9]*$/);
     req.assert("identity_number","Enter a valid Identity Number").matches(/^[0-9]*$/);
-    req.checkBody("district","Enter a valid District name").matches(/^[a-zA-Z\s]*$/).notEmpty();
     req.checkBody("city","Enter a valid City name").matches(/^[a-zA-Z\s]*$/).notEmpty();
     req.checkBody("address","Enter a valid Address").notEmpty();
-    console.log("req",req.body);
     var error = req.validationErrors(true);
     var errorValues = Object.keys(error);
     console.log("error length " + errorValues.length);

@@ -164,15 +164,14 @@ class user {
            });
        }
 
-    setNewUser(userData, callback) {
+    setNewUser(userData, callback){
         console.log("inside set new user in modal");
         console.log(userData);
         // WORKING CODE 
         var query = "INSERT into myraal_raal.users" +
-            "(name,  mobile, phone_number, email, password,district,address,city,note,identity_number)" +
-            "VALUES" + "(" + "\"" + userData.name + "\"" + "," + "\"" + userData.mobile + "\"" + "," + "\"" + userData.phone_number + "\"" + "," + "\"" + userData.email + "\"" + "," + "\"" + userData.password + "\"" + "," + "\"" + userData.district + "\"" + "," + "\"" + userData.address + "\"" + "," + "\"" + userData.city + "\"" + "," + "\"" + userData.note + "\"" + "," + userData.identity_number + ")";
+            "(name,phone_number, email, password,address,city,identity_number)" +
+            "VALUES" + "(" + "\"" + userData.name + "\"" + "," + "\"" + userData.phone_number + "\"" + "," + "\"" + userData.email + "\"" + "," + "\"" + userData.password + "\"" + ","+ "\"" + userData.address + "\"" + "," + "\"" + userData.city + "\"" + "," + userData.identity_number + ")";
         var findbyemail = this.findByEmail;
- 
         mySql.getConnection(function (err, connection) {
             if (err) {
                 throw err;

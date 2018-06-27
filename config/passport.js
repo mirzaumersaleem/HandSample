@@ -34,11 +34,9 @@ passport.use('local-register', new localStrategy({
     req.checkBody("confirm_password", "Enter a valid password").notEmpty();
     req.assert("email", "Enter a valid email").isEmail().notEmpty();
     req.assert("phone_number", "Enter a valid phone number").matches(/^[0-9]*$/);
-    req.assert("mobile", "Enter a valid mobile no").matches(/^[0-9]*$/);
     req.assert("identity_number", "Enter a valid Identity Number ").matches(/^[0-9]*$/);
     req.assert("pin_code", "Enter a valid pin code (digits only) ").matches(/^[0-9]*$/);
     req.assert("postal_code", "Enter a valid postal code ").matches(/^[0-9]*$/);
-    req.checkBody("district", "Enter a valid District name").matches(/^[a-zA-Z\s]*$/).notEmpty();
     req.checkBody("city", "Enter a valid City name").matches(/^[a-zA-Z\s]*$/).notEmpty();
     req.checkBody("country", "Enter a valid Country name").matches(/^[a-zA-Z\s]*$/).notEmpty();
     req.checkBody("address", "Enter a valid Address").notEmpty();
@@ -56,7 +54,7 @@ passport.use('local-register', new localStrategy({
         var user = new User();
         user.findByEmail(req.body.email, function (err, resultUser) {
             if (err) {
-                console.log("error agaya",err);
+                console.log("error agaya", err);
                 return done(err);
             }
             if (resultUser.length === 1) {
@@ -71,10 +69,8 @@ passport.use('local-register', new localStrategy({
                 phone_number: req.body.phone_number,
                 email: req.body.email,
                 password: user.generatePasswordHash(req.body.password),
-                district: req.body.district,
                 address: req.body.address,
                 city: req.body.city,
-                note: req.body.note,
                 identity_number: req.body.identity_number,
             }
             var bankUser = {
@@ -95,7 +91,7 @@ passport.use('local-register', new localStrategy({
                 created_at: moment().format('YYYY-MM-DD HH:mm:ss')//
             }
             //Creating new user
-            user.setNewUser(newUser,async function (err, newAddedUser) {
+            user.setNewUser(newUser, async function (err, newAddedUser) {
                 if (err) {
                     console.log("There is an error ");
                     console.log(err);
@@ -110,13 +106,13 @@ passport.use('local-register', new localStrategy({
                     var accountTable = {
                         customer_id: bankUsers.insertId,
                         balance: encrypt.encrypt(0),
-                        account_no: bankUsers.insertId*543123,
+                        account_no: bankUsers.insertId * 543123,
                         status: 1,
                         updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
                         created_at: moment().format('YYYY-MM-DD HH:mm:ss')
                     }
 
-                    
+
                     var accountTables = await user.setAccountTable(accountTable);
                     //Send verification code in email after the user is created
                     //var mail = new Mail();
@@ -144,28 +140,28 @@ passport.use('local-signin', new localStrategy({
     usernameField: 'email',
     passwordField: 'password',
     passReqToCallback: true
-}, 
-function(req, username, password, done){
-    console.log("Inside passport Strategy");
+},
+    function (req, username, password, done) {
+        console.log("Inside passport Strategy");
 
-    var user = new User();
-    user.findByEmail(username, function(err, result){
-        
-        if(err){
-            console.log(err);
-            return done(err);
-        } 
-        console.log("executed tille here");
-        if(result.length == 0){
-            console.log("No user found");
-            return done(null, false, {message: "No user found"});
-        }
-        if(!user.validPassword(password, result[0].password)){
-                console.log("password",password,"checking Password",result[0].password)
-            console.log("Incorrect password entered");
-            return done(null, false, {message: "Incorrect password"});
-        }
-        console.log("Every thing is correct in signin");
+        var user = new User();
+        user.findByEmail(username, function (err, result) {
+
+            if (err) {
+                console.log(err);
+                return done(err);
+            }
+            console.log("executed tille here");
+            if (result.length == 0) {
+                console.log("No user found");
+                return done(null, false, { message: "No user found" });
+            }
+            if (!user.validPassword(password, result[0].password)) {
+                console.log("password", password, "checking Password", result[0].password)
+                console.log("Incorrect password entered");
+                return done(null, false, { message: "Incorrect password" });
+            }
+            console.log("Every thing is correct in signin");
             done(null, result[0]);
-    });
-}));
+        });
+    }));
