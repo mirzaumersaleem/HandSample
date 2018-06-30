@@ -11,16 +11,22 @@ router.get('/shopping-cart', function(req, res){
     cartController.shoppingCartController(req, res);
 });
 
-/*
-router.get('/final-checkout', isLoggedIn, function(req, res){
-    cartController.finalCheckoutController(req, res);
+router.get('/AddOfferToCart', function(req, res){
+    cartController.addOfferToCartController(req, res);
 });
-*/
 
 router.post('/final-checkout', isLoggedIn, function(req, res){
     cartController.finalCheckoutController(req, res);
 });
 
+router.get('/delete-from-cart', function(req, res){
+    cartController.deleteShoppingCartController(req, res);
+});
+
+router.get('/edit-from-cart', function(req, res){
+    cartController.editShoppingCartController(req, res);
+})
+ 
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){
         next();
@@ -32,4 +38,5 @@ function isLoggedIn(req, res, next){
         });
     }
 }
+
 module.exports = router;

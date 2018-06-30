@@ -1,112 +1,82 @@
 var mySql = require('../config/database');
-var microtime = require('microtime');
+var moment = require('moment');
 
-class Order{
-    constructor(){ 
-        this.addOrderItems = function(cart, orderId, callback){
+class Order {
+    constructor() {
+        this.addOrderItems = function (cart, orderedId, callback) {
             var productsInCart = cart.generateArray();
+            console.log(cart, 'productsInCart');
             var orderItemsArray = [];
-        
             //Creating array of order items so that it can be added asynchronously
-            for(var i = 0; i < productsInCart.length; i++){
-                var newItem = [orderId, productsInCart[i].item.id, productsInCart[i].qty, productsInCart[i].item.name, productsInCart[i].item.price_1, productsInCart[i].price];
-                orderItemsArray.push(newItem);
+            for (var i = 0; i < productsInCart.length; i++) {
+                if (productsInCart[i].item.id >= 200) {
+                    productsInCart[i].item.id = productsInCart[i].item.id - 200;
+                    var newItem = [orderedId,0, productsInCart[i].item.id, productsInCart[i].qty, productsInCart[i].price];
+                    orderItemsArray.push(newItem);
+                } else {
+                    var newItem = [orderedId, productsInCart[i].item.id,0, productsInCart[i].qty, productsInCart[i].price];
+                    orderItemsArray.push(newItem);
+                }
             }
-            console.log(orderItemsArray);
-            console.log("inside add order items function");
-            var query = "INSERT INTO hiksaudi_js.gc_order_items (order_id, product_id, quantity, name,  price, total_price) VALUES ?";
-            
-            mySql.getConnection(function(err, connection){
-                if(err){
+
+            var query = "INSERT INTO myraal_raal.order_items (order_id, product_id,offer_id, qty, unit_price) VALUES ?";
+            mySql.getConnection(function (err, connection) {
+                if (err) {
                     throw err;
                 }
-                connection.query(query, [orderItemsArray], function(err, rows, fields){
-                    connection.release()
-                    console.log(rows);
-                    console.log(err);
+                connection.query(query, [orderItemsArray], async function (err, rows) {
                     callback(err, rows); //Passing results to callback function
                 });
             });
-            
-            /* 
-                Since we have to add multiple order items
-                Therefore we have to take care of the transanctions in case if 
-                any of the order item is not added we have to rollback the entire transaction
-            */
-           /*
-           mySql.getConnection(function(err, connection){
-                if(err){
-                    console.log(err);
-                    throw err;
-                }
-                console.log("inside get connection function");
-                connection.beginTransaction(function(err){
-                    if(err){
-                        callback(err);
-                    }
-                    connection.query(query, [orderItemsArray], function(err, result){
-                        //If any item failed to be inserted transaction would be rolledback
-                        if(err){
-                            connection.rollback(function(){
-                                callback(err);
-                            });
-                        }
-                        //If all items are inserted transaction would be committed
-                        connection.commit(function(err){
-                            if(err){
-                                connection.rollback(function(){
-                                    callback(err);
-                                })
-                            }
-                            connection.end();
-//                            mySql.end();
-                            callback(null);
-                        });
-                    });
-                })
-            });*/
-            
         }
-    
     }
-
-
-    addNewOrder(cart, userId, address, callback){
+    addNewOrder(req, cart, userId, address_id, addressRow, shipping_id, comments,sub_total, callback) {
         /*
             The generate array in Cart class would return
             all the products present in the cart.
-         */
+        */
+       //var cart = new Cart(req.session.cart);
+        var productsInCart = cart.generateArray();
         console.log("Inside add New Order model");
         var productsInCart = cart.generateArray();
-
-        var newOrderQuery = "INSERT INTO hiksaudi_js.gc_orders (customer_id, order_number, status, total, subtotal, ordered_on, address)\
-                             VALUES (" + userId + "," + "\"" + microtime.now() + "\"" + "," + "\"cart\"" + "," + cart.totalPrice + "," + cart.totalPrice + "," + Date.now() + "," + "\"" + address + "\"" + ")";
+        addressRow = JSON.stringify(addressRow);
+        var order_obj = {
+            user_id: req.user.id,
+            shipping_address_id: address_id,
+            billing_address_id: shipping_id,
+            comment: comments,
+            status: 0,
+            sub_total: sub_total,
+            total: sub_total,
+            created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+        }
+        var newOrderQuery = `INSERT INTO myraal_raal.orders set ?`
         /*
-            Insert a new order and get the id of the row inserted in order table
-            The id would be used to add order items in order items table
-         */
-
+        Insert a new order and get the id of the row inserted in order table
+        The id would be used to add order items in order items table
+        */
+        console.log("address", newOrderQuery);
         var orderItemFunction = this.addOrderItems;
 
-        mySql.getConnection(function(err, connection){
-            if(err){
+        mySql.getConnection(function (err, connection) {
+            if (err) {
                 throw err;
             }
-            connection.query(newOrderQuery, function(err, result){
+            connection.query(newOrderQuery, order_obj, function (err, result) {
                 connection.release()
-                if(err){
+                if (err) {
                     callback(err);
                 } else {
                     orderItemFunction(cart, result.insertId, (err) => {
-                        if(err)
+                        if (err)
                             callback(err);
-                        else 
+                        else
                             callback(null);
                     });
                 }
             });
         });
-   }
+    }
 }
 
 module.exports = Order;

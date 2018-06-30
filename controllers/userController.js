@@ -1,7 +1,7 @@
 var User = require('../models/user');
 var Mail = require('../models/mail');
 var crypto = require('crypto');
-
+var moment = require('moment');
 exports.getRegisterController = function(req, res){
     res.render('signup', {});
 }
@@ -26,15 +26,18 @@ exports.getUserAddressController = function(req, res){
 }
 
 exports.addUserAddressController = function(req, res){
-    
-    
-
     var user = new User();
     
     var addressData = {
-        latitude: req.body.latitude,
-        longitude: req.body.longitude,
-        addressDesc: req.body.addressDesc
+        first_name:req.body.first_name,
+        last_name:req.body.last_name,
+        company:req.body.company,
+        address_1:req.body.address_1,
+        address_2:req.body.address_2,
+        city:req.body.city,
+        postal_code:req.body.postal_code,
+        created_at:moment().format('YYYY-MM-DD HH:mm:ss'),
+        user_id:req.user.id,
     }
     
     console.log("Printing req.user.id" + req.user.id);

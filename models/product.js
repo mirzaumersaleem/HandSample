@@ -1,32 +1,62 @@
 var mySql = require('../config/database');
 
-class product{
-    constructor(){
+class product {
+    constructor() {
     }
-    findById(id, callback){
-        var query = "SELECT id, name, arabic_name, price_1\
-                     FROM hiksaudi_js.gc_products\
+    findProductById(id, callback) {
+        var query = "SELECT id, name, arabic_name, price\
+                     FROM myraal_raal.products\
                      WHERE id =  " + id;
-        mySql.getConnection(function(err, connection){
-            if(err){
+        mySql.getConnection(function (err, connection) {
+            if (err) {
                 throw err;
             }
-            connection.query(query, function(err, rows, fields){
+            connection.query(query, function (err, rows, fields) {
                 connection.release()
                 console.log(rows);
                 callback(err, rows[0]); //Passing results to callback function
             });
         });
     }
-    getSubCatProd(subCategoryId, callback){   
+    findOffertById(id, callback) { 
+        var query = "SELECT id, name, arabic_name,discount\
+                     FROM myraal_raal.offers\
+                     WHERE id =  " + id;
+        mySql.getConnection(function (err, connection) {
+            if (err) {
+                throw err;
+            }
+            connection.query(query, function (err, rows, fields) {
+                connection.release()
+                console.log(rows);
+                callback(err, rows[0]); //Passing results to callback function
+            });
+        });
+    }
+    findById(id, callback) {
+        var query = "SELECT id, name, arabic_name, product_id,discount\
+        FROM myraal_raal.offers\
+        WHERE id = 2 " ;
+        mySql.getConnection(function (err, connection) {
+            if (err) {
+                throw err;
+            }
+            connection.query(query, function (err, rows, fields) {
+                connection.release()
+                console.log(rows);
+                callback(err, rows[0]); //Passing results to callback function
+            });
+        });
+    }
+    getSubCatProd(subCategoryId, callback) {
         var query = "SELECT id, name, model, arabic_name, quantity, price_1, images \
                      FROM hiksaudi_js.gc_products \
                      WHERE secondary_category = " + subCategoryId;
-        mySql.getConnection(function(err, connection){
-            if(err){
+        mySql.getConnection(function (err, connection) {
+            if (err) {
                 throw err;
             }
-            connection.query(query, function(err, rows, fields){
+            connection.query(query, function (err, rows, fields) {
                 connection.release()
                 //console.log(rows);
                 callback(err, rows); //Passing results to callback function
@@ -34,40 +64,40 @@ class product{
         });
     }
 
-    getProductDetails(req,callback) {
-        console.log("req.query.city_id",req.query.city_id,"req.query.subcategory_id",req.query.subcategory_id);
-        var query =`select id from myraal_raal.branches where city_id=${req.query.city_id} and subcategory_id=${req.query.subcategory_id} `
-        
-        mySql.getConnection(function(err, connection){
-            if(err){
+    getProductDetails(req, callback) {
+        console.log("req.query.city_id", req.query.city_id, "req.query.subcategory_id", req.query.subcategory_id);
+        var query = `select id from myraal_raal.branches where city_id=${req.query.city_id} and subcategory_id=${req.query.subcategory_id} `
+
+        mySql.getConnection(function (err, connection) {
+            if (err) {
                 throw err;
             }
-            connection.query(query, function(err, rows, fields){
+            connection.query(query, function (err, rows, fields) {
                 connection.release()
                 console.log(rows);
                 callback(err, rows); //Passing results to callback function
             });
         });
     }
-        getOfferData(product_id) {
-        return new Promise(function(resolve){
-          
-          console.log("id ",product_id)
+    getOfferData(product_id) {
+        return new Promise(function (resolve) {
+
+            console.log("id ", product_id)
             var query = `select s.*,p.price, COALESCE(p.price - ((p.price/100) * s.discount)) AS discounted_price, p._token as logo from myraal_raal.offers s inner join myraal_raal.products p on p.id = ${product_id}
              where product_id =${product_id}`
-          
-            mySql.getConnection(function(err, connection){
-                if(err){
+
+            mySql.getConnection(function (err, connection) {
+                if (err) {
                     throw err;
                 }
-                connection.query(query, function(err, rows){
-                    if(err){
+                connection.query(query, function (err, rows) {
+                    if (err) {
                         throw err;
-                    } 
+                    }
                     else {
                         connection.release();
                         console.log("Promise going to be resolved");
-               
+
                         resolve(rows[0]);
                     }
                 });
@@ -75,21 +105,21 @@ class product{
         });
     }
     getSpecificProduct(result) {
-        return new Promise(function(resolve){
+        return new Promise(function (resolve) {
             var branch_id = result[0].id
             var query = `select * from myraal_raal.products where branch_id =${branch_id}`
-            mySql.getConnection(function(err, connection){
-                if(err){
+            mySql.getConnection(function (err, connection) {
+                if (err) {
                     throw err;
                 }
-                connection.query(query, function(err, rows){
-                    if(err){
+                connection.query(query, function (err, rows) {
+                    if (err) {
                         throw err;
                     }
                     else {
                         connection.release();
                         console.log("Promise going to be resolved");
-               
+
                         resolve(rows);
                     }
                 });
@@ -98,21 +128,21 @@ class product{
 
     }
     getBranchInfo(id) {
-        return new Promise(function(resolve){
+        return new Promise(function (resolve) {
             var ID = id
             var query = `select * from myraal_raal.branches where id =${ID}`
-            mySql.getConnection(function(err, connection){
-                if(err){
+            mySql.getConnection(function (err, connection) {
+                if (err) {
                     throw err;
                 }
-                connection.query(query, function(err, rows){
-                    if(err){
+                connection.query(query, function (err, rows) {
+                    if (err) {
                         throw err;
                     }
                     else {
                         connection.release();
                         console.log("Promise going to be resolved");
-               
+
                         resolve(rows);
                     }
                 });
@@ -121,21 +151,21 @@ class product{
 
     }
     getBranchReview(id) {
-        return new Promise(function(resolve){
+        return new Promise(function (resolve) {
             var ID = id
             var query = `select rating,comment from myraal_raal.comments where id =${ID}`
-            mySql.getConnection(function(err, connection){
-                if(err){
+            mySql.getConnection(function (err, connection) {
+                if (err) {
                     throw err;
                 }
-                connection.query(query, function(err, rows){
-                    if(err){
+                connection.query(query, function (err, rows) {
+                    if (err) {
                         throw err;
                     }
                     else {
                         connection.release();
                         console.log("Promise going to be resolved");
-               
+
                         resolve(rows);
                     }
                 });
@@ -144,26 +174,26 @@ class product{
 
     }
 
-    getOfferImagePromise(offerId){
-        return new Promise(function(resolve){
+    getOfferImagePromise(offerId) {
+        return new Promise(function (resolve) {
             var query = "SELECT products.images\
                      FROM hiksaudi_js.gc_promotions as promotions\
                      INNER JOIN hiksaudi_js.gc_promotions_products as promo_prods ON  promotions.id = promo_prods.on_offer_product_id \
                      INNER JOIN hiksaudi_js.gc_products as products ON promo_prods.product_id = products.id  \
                      WHERE promotions.id = " + offerId;
-    
-            mySql.getConnection(function(err, connection){
-                if(err){
+
+            mySql.getConnection(function (err, connection) {
+                if (err) {
                     throw err;
                 }
-                connection.query(query, function(err, rows){
-                    if(err){
+                connection.query(query, function (err, rows) {
+                    if (err) {
                         throw err;
                     }
                     else {
                         connection.release();
                         console.log("Promise going to be resolved");
-                        for(var i = 0; i < rows.length; ++i) {
+                        for (var i = 0; i < rows.length; ++i) {
                             var productImageObj = rows[i];
                             //console.log("This is product image obj" + productImageObj);
                             //var productImageObj = JSON.parse(productImageObj);
@@ -183,20 +213,20 @@ class product{
         });
 
     }
-    
-    getOffers(callback){
+
+    getOffers(callback) {
         var query = "SELECT promotions.id, timestampdiff(HOUR, promotions.start_date, promotions.end_date) as time_remaining, promotions.offer_name\
                      FROM hiksaudi_js.gc_promotions as promotions";
 
-        mySql.getConnection(function(err, connection){
-            if(err){
+        mySql.getConnection(function (err, connection) {
+            if (err) {
                 throw err;
             }
-            connection.query(query, function(err, results){
-                if(err){
+            connection.query(query, function (err, results) {
+                if (err) {
                     throw err;
                 }
-                else{
+                else {
                     connection.release();
                     console.log(results);
                     callback(err, results);
