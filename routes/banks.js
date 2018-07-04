@@ -24,6 +24,22 @@ router.post('/test', (req, res) => {
 
 });
 
+router.post('/getAccountDetails', isLoggedIn, (req, res) => {
+    var error = req.validationErrors(true);
+    var errorValues = Object.keys(error);
+    if(errorValues.length > 0){
+        console.log("inside if"); 
+        return res.json({
+            status: 422,
+            message: "Validation errors",
+            errors: error
+        });
+    }else{
+        console.log("getAccountDetails controller executed");
+        customerController.accountDetails(req, res);
+    }
+
+});
 //Searching friend from List of users on the basis of name
 router.post('/addFriendSearch', isLoggedIn, (req, res) => {
     req.assert("name", "Enter a name to search").notEmpty();

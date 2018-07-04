@@ -399,6 +399,37 @@ exports.verifyPinAddMoney = function (req, res){
 
 }
 
+exports.accountDetails = function (req, res){
+    var customers = new customer();
+    console.log("in accountDetails Controller");
+    
+    customers.getEmail(req,async function(result, err){
+        if(err){
+            res.json({
+                status: 500,
+                message: "error in accountDetails: "+err
+            });
+        } else{
+            var sta = 1;
+            if(result.length!=0){
+                
+                var userObj =await customers.getCustomerByEmail(req.user.email);
+                var balanceObj = await customers.getCustomerBalance(req,userObj[0].id);
+                 
+                res.json({ status: 200, balance: balanceObj[0].balance, account_no: balanceObj[0].account_no });
+                
+            
+            }else{
+                res.json({
+                    status: 301,
+                    message: "No request found"
+                });    
+            }
+        }
+    });
+
+}
+
 
 exports.payTransaction = function (req, res){
     var customers = new customer();
