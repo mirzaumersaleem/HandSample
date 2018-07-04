@@ -381,7 +381,7 @@ exports.verifyPinAddMoney = function (req, res){
                 //fetching logged in user's instance by email
                 var userObj =await customers.getCustomerByEmail(req.user.email);
                 var pinObj = await customers.verifyPinAddMoney(req,userObj[0].id);
-                pinObj[0].pin = encrypt.decrypt(pinObj[0].pin);
+                //pinObj[0].pin = encrypt.decrypt(pinObj[0].pin);
                 if(pinObj[0].pin == req.body.pin){
                     res.json({ status: 200, message: 'Verified' });
                 }
