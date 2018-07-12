@@ -190,7 +190,7 @@ exports.getProductDetailsController = function (req, res) {
             console.log(err);
             res.json({
                 status: 500,
-                message: "y masla hai " + err
+                message: "Error " + err
             });
         } else{
             if (result.length != 0) {
@@ -258,6 +258,24 @@ exports.getOffers = function (req, res) {
             res.json({
                 status: 200,
                 message: offerWithImagesProm
+            });
+        }
+    })
+}
+exports.getActiveCategoryController = function (req, res) {
+    var products = new product();
+    console.log("inside offers controller");
+    products.getCategory(async function (err, result) {
+        if (err) {
+            res.json({
+                status: 500,
+                message: err
+            });
+        }
+        else {
+            res.json({
+                status: 200,
+                data:result,
             });
         }
     })

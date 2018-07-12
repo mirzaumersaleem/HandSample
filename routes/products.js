@@ -25,6 +25,10 @@ router.get('/getAllProductInfo', function(req, res){
     productsController.getProductDetailsController(req, res);
 }); 
 
+router.get('/getActiveCategories', function(req, res){
+    productsController.getActiveCategoryController(req, res);
+}); 
+
 router.get('/offers', (req, res) => {
     console.log("Inside offers");
     productsController.getOffers(req, res);

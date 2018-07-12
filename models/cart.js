@@ -8,15 +8,27 @@ class Cart {
 		this.items = oldCart.items || {};
 		this.totalQty = oldCart.totalQty || 0;
 		this.totalPrice = oldCart.totalPrice || 0;
+		this.cityId = oldCart.cityId || 0;
+		this.branchId = oldCart.branchId || 0;
 	}
-
-	addProductToCart(item, id, quantity, price) {
+	addProductToCart(item, id, quantity, price, req) {
 		var storedItem = this.items[id];
-		console.log("this.items at time of testing",this.items);
+		var count = 0;
 		//Create a new item if its not present in items list
-		if (!storedItem){
-			item.price = price;
-			storedItem = this.items[id] = { item: item, qty: Number(quantity), price: Number(price * quantity) };
+		if (!storedItem) {
+			if (this.cityId == 0 && this.branchId == 0) {
+				item.price = price;
+				storedItem = this.items[id] = { item: item, qty: Number(quantity), price: Number(price * quantity), };
+				this.cityId = req.query.city_id;
+				this.branchId = req.query.branch_id;
+			} else {
+				if ((this.cityId == req.query.city_id) && (this.branchId == req.query.branch_id)) {
+					item.price = price;
+					storedItem = this.items[id] = { item: item, qty: Number(quantity), price: Number(price * quantity), };
+				} else {
+					throw 3;
+				}
+			}
 		} else {
 			throw 1;
 		}
@@ -24,23 +36,35 @@ class Cart {
 		this.totalPrice += (price * quantity);
 		throw 2;
 	}
-	addOfferToCart(item, id, quantity, price) {
-		var discount_priceD = price - ((price / 100) * item.discount)
-		console.log("this.items at time of testing",this.items);
-		var storedItem = this.items[id+200];
-		console.log("this.items at time of testing after incrementing id + 200",this.items);
+	addOfferToCart(item, id, quantity, price,discount_price, req) {
+		var storedItem = this.items[id + 200];
 		//Create a new item if its not present in items list
 		if (!storedItem) {
-			item.id += 200;
-			item.price = discount_priceD
-			storedItem = this.items[id+200] = { item: item, qty: Number(quantity), price: Number(discount_priceD * quantity),actual_price:price, type: "Offer" };
-			console.log("Newly Stored Item")
+			console.log("item not exist");
+			if (this.cityId == 0 && this.branchId == 0) {
+				item.id += 200;
+				item.price = Number(price);
+				storedItem = this.items[id] = { item: item, qty: Number(quantity), price: Number(discount_price * quantity), actual_price:price, type: "Offer" };
+				this.cityId = req.query.city_id;
+				this.branchId = req.query.branch_id;
+			} else {
+				console.log("city id there");
+				if ((this.cityId == req.query.city_id) && (this.branchId == req.query.branch_id)) {
+					item.id += 200;
+					item.price = Number(price)
+					storedItem = this.items[id + 200] = { item: item, qty: Number(quantity), price: Number(discount_price * quantity), actual_price: price, type: "Offer" };
+				} else {
+					throw 3;
+				}
+			}
 		} else {
+			//	console.log("item exist");
 			throw 1;
 		}
 		//Increment qty by 1 and set price to item price
 		this.totalQty += Number(quantity);
-		this.totalPrice += discount_priceD * quantity; 
+		this.totalPrice += Number(discount_price) * quantity;
+		//console.log("");
 		throw 2;
 	}
 	//Object.assign([...this.state.editTarget], {[id]: {[target]: value}})
@@ -57,7 +81,7 @@ class Cart {
 			console.log("in delete cart model cart data", cart);
 		}
 		console.log("Complete Cart", cart);
-	} 
+	}
 
 	editProductfromCart(id, changeQty, cart) {
 		var storedItem = this.items[id];
@@ -73,7 +97,7 @@ class Cart {
 			this.totalPrice += storedItem.item.price * storedItem.qty;
 		} else {
 			console.log("do nothig")
-		} 
+		}
 		console.log("Complete Cart", cart);
 	}
 	generateArray() {

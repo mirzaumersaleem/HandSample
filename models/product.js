@@ -119,13 +119,11 @@ class product {
                     else {
                         connection.release();
                         console.log("Promise going to be resolved");
-
                         resolve(rows);
                     }
                 });
             });
         });
-
     }
     getBranchInfo(id) {
         return new Promise(function (resolve) {
@@ -234,6 +232,25 @@ class product {
             });
         });
     }
+    
+    getCategory(callback) {
+        var query = "SELECT id,name,arabic_name \
+                     FROM myraal_raal.categories where status=1 ";
+        mySql.getConnection(function (err, connection) {
+            if (err) {
+                throw err;
+            }
+            connection.query(query, function (err, results) {
+                if (err) {
+                    throw err;
+                }
+                else { 
+                    connection.release();
+                    console.log(results);
+                    callback(err, results);
+                }
+            });
+        });
+    }
 }
-
 module.exports = product;
