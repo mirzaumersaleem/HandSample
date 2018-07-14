@@ -36,7 +36,7 @@ class Cart {
 		this.totalPrice += (price * quantity);
 		throw 2;
 	}
-	addOfferToCart(item, id, quantity, price,discount_price, req) {
+	addOfferToCart(item, id, quantity, price, discount_price, req) {
 		var storedItem = this.items[id + 200];
 		//Create a new item if its not present in items list
 		if (!storedItem) {
@@ -44,7 +44,7 @@ class Cart {
 			if (this.cityId == 0 && this.branchId == 0) {
 				item.id += 200;
 				item.price = Number(price);
-				storedItem = this.items[id] = { item: item, qty: Number(quantity), price: Number(discount_price * quantity), actual_price:price, type: "Offer" };
+				storedItem = this.items[id] = { item: item, qty: Number(quantity), price: Number(discount_price * quantity), actual_price: price, type: "Offer" };
 				this.cityId = req.query.city_id;
 				this.branchId = req.query.branch_id;
 			} else {
@@ -58,7 +58,6 @@ class Cart {
 				}
 			}
 		} else {
-			//	console.log("item exist");
 			throw 1;
 		}
 		//Increment qty by 1 and set price to item price

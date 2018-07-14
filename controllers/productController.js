@@ -78,10 +78,10 @@ exports.getCategoryController = function (req, res) {
     return all the ssub categories that are in the parent
     category
  */
-exports.getAllCategoriesController = function (req, res) {
+exports.getAllCategoriesController = function (req, res,city_id) {
     var categories = new category();
-
-    categories.getCategories(req, async function (err, result) {
+    console.log("In Controller",city_id);
+    categories.getCategories(req,city_id, async function (err, result) {
         if (result != 0) {
             for (var i = 0; i < result.length; i++) {
                 var temp = JSON.parse(result[i].branch_logo);
@@ -192,7 +192,7 @@ exports.getProductDetailsController = function (req, res) {
                 status: 500,
                 message: "Error " + err
             });
-        } else{
+        } else {
             if (result.length != 0) {
                 var prod = await getproduct(result);
                 for (var i = 0; i < prod.length; i++) {
@@ -201,27 +201,27 @@ exports.getProductDetailsController = function (req, res) {
                 }
                 var offer = await getOffer(prod);
                 if (offer) {
-                    for(var i=0;i<offer.length;i++){
+                    for (var i = 0; i < offer.length; i++) {
                         var temp = JSON.parse(offer[i].image);
-                        offer[i].logo=temp1.small;
-                    } 
+                        offer[i].logo = temp1.small;
+                    }
                 }
                 var branchInfo = [];
-                var arr=[];
+                var arr = [];
                 var review = "";
-               // for (let j = 0; j < result.length; j++) {
-                    branchInfo = await getbranchInfo(result[0].id);
-                   // console.log(branchInfo[j],"<-");
-                    for (var i = 0; i < branchInfo.length; i++) {
-                        console.log("In for",branchInfo[i].sliders)
-                        branchInfo[i].sliders = JSON.parse(branchInfo[i].sliders);
-                        console.log("branchInfo[i].sliders.length",branchInfo[i].sliders.length);
-                    }
+                // for (let j = 0; j < result.length; j++) {
+                branchInfo = await getbranchInfo(result[0].id);
+                // console.log(branchInfo[j],"<-");
+                for (var i = 0; i < branchInfo.length; i++) {
+                    console.log("In for", branchInfo[i].sliders)
+                    branchInfo[i].sliders = JSON.parse(branchInfo[i].sliders);
+                    console.log("branchInfo[i].sliders.length", branchInfo[i].sliders.length);
+                }
 
-              //  }
-                console.log("outside",branchInfo);
-                for (k=0;k<result.length;k++){
-                    review =await getbranchReview(result[k].id);
+                //  }
+                console.log("outside", branchInfo);
+                for (k = 0; k < result.length; k++) {
+                    review = await getbranchReview(result[k].id);
                 }
                 res.json({
                     status: 200,
@@ -275,7 +275,7 @@ exports.getActiveCategoryController = function (req, res) {
         else {
             res.json({
                 status: 200,
-                data:result,
+                data: result,
             });
         }
     })
