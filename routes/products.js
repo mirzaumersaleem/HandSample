@@ -41,20 +41,12 @@ router.post('/category', function (req, res) {
                         productsController.getAllCategoriesController(req, res, 6);
                     }
                     else if ((responce[0].city != "Medina") && (responce[0].city != "Mecca") && (responce[0].city != "Jeddah")) {
-                        return res.json({
-                            status: 422,
-                            message: "Sorry No Nearby Resturant Found ! Please try some other location.",
-                            errors: error,
-                            data: responce
-                        });
+                        productsController.getAllCategoriesController(req, res, 4);
+                   
                     }
                 })
                 .catch(function (err) {
-                    return res.json({
-                        status: 422,
-                        message: "Error in Fetching City",
-                        errors: err
-                    });
+                    productsController.getAllCategoriesController(req, res, 4);
                 });
         } else {
             productsController.getAllCategoriesController(req, res);
