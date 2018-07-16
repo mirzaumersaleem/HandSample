@@ -26,6 +26,9 @@ router.get('/delete-from-cart', function(req, res){
 router.get('/edit-from-cart', function(req, res){
     cartController.editShoppingCartController(req, res);
 })
+router.get('/complete-cart-delete', function(req, res){
+    cartController.deleteCompleteCart(req, res);
+})
  
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){

@@ -29,7 +29,7 @@ router.post('/category', function (req, res) {
         if (req.body.latLong) {
             req.body.latLong = JSON.parse(req.body.latLong);
             geocoder.reverse({ lat:req.body.latLong[0].Lat,lon:req.body.latLong[0].Long })
-                .then(function (responce) {
+                .then(function (responce){
                     console.log(responce[0].city, (responce[0].city == "Jeddah"));
                     if (responce[0].city == "Jeddah") {
                         productsController.getAllCategoriesController(req, res, 4);
@@ -42,7 +42,6 @@ router.post('/category', function (req, res) {
                     }
                     else if ((responce[0].city != "Medina") && (responce[0].city != "Mecca") && (responce[0].city != "Jeddah")) {
                         productsController.getAllCategoriesController(req, res, 4);
-                   
                     }
                 })
                 .catch(function (err) {

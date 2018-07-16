@@ -258,3 +258,25 @@ exports.deleteShoppingCartController = function (req, res) {
         }
     })
 }
+exports.deleteCompleteCart = function (req, res) {
+    console.log("Inside delete to cart controller");
+
+    //req.assert("");
+    /*
+    
+      If cart is already present in session then pass that old cart
+      into the new Cart obj. Else create a new cart and pass it to 
+      the new Cart
+
+    */
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+            req.session.cart = null;
+            console.log("req.session.cart",req.session.cart);
+            res.json({
+                status: 200,
+                message: "Cart deleted successfully",
+                data: req.session.cart,
+            })
+      
+   
+}

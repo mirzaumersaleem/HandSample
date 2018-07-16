@@ -81,7 +81,6 @@ class Cart {
 		}
 		console.log("Complete Cart", cart);
 	}
-
 	editProductfromCart(id, changeQty, cart) {
 		var storedItem = this.items[id];
 		var qty_decission = 0;
@@ -105,9 +104,7 @@ class Cart {
 		for (var id in this.items) {
 			arr.push(this.items[id]);
 		}
-
 		return arr;
 	}
 }
-
 module.exports = Cart;
