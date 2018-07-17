@@ -67,7 +67,6 @@ class product {
     getProductDetails(req, callback) {
         console.log("req.query.city_id", req.query.city_id, "req.query.subcategory_id", req.query.subcategory_id);
         var query = `select id from myraal_raal.branches where city_id=${req.query.city_id} and subcategory_id=${req.query.subcategory_id} `
-
         mySql.getConnection(function (err, connection) {
             if (err) {
                 throw err;
@@ -81,7 +80,6 @@ class product {
     }
     getOfferData(product_id) {
         return new Promise(function (resolve) {
-
             console.log("id ", product_id)
             var query = `select s.*,p.price, COALESCE(p.price - ((p.price/100) * s.discount)) AS discounted_price, p._token as logo from myraal_raal.offers s inner join myraal_raal.products p on p.id = ${product_id}
              where product_id =${product_id}`

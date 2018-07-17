@@ -32,15 +32,10 @@ async function getMainAndSubCat(parentCategories) {
         }
         resolve(catMainAndSub); //Returning parent and subcategories when every thing executes correctly
     });
-
-
 }
-
-
 function getOffersWithImages(offers) {
     return new Promise(async function (resolve) {
         var products = new product();
-
         for (var i = 0; i < offers.length; ++i) {
             //Convert time remaining into minuites and hours
             var timeRemaining = offers[i].time_remaining;
@@ -50,19 +45,17 @@ function getOffersWithImages(offers) {
             offers[i].hours = hours;
             offers[i].minuites = mins;
             console.log("This offer id " + offers[i].id)
-
             var imagesArray = await products.getOfferImagePromise(offers[i].id);
             console.log("This is images Array" + imagesArray);
             offers[i].images = imagesArray;
             //console.log(offers[i]);
         }
-
         resolve(offers);
     });
 }
 /*
     This controller returns all the parent categories
- */
+*/
 exports.getCategoryController = function (req, res) {
     var categories = new category();
 
@@ -217,7 +210,6 @@ exports.getProductDetailsController = function (req, res) {
                     branchInfo[i].sliders = JSON.parse(branchInfo[i].sliders);
                     console.log("branchInfo[i].sliders.length", branchInfo[i].sliders.length);
                 }
-
                 //  }
                 console.log("outside", branchInfo);
                 for (k = 0; k < result.length; k++) {
