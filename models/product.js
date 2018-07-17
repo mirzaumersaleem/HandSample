@@ -19,7 +19,7 @@ class product {
         });
     }
     findOffertById(id, callback) { 
-        var query = "SELECT id, name, arabic_name,discount\
+        var query = "SELECT id, name, arabic_name,discount as price\
                      FROM myraal_raal.offers\
                      WHERE id =  " + id;
         mySql.getConnection(function (err, connection) {

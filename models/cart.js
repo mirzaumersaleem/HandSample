@@ -14,6 +14,7 @@ class Cart {
 	addProductToCart(item, id, quantity, price, req) {
 		var storedItem = this.items[id];
 		var count = 0;
+		console.log("this.items[id+200]",item);
 		//Create a new item if its not present in items list
 		if (!storedItem) {
 			if (this.cityId == 0 && this.branchId == 0) {
@@ -38,20 +39,21 @@ class Cart {
 	}
 	addOfferToCart(item, id, quantity, price, discount_price, req) {
 		var storedItem = this.items[id + 200];
+		console.log("this.items[id+200]",item);
 		//Create a new item if its not present in items list
 		if (!storedItem) {
-			console.log("item not exist");
-			if (this.cityId == 0 && this.branchId == 0) {
+			
+			if (this.cityId == 0 && this.branchId == 0){
 				item.id += 200;
 				item.price = Number(discount_price);
 				storedItem = this.items[id] = { item: item, qty: Number(quantity), price: Number(discount_price * quantity), actual_price: price, type: "Offer" };
 				this.cityId = req.query.city_id;
 				this.branchId = req.query.branch_id;
-			} else {
+			} else{
 				console.log("city id there");
 				if ((this.cityId == req.query.city_id) && (this.branchId == req.query.branch_id)) {
 					item.id += 200;
-					item.price = Number(price)
+					item.price = Number(discount_price)
 					storedItem = this.items[id + 200] = { item: item, qty: Number(quantity), price: Number(discount_price * quantity), actual_price: price, type: "Offer" };
 				} else {
 					throw 3;
@@ -71,7 +73,7 @@ class Cart {
 		var int_id = Number(id)
 		var storedItem = this.items[id];
 		console.log("in delete cart model cart.length", typeof (id), id);
-		console.log(storedItem, "storedItem") 
+		console.log(storedItem, "storedItem")
 		if (storedItem) {
 			this.totalQty -= Number(storedItem.qty);
 			this.totalPrice -= storedItem.price;

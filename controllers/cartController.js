@@ -91,16 +91,16 @@ exports.addOfferToCartController = function (req, res) {
             });
         } else {
             try {
-                cart.addOfferToCart(prod, productId, req.query.quantity, req.query.price,req.query.discount_price,req);
+                cart.addOfferToCart(prod, productId, req.query.quantity, req.query.price, req.query.discount_price, req);
             } catch (e) {
                 console.log(e);
-                if (e == 1){
+                if (e == 1) {
                     res.json({
                         status: 200,
                         message: "Product Already Exist, Kindly Check Your Cart",
                     })
                 }
-                if (e == 2){
+                if (e == 2) {
                     req.session.cart = cart;
                     console.log("Following items in session cart");
                     console.log(req.session.cart);
@@ -110,7 +110,7 @@ exports.addOfferToCartController = function (req, res) {
                         cartProducts: cart.generateArray(),
                     })
                 }
-                if (e == 3){
+                if (e == 3) {
                     res.json({
                         status: 300,
                         message: "Please Select Product/Offer from one Resturant at a time.",
@@ -249,12 +249,22 @@ exports.deleteShoppingCartController = function (req, res) {
             req.session.cart = cart;
             cart.deleteProductfromCart(productId, price_1, req.session.cart);
             console.log("Following items in session cart");
-            console.log(req.session.cart);
-            res.json({
-                status: 200,
-                message: "Product deleted successfully",
-                data: req.session.cart,
-            })
+            console.log(req.session.cart.length);
+            if (req.session.cart.length != 0) {
+                res.json({
+                    status: 200,
+                    message: "Product deleted successfully",
+                    data: req.session.cart,
+                })
+            } else {
+                req.session.cart=null;
+                res.json({
+                    status: 200,
+                    message: "Product deleted successfully",
+                    data: req.session.cart,
+                })
+            }
+
         }
     })
 }
@@ -270,13 +280,13 @@ exports.deleteCompleteCart = function (req, res) {
 
     */
     var cart = new Cart(req.session.cart ? req.session.cart : {});
-            req.session.cart = null;
-            console.log("req.session.cart",req.session.cart);
-            res.json({
-                status: 200,
-                message: "Cart deleted successfully",
-                data: req.session.cart,
-            })
-      
-   
+    req.session.cart = null;
+    console.log("req.session.cart", req.session.cart);
+    res.json({
+        status: 200,
+        message: "Cart deleted successfully",
+        data: req.session.cart,
+    })
+
+
 }
