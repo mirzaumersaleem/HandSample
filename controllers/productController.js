@@ -166,6 +166,15 @@ async function getbranchReview(result) {
         var products = new product();
         var productdata = [];
         var data = await products.getBranchReview(result);
+        let grand_total=0;
+        //overall_rating
+        for(let i=0 ;i<data.length;i++){
+            grand_total+=data[i].indivisual_rating;
+        }
+        for(let j=0 ;j<data.length;j++){
+            data[j].overall_rating=grand_total
+        }
+        
         resolve(data); //Returning All offers
     });
 }

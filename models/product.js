@@ -18,7 +18,7 @@ class product {
             });
         });
     }
-    findOffertById(id, callback) { 
+    findOffertById(id, callback) {
         var query = "SELECT id, name, arabic_name,discount as price\
                      FROM myraal_raal.offers\
                      WHERE id =  " + id;
@@ -63,7 +63,6 @@ class product {
             });
         });
     }
-
     getProductDetails(req, callback) {
         console.log("req.query.city_id", req.query.city_id, "req.query.subcategory_id", req.query.subcategory_id);
         var query = `select id from myraal_raal.branches where city_id=${req.query.city_id} and subcategory_id=${req.query.subcategory_id} `
@@ -95,7 +94,6 @@ class product {
                     else {
                         connection.release();
                         console.log("Promise going to be resolved");
-
                         resolve(rows[0]);
                     }
                 });
@@ -144,12 +142,12 @@ class product {
                 });
             });
         });
-
     }
     getBranchReview(id) {
         return new Promise(function (resolve) {
             var ID = id
-            var query = `select rating,comment from myraal_raal.comments where id =${ID}`
+            //SELECT rating, comment, Count(*) FROM `comments` , (select count(rating) as count FROM `comments`  ) as x ORDER BY rating
+            var query = `select rating,comment,count(*) as indivisual_rating,status as overall_rating from myraal_raal.comments where branch_id =${ID} group by rating`
             mySql.getConnection(function (err, connection) {
                 if (err) {
                     throw err;
@@ -161,7 +159,6 @@ class product {
                     else {
                         connection.release();
                         console.log("Promise going to be resolved");
-
                         resolve(rows);
                     }
                 });
@@ -177,7 +174,6 @@ class product {
                      INNER JOIN hiksaudi_js.gc_promotions_products as promo_prods ON  promotions.id = promo_prods.on_offer_product_id \
                      INNER JOIN hiksaudi_js.gc_products as products ON promo_prods.product_id = products.id  \
                      WHERE promotions.id = " + offerId;
-
             mySql.getConnection(function (err, connection) {
                 if (err) {
                     throw err;
@@ -230,7 +226,7 @@ class product {
             });
         });
     }
-    
+
     getCategory(callback) {
         var query = "SELECT id,name,arabic_name \
                      FROM myraal_raal.categories where status=1 ";
@@ -242,7 +238,7 @@ class product {
                 if (err) {
                     throw err;
                 }
-                else { 
+                else {
                     connection.release();
                     console.log(results);
                     callback(err, results);
