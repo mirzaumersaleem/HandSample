@@ -58,9 +58,8 @@ class Cart {
 			} else {
 				console.log("city id there");
 				if ((this.cityId == req.query.city_id) && (this.branchId == req.query.branch_id)) {
-
 					item.price = Number(discount_price)
-					storedItem = this.items[id + 200] = { item: item, qty: Number(quantity), price: Number(discount_price * quantity), actual_price: price, type: "Offer" };
+					storedItem = this.items[id] = { item: item, qty: Number(quantity), price: Number(discount_price * quantity), actual_price: price, type: "Offer" };
 					this.totalQty += Number(quantity);
 					this.totalPrice += Number(discount_price) * quantity;
 					throw 2;
