@@ -42,13 +42,12 @@ class Cart {
 
 	}
 	addOfferToCart(item, id, quantity, price, discount_price, req) {
-		id=Number(id+200);
+		id = Number(id + 200);
 		var storedItem = this.items[id];
 		console.log("this.items[id+200]", item);
 		//Create a new item if its not present in items list
 		if (!storedItem) {
 			if (this.cityId == 0 && this.branchId == 0) {
-				item.id += 200; 
 				item.price = Number(discount_price);
 				storedItem = this.items[id] = { item: item, qty: Number(quantity), price: Number(discount_price * quantity), actual_price: price, type: "Offer" };
 				this.cityId = req.query.city_id;
@@ -56,10 +55,10 @@ class Cart {
 				this.totalQty += Number(quantity);
 				this.totalPrice += Number(discount_price) * quantity;
 				throw 2;
-			} else { 
+			} else {
 				console.log("city id there");
 				if ((this.cityId == req.query.city_id) && (this.branchId == req.query.branch_id)) {
-					item.id += 200;
+
 					item.price = Number(discount_price)
 					storedItem = this.items[id + 200] = { item: item, qty: Number(quantity), price: Number(discount_price * quantity), actual_price: price, type: "Offer" };
 					this.totalQty += Number(quantity);
@@ -73,7 +72,7 @@ class Cart {
 			throw 1;
 		}
 		//Increment qty by 1 and set price to item price
- 
+
 	}
 	//Object.assign([...this.state.editTarget], {[id]: {[target]: value}})
 	deleteProductfromCart(id, price_1, cart) {
