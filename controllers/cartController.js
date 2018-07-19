@@ -2,15 +2,12 @@ var Product = require('../models/product');
 var Cart = require('../models/cart');
 var User = require('../models/user');
 var Order = require('../models/order');
-
 exports.addToCartController = function (req, res) {
     console.log("Inside add to cart controller");
     //req.assert("");
-
     var productId = req.query.id;
     var quantity = Number(req.query.quantity);
     var price = Number(req.query.price);
-
     if (!(/^[0-9]+$/.test(quantity))) {
         return res.json({
             status: 500,
@@ -74,7 +71,6 @@ exports.addOfferToCartController = function (req, res) {
             message: "Invalid quantity"
         })
     }
-
     /*
       If cart is already present in session then pass that old cart
       into the new Cart obj. Else create a new cart and pass it to 
@@ -139,7 +135,6 @@ exports.shoppingCartController = function (req, res) {
     });
     return;
 }
-
 exports.finalCheckoutController = function (req, res) {
     var addressId = req.body.billing_id;
     var shippingId = req.body.shipping_id;
@@ -178,13 +173,10 @@ exports.finalCheckoutController = function (req, res) {
                         message: "order placed successfully"
                     })
                 }
-
             });
         }
     });
 }
-
-
 exports.editShoppingCartController = async function (req, res) {
     console.log("Inside Edit to cart controller");
     //req.assert("");
