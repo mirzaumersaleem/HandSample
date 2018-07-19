@@ -248,9 +248,10 @@ exports.deleteShoppingCartController = function (req, res) {
         } else {
             req.session.cart = cart;
             cart.deleteProductfromCart(productId, price_1, req.session.cart);
-            console.log("Following items in session cart");
-            console.log(req.session.cart.length);
-            if (req.session.cart.length != 0) {
+            var size_of_cart=cart.generateArray();
+            console.log("size_of_cart.length",size_of_cart.length);
+            size_of_cart=size_of_cart.length;
+            if (size_of_cart.length != 0) {
                 res.json({
                     status: 200,
                     message: "Product deleted successfully",
@@ -263,7 +264,7 @@ exports.deleteShoppingCartController = function (req, res) {
                     message: "Product deleted successfully",
                     data: req.session.cart,
                 })
-            }
+            } 
 
         }
     })

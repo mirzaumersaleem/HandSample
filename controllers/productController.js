@@ -171,10 +171,10 @@ async function getbranchReview(result) {
         for(let i=0 ;i<data.length;i++){
             grand_total+=data[i].indivisual_rating;
         }
+        var average_rating=Math.round(grand_total/25)
         for(let j=0 ;j<data.length;j++){
-            data[j].overall_rating=grand_total
+            data[j].overall_rating=average_rating
         }
-        
         resolve(data); //Returning All offers
     });
 }
