@@ -243,7 +243,7 @@ exports.deleteShoppingCartController = function (req, res) {
             var size_of_cart=cart.generateArray();
             console.log("size_of_cart.length",size_of_cart.length);
             size_of_cart=size_of_cart.length;
-            if (size_of_cart.length != 0) {
+            if (size_of_cart != 0) {
                 res.json({
                     status: 200,
                     message: "Product deleted successfully",

@@ -42,14 +42,15 @@ class Cart {
 
 	}
 	addOfferToCart(item, id, quantity, price, discount_price, req) {
-		id = Number(id + 200);
-		var storedItem = this.items[id];
-		console.log("this.items[id+200]", item);
+		var  _id = Number(id + 200);
+		var storedItem = this.items[_id];
+		console.log("this.items[id+200]", _id);
 		//Create a new item if its not present in items list
 		if (!storedItem) {
 			if (this.cityId == 0 && this.branchId == 0) {
 				item.price = Number(discount_price);
-				storedItem = this.items[id] = { item: item, qty: Number(quantity), price: Number(discount_price * quantity), actual_price: price, type: "Offer" };
+				item.id=_id;
+				storedItem = this.items[_id] = { item: item, qty: Number(quantity), price: Number(discount_price * quantity), actual_price: price, type: "Offer" };
 				this.cityId = req.query.city_id;
 				this.branchId = req.query.branch_id;
 				this.totalQty += Number(quantity);
@@ -59,7 +60,8 @@ class Cart {
 				console.log("city id there");
 				if ((this.cityId == req.query.city_id) && (this.branchId == req.query.branch_id)) {
 					item.price = Number(discount_price)
-					storedItem = this.items[id] = { item: item, qty: Number(quantity), price: Number(discount_price * quantity), actual_price: price, type: "Offer" };
+					item.id=_id;
+					storedItem = this.items[_id] = { item: item, qty: Number(quantity), price: Number(discount_price * quantity), actual_price: price, type: "Offer" };
 					this.totalQty += Number(quantity);
 					this.totalPrice += Number(discount_price) * quantity;
 					throw 2;
