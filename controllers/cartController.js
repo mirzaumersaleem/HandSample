@@ -2,11 +2,9 @@ var Product = require('../models/product');
 var Cart = require('../models/cart');
 var User = require('../models/user');
 var Order = require('../models/order');
-
 exports.addToCartController = function (req, res) {
     console.log("Inside add to cart controller");
     //req.assert("");
-
     var productId = req.query.id;
     var quantity = Number(req.query.quantity);
     var price = Number(req.query.price);
@@ -33,7 +31,7 @@ exports.addToCartController = function (req, res) {
             });
         } else {
             try {
-                cart.addProductToCart(prod, productId, req.query.quantity, price);
+                cart.addProductToCart(prod, productId, req.query.quantity, price, req);
             }
             catch (e) {
                 if (e == 1) {
@@ -52,6 +50,12 @@ exports.addToCartController = function (req, res) {
                         cartProducts: cart.generateArray(),
                     })
                 }
+                if (e == 3) {
+                    res.json({
+                        status: 300,
+                        message: "Please Select Product/Offer from one Resturant at a time.",
+                    })
+                }
             }
         }
     })
@@ -67,7 +71,6 @@ exports.addOfferToCartController = function (req, res) {
             message: "Invalid quantity"
         })
     }
-
     /*
       If cart is already present in session then pass that old cart
       into the new Cart obj. Else create a new cart and pass it to 
@@ -84,8 +87,9 @@ exports.addOfferToCartController = function (req, res) {
             });
         } else {
             try {
-                cart.addOfferToCart(prod, productId, req.query.quantity, req.query.price);
+                cart.addOfferToCart(prod, productId, req.query.quantity, req.query.price, req.query.discount_price, req);
             } catch (e) {
+                console.log(e);
                 if (e == 1) {
                     res.json({
                         status: 200,
@@ -100,11 +104,15 @@ exports.addOfferToCartController = function (req, res) {
                         status: 200,
                         message: "Offer added",
                         cartProducts: cart.generateArray(),
-
+                    })
+                }
+                if (e == 3) {
+                    res.json({
+                        status: 300,
+                        message: "Please Select Product/Offer from one Resturant at a time.",
                     })
                 }
             }
-
         }
     })
 }
@@ -127,11 +135,10 @@ exports.shoppingCartController = function (req, res) {
     });
     return;
 }
-
 exports.finalCheckoutController = function (req, res) {
     var addressId = req.body.billing_id;
     var shippingId = req.body.shipping_id;
-    var comments=req.body.comments;
+    var comments = req.body.comments;
     var user = new User();
     var order = new Order();
     if (req.session.cart == null) {
@@ -143,7 +150,7 @@ exports.finalCheckoutController = function (req, res) {
     var user = new User();
     var ID = req.body.shippingId;
     var cart = new Cart(req.session.cart);
-    var sub_total= cart.totalPrice;
+    var sub_total = cart.totalPrice;
     user.getUserAddressById(addressId, async function (err, addressRow) {
         console.log("address", addressRow);
         if (err) {
@@ -153,7 +160,7 @@ exports.finalCheckoutController = function (req, res) {
             });
         }
         else {
-            order.addNewOrder(req,cart, req.user.id, addressId, addressRow[0].address1, shippingId,comments,sub_total, async function (err) {
+            order.addNewOrder(req, cart, req.user.id, addressId, addressRow[0].address1, shippingId, comments, sub_total, async function (err) {
                 if (err) {
                     res.json({
                         status: 500,
@@ -166,13 +173,10 @@ exports.finalCheckoutController = function (req, res) {
                         message: "order placed successfully"
                     })
                 }
-
             });
         }
     });
 }
-
-
 exports.editShoppingCartController = async function (req, res) {
     console.log("Inside Edit to cart controller");
     //req.assert("");
@@ -236,13 +240,46 @@ exports.deleteShoppingCartController = function (req, res) {
         } else {
             req.session.cart = cart;
             cart.deleteProductfromCart(productId, price_1, req.session.cart);
-            console.log("Following items in session cart");
-            console.log(req.session.cart);
-            res.json({
-                status: 200,
-                message: "Product deleted successfully",
-                data: req.session.cart,
-            })
+            var size_of_cart=cart.generateArray();
+            console.log("size_of_cart.length",size_of_cart.length);
+            size_of_cart=size_of_cart.length;
+            if (size_of_cart != 0) {
+                res.json({
+                    status: 200,
+                    message: "Product deleted successfully",
+                    data: req.session.cart,
+                })
+            } else {
+                req.session.cart=null;
+                res.json({
+                    status: 200,
+                    message: "Product deleted successfully",
+                    data: req.session.cart,
+                })
+            } 
+
         }
     })
+}
+exports.deleteCompleteCart = function (req, res) {
+    console.log("Inside delete to cart controller");
+
+    //req.assert("");
+    /*
+    
+      If cart is already present in session then pass that old cart
+      into the new Cart obj. Else create a new cart and pass it to 
+      the new Cart
+
+    */
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    req.session.cart = null;
+    console.log("req.session.cart", req.session.cart);
+    res.json({
+        status: 200,
+        message: "Cart deleted successfully",
+        data: req.session.cart,
+    })
+
+
 }

@@ -18,8 +18,8 @@ class product {
             });
         });
     }
-    findOffertById(id, callback) { 
-        var query = "SELECT id, name, arabic_name,discount\
+    findOffertById(id, callback) {
+        var query = "SELECT id, name, arabic_name,discount as price\
                      FROM myraal_raal.offers\
                      WHERE id =  " + id;
         mySql.getConnection(function (err, connection) {
@@ -63,11 +63,9 @@ class product {
             });
         });
     }
-
     getProductDetails(req, callback) {
         console.log("req.query.city_id", req.query.city_id, "req.query.subcategory_id", req.query.subcategory_id);
         var query = `select id from myraal_raal.branches where city_id=${req.query.city_id} and subcategory_id=${req.query.subcategory_id} `
-
         mySql.getConnection(function (err, connection) {
             if (err) {
                 throw err;
@@ -81,7 +79,6 @@ class product {
     }
     getOfferData(product_id) {
         return new Promise(function (resolve) {
-
             console.log("id ", product_id)
             var query = `select s.*,p.price, COALESCE(p.price - ((p.price/100) * s.discount)) AS discounted_price, p._token as logo from myraal_raal.offers s inner join myraal_raal.products p on p.id = ${product_id}
              where product_id =${product_id}`
@@ -97,7 +94,6 @@ class product {
                     else {
                         connection.release();
                         console.log("Promise going to be resolved");
-
                         resolve(rows[0]);
                     }
                 });
@@ -119,13 +115,11 @@ class product {
                     else {
                         connection.release();
                         console.log("Promise going to be resolved");
-
                         resolve(rows);
                     }
                 });
             });
         });
-
     }
     getBranchInfo(id) {
         return new Promise(function (resolve) {
@@ -148,12 +142,12 @@ class product {
                 });
             });
         });
-
     }
     getBranchReview(id) {
         return new Promise(function (resolve) {
             var ID = id
-            var query = `select rating,comment from myraal_raal.comments where id =${ID}`
+            //SELECT rating, comment, Count(*) FROM `comments` , (select count(rating) as count FROM `comments`  ) as x ORDER BY rating
+            var query = `select rating,comment,count(*) as indivisual_rating,status as overall_rating from myraal_raal.comments where branch_id =${ID} group by rating`
             mySql.getConnection(function (err, connection) {
                 if (err) {
                     throw err;
@@ -165,7 +159,6 @@ class product {
                     else {
                         connection.release();
                         console.log("Promise going to be resolved");
-
                         resolve(rows);
                     }
                 });
@@ -181,7 +174,6 @@ class product {
                      INNER JOIN hiksaudi_js.gc_promotions_products as promo_prods ON  promotions.id = promo_prods.on_offer_product_id \
                      INNER JOIN hiksaudi_js.gc_products as products ON promo_prods.product_id = products.id  \
                      WHERE promotions.id = " + offerId;
-
             mySql.getConnection(function (err, connection) {
                 if (err) {
                     throw err;
@@ -234,6 +226,25 @@ class product {
             });
         });
     }
-}
 
+    getCategory(callback) {
+        var query = "SELECT id,name,arabic_name \
+                     FROM myraal_raal.categories where status=1 ";
+        mySql.getConnection(function (err, connection) {
+            if (err) {
+                throw err;
+            }
+            connection.query(query, function (err, results) {
+                if (err) {
+                    throw err;
+                }
+                else {
+                    connection.release();
+                    console.log(results);
+                    callback(err, results);
+                }
+            });
+        });
+    }
+}
 module.exports = product;

@@ -18,13 +18,16 @@ router.get('/AddOfferToCart', function(req, res){
 router.post('/final-checkout', isLoggedIn, function(req, res){
     cartController.finalCheckoutController(req, res);
 });
-
+ 
 router.get('/delete-from-cart', function(req, res){
     cartController.deleteShoppingCartController(req, res);
 });
 
 router.get('/edit-from-cart', function(req, res){
     cartController.editShoppingCartController(req, res);
+})
+router.get('/complete-cart-delete', function(req, res){
+    cartController.deleteCompleteCart(req, res);
 })
  
 function isLoggedIn(req, res, next){
