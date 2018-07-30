@@ -90,6 +90,7 @@ router.get('/signin', function(req, res){
 router.post('/signin', function(req, res, next){
     req.assert("password", "Password field cannot be empty").notEmpty();
     req.assert("email", "Enter a valid email").isEmail().notEmpty();
+    req.checkBody("mobile_id");
     var error = req.validationErrors(true);
     var errorValues = Object.keys(error);
     console.log("error length " + errorValues.length);
@@ -126,6 +127,7 @@ router.post('/signin', function(req, res, next){
                         message: err1
                     });
                 }
+                userController.setMobileId(req, res);
                 return res.json({
                     status:200,
                     message: "Successful login",

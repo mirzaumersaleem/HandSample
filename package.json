@@ -24,6 +24,7 @@
     "express-mysql-session": "^1.3.0",
     "express-session": "^1.15.6",
     "express-validator": "^5.1.2",
+    "firebase-admin": "^5.13.1",
     "js-base64": "^2.4.8",
     "laravel-encryption": "^1.1.1",
     "microtime": "^2.1.7",

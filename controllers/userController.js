@@ -24,7 +24,7 @@ exports.pushNotification = function (req, res){
            // console.log(result);
             if(result.length!=0){
                 
-                   var notify = await pushNotify(result); 
+                   var notify = await customers.pushNotify(result[0].mobile_id); 
                    res.json({
                     status: 200,
                     message: result
@@ -39,6 +39,40 @@ exports.pushNotification = function (req, res){
     });
 
 }
+
+exports.setMobileId = function (req, res){
+    var customers = new customer();
+    console.log("in addFriend Controller");
+    // var userObj =await customers.getCustomerByEmail(req.user.email);
+    customers.getEmail(req,async function(result, err){
+        console.log("type",typeof(err))
+       // console.log(err);
+        if(err){
+            //console.log(err);
+            res.json({
+                status: 500,
+                message: "error in addFriend: "+err
+            });
+        } else{
+           // console.log(result);
+                if(result.length!=0){
+                    var userObj =await customers.getCustomerByEmail(result);
+                    var mobileId = await customers.addMobileId(req,userObj);
+                    res.json({
+                        status: 200,
+                        message: "mobile_id added Successfully"
+                    });          
+            }else{
+                res.json({
+                    status: 301,
+                    message: "No Customer found"
+                });    
+            }
+        }
+    });
+
+}
+
 
 
 exports.getUserAddressController = function(req, res){

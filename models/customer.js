@@ -2,6 +2,15 @@ var mySql = require('../config/bank_db');
 var moment = require('moment');
 var encrypt = require("../models/encryption");
 
+var admin = require("firebase-admin");
+
+var serviceAccount = require(".././saisaliahrider-firebase-adminsdk-bxg81-2eaffafcc7.json");
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://saisaliahrider.firebaseio.com"
+});
+
 class customer{
     constructor(){
         //defining constructor for customer model
@@ -28,6 +37,34 @@ class customer{
                     }
                 });
             });
+        });
+
+    }
+    //send Push Notification
+    pushNotify(mobile_id) {
+        return new Promise(function(resolve){
+            var payload = {
+                data: {
+                    title: "Raal Notification Update",
+                    body: "Money Received",
+                },
+                notification: {
+                    title: "Raal Notification Update",
+                    body: "Money Received",
+                }
+            }
+            var options = {
+                priority: "high",
+                timeToLive: 60 * 60 * 24
+            }
+            admin.messaging().sendToDevice(RegistrationToken, payload, options)
+                .then(function (response) {
+                    console.log("Successfully send to device", response);
+                }).catch(function (response) {
+                    console.log("Fail to Send", response);
+                })
+
+            resolve("Notification Sent"); //Passing results to callback function
         });
 
     }
@@ -192,6 +229,35 @@ class customer{
                 created_at: moment().format('YYYY-MM-DD HH:mm:ss')
             }
             connection.query(query,favData, function(err, results){
+                if(err){
+                    throw err;
+                }
+                else{
+                    connection.release();
+                    //console.log(results);
+                    resolve(results);
+                }
+            });
+        });
+    });
+
+    }
+    addMobileId(req, userObj){
+        return new Promise(function(resolve){
+        var query = `update customers set ? where email = ?`
+        let favData = {};
+        //var userObj = this.getCustomerByEmail(req.user.email);
+        console.log("user OBJ -> ", userObj[0].id);
+        var customer_id = userObj[0].id;
+        mySql.getConnection(function(err, connection){
+            if(err){
+                throw err;
+            }
+            
+            favData = {
+                mobile_id: req.body.mobile_id
+            }
+            connection.query(query, [favData,req.user.email], function(err, results){
                 if(err){
                     throw err;
                 }
