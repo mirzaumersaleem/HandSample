@@ -829,7 +829,7 @@ exports.testController = function (req, res){
             
             // console.log(result);
             //console.log(result);
-            var userObj = await customers.encryptIt(req.body.text);
+            var userObj = await customers.decryptIt(req.body.text);
             res.json({ 
                 status: 200, 
                 messages: userObj});

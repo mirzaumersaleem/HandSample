@@ -12,6 +12,11 @@ var Product = require('../models/product');
 //   });
   
 
+router.post('/pushNotification', function(req, res){
+    req.checkBody("email").notEmpty();
+    
+    userController.pushNotification(req, res);
+});
 /* GET users listing. */
 router.get('/register', function (req, res) {
     res.render('signup', {});

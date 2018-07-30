@@ -2,10 +2,45 @@ var User = require('../models/user');
 var Mail = require('../models/mail');
 var crypto = require('crypto');
 var moment = require('moment');
+var customer = require("../models/customer");
 exports.getRegisterController = function(req, res){
     res.render('signup', {});
 }
  
+exports.pushNotification = function (req, res){
+    var customers = new customer();
+    console.log("in pushNotification Controller");
+    
+    customers.getCustomerByEmail(req,async function(result, err){
+        //console.log("type",typeof(err))
+       // console.log(err);
+        if(err){
+            //console.log(err);
+            res.json({
+                status: 500,
+                message: "error in pushNotification: "+err
+            });
+        } else{
+           // console.log(result);
+            if(result.length!=0){
+                
+                   var notify = await pushNotify(result); 
+                   res.json({
+                    status: 200,
+                    message: result
+                });               
+            }else{
+                res.json({
+                    status: 301,
+                    message: "No request found"
+                });    
+            }
+        }
+    });
+
+}
+
+
 exports.getUserAddressController = function(req, res){
     
     var user = new User();

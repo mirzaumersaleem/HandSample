@@ -13,12 +13,13 @@ router.post('/test', (req, res) => {
 
     req.checkBody('text').notEmpty();
         console.log("test controller executed");
-        customerController.testController(req, res);
-        // var ac = encry.encrypt("20000");
-        
+        //customerController.testController(req, res);
+        // var ac = encry.encrypt(req.body.text);
+        var ac = encry.encrypt("Hello World");
+        console.log("test email ", ac);
         // console.log("test email ", ac);
-        // var dc = encry.decrypt(ac);
-        // console.log("test email ", dc);
+        var dc = encry.decrypt(ac);
+        console.log("test email2 ", dc);
         // res.json({message : "yo"});
 // var iid = req.session.passport.user;
 
