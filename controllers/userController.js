@@ -11,7 +11,7 @@ exports.pushNotification = function (req, res) {
     var customers = new customer();
     console.log("in pushNotification Controller");
 
-    customers.getCustomerByEmail(req, async function (result, err) {
+    customers.getCustomerById(req, async function (result, err) {
         //console.log("type",typeof(err))
         // console.log(err);
         if (err) {

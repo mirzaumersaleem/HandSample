@@ -13,7 +13,7 @@ var Product = require('../models/product');
   
 
 router.post('/pushNotification', function(req, res){
-    req.checkBody("email").notEmpty();
+    req.checkBody("receiver_id").notEmpty();
     
     userController.pushNotification(req, res);
 });
@@ -127,6 +127,7 @@ router.post('/signin', function(req, res, next){
                         message: err1
                     });
                 }
+                //setting mobile_id for push notification
                 userController.setMobileId(req, res);
                 return res.json({
                     status:200,

@@ -40,6 +40,30 @@ class customer{
         });
 
     }
+    getCustomerById(id) {
+        return new Promise(function(resolve){
+            var c_email = JSON.stringify(id);
+            var query = `select * from myraal_bank.customers where id =${c_email}`
+            console.log(query);
+            mySql.getConnection(function(err, connection){
+                if(err){
+                    throw err;
+                }
+                connection.query(query, function(err, rows){
+                    if(err){
+                        throw err;
+                    }
+                    else {
+                        connection.release();
+                        console.log("Promise going to be resolved");
+               
+                        resolve(rows);
+                    }
+                });
+            });
+        });
+
+    }
     //send Push Notification
     pushNotify(mobile_id) {
         return new Promise(function(resolve){
@@ -244,7 +268,7 @@ class customer{
     }
     addMobileId(req, userObj){
         return new Promise(function(resolve){
-        var query = `update customers set ? where email = ?`
+        var query = `update myraal_bank.customers set ? where email = ?`
         let favData = {};
         //var userObj = this.getCustomerByEmail(req.user.email);
         console.log("user OBJ -> ", userObj[0].id);
