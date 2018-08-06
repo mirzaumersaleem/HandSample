@@ -23,6 +23,7 @@ exports.pushNotification = function (req, res) {
         } else {
             // console.log(result);
             if (result.length != 0) {
+                console.log("mobile_id : ", result[0].mobile_id);
                 if(result[0].mobile_id){
 
                     var notify = await customers.pushNotify(result[0].mobile_id);
@@ -66,7 +67,10 @@ exports.setMobileId = function (req, res) {
             // console.log(result);
             if (result.length != 0) {
                 var userObj = await customers.getCustomerByEmail(result);
-                var mobileId = await customers.addMobileId(req, userObj);
+                if(req.body.mobile_id){
+
+                    var mobileId = await customers.addMobileId(req, userObj);
+                }
                 // res.json({
                 //     status: 200,
                 //     message: "mobile_id added Successfully"

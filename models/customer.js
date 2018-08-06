@@ -4,7 +4,7 @@ var encrypt = require("../models/encryption");
 
 var admin = require("firebase-admin");
 
-var serviceAccount = require(".././saisaliahrider-firebase-adminsdk-bxg81-2eaffafcc7.json");
+var serviceAccount = require(".././raal-fff3f-firebase-adminsdk-g70m2-0b4686adb1.json");
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
