@@ -334,7 +334,7 @@ router.post('/shareMoney', isLoggedIn, (req, res) => {
 
 router.post('/shareMoneyPage', isLoggedIn, (req, res) => {
 
-        console.log("sendGiftPage controller executed");
+        console.log("shareMoneyPage controller executed");
         customerController.shareMoneyPage(req, res);
         
 });

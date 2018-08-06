@@ -13,7 +13,7 @@ exports.pushNotification = function (req, res) {
 
     customers.getCustomerById(req, async function (result, err) {
         //console.log("type",typeof(err))
-        // console.log(err);
+        console.log("in it after getId");
         if (err) {
             //console.log(err);
             res.json({
@@ -23,12 +23,21 @@ exports.pushNotification = function (req, res) {
         } else {
             // console.log(result);
             if (result.length != 0) {
+                if(result[0].mobile_id){
 
-                var notify = await customers.pushNotify(result[0].mobile_id);
-                res.json({
-                    status: 200,
-                    message: result
-                });
+                    var notify = await customers.pushNotify(result[0].mobile_id);
+                    res.json({
+                        status: 200,
+                        message: result
+                    });
+                }
+                else{
+
+                    res.json({
+                        status: 200,
+                        message: "transaction processed, but receiver didn't receive notification"
+                    });
+                }
             } else {
                 res.json({
                     status: 301,
@@ -42,7 +51,7 @@ exports.pushNotification = function (req, res) {
 
 exports.setMobileId = function (req, res) {
     var customers = new customer();
-    console.log("in addFriend Controller");
+    console.log("in setMobileId Controller");
     // var userObj =await customers.getCustomerByEmail(req.user.email);
     customers.getEmail(req, async function (result, err) {
         console.log("type", typeof (err))
@@ -51,17 +60,17 @@ exports.setMobileId = function (req, res) {
             //console.log(err);
             res.json({
                 status: 500,
-                message: "error in addFriend: " + err
+                message: "error in setMobileId: " + err
             });
         } else {
             // console.log(result);
             if (result.length != 0) {
                 var userObj = await customers.getCustomerByEmail(result);
                 var mobileId = await customers.addMobileId(req, userObj);
-                res.json({
-                    status: 200,
-                    message: "mobile_id added Successfully"
-                });
+                // res.json({
+                //     status: 200,
+                //     message: "mobile_id added Successfully"
+                // });
             } else {
                 res.json({
                     status: 301,

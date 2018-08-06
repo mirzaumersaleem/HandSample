@@ -11,10 +11,13 @@ var Product = require('../models/product');
 //     apiSecret: '1DfIoQeZRcWpopSI',
 //   });
   
-
-router.post('/pushNotification', function(req, res){
-    req.checkBody("receiver_id").notEmpty();
-    
+/* Send push notification */
+router.get('/pushNotification', function(req, res){
+    console.log("Inside Push");
+    var receiver_id = req.query.receiver_id;
+    console.log("receiver_id : ", receiver_id);
+    //req.checkBody("receiver_id").notEmpty();
+    req.body.receiver_id = receiver_id;
     userController.pushNotification(req, res);
 });
 /* GET users listing. */

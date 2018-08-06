@@ -40,10 +40,10 @@ class customer{
         });
 
     }
-    getCustomerById(id) {
+    getCustomerById(req, callback) {
         return new Promise(function(resolve){
-            var c_email = JSON.stringify(id);
-            var query = `select * from myraal_bank.customers where id =${c_email}`
+            //var c_email = JSON.stringify(id);
+            var query = `select * from myraal_bank.customers where id =${req.body.receiver_id}`
             console.log(query);
             mySql.getConnection(function(err, connection){
                 if(err){
@@ -55,8 +55,8 @@ class customer{
                     }
                     else {
                         connection.release();
-                        console.log("Promise going to be resolved");
-               
+                        // console.log("getCustomerById resolve :",rows);
+                        callback(rows)
                         resolve(rows);
                     }
                 });
@@ -81,7 +81,7 @@ class customer{
                 priority: "high",
                 timeToLive: 60 * 60 * 24
             }
-            admin.messaging().sendToDevice(RegistrationToken, payload, options)
+            admin.messaging().sendToDevice(mobile_id, payload, options)
                 .then(function (response) {
                     console.log("Successfully send to device", response);
                 }).catch(function (response) {
