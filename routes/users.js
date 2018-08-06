@@ -94,6 +94,7 @@ router.post('/signin', function(req, res, next){
     req.assert("password", "Password field cannot be empty").notEmpty();
     req.assert("email", "Enter a valid email").isEmail().notEmpty();
     req.checkBody("mobile_id");
+    console.log("sign in req body : ", req.body);
     var error = req.validationErrors(true);
     var errorValues = Object.keys(error);
     console.log("error length " + errorValues.length);
