@@ -219,10 +219,10 @@ exports.rejectMoney = function (req, res) {
                 // updating the fetched receive request instance in DB
                 var updateReceivedObj = await customers.updateReceiveSet(req, reveivedObj, r_status);
 
-                res.json({
-                    status: 200,
-                    message: "Amount returned Successfully"
-                });
+
+                // res.json({ status: 200, message: 'Money Send Successfully' });
+                var string = encodeURIComponent(reveivedObj[0].sender_id);
+                res.redirect('../users/pushNotification/?receiver_id=' + string);
             } else {
                 res.json({
                     status: 301,
@@ -476,7 +476,8 @@ exports.payTransaction = function (req, res) {
                         var updateReceivedObj = await customers.transReceiveSet(req, reveivedObj[0].customer_id, userObj[0].id);
 
 
-                        res.json({ status: 200, message: 'Transaction Successfull' });
+                        var string = encodeURIComponent(reveivedObj[0].customer_id);
+                        res.redirect('../users/pushNotification/?receiver_id=' + string);
                     }
                 }
                 else {
@@ -615,7 +616,8 @@ exports.sendMoney = function (req, res) {
                         var updateReceivedObj = await customers.sendMoneyRec(req, req.body.friend_id, userObj[0].id);
 
 
-                        res.json({ status: 200, message: 'Money Send Successfully' });
+                        var string = encodeURIComponent(req.body.friend_id);
+                        res.redirect('../users/pushNotification/?receiver_id=' + string);
                     }
                 }
                 else {
@@ -654,7 +656,7 @@ exports.sendGift = function (req, res) {
                 //fetching logged in user's instance by email
                 var userObj = await customers.getCustomerByEmail(req.user.email);
                 var pinObj = await customers.getPinVerification(userObj[0].id);
-                 console.log("pin Obj ====" , pinObj);
+                console.log("pin Obj ====", pinObj);
                 if (pinObj[0].pin == req.body.pin) {
                     //fetching balance instance from DB of user
                     var balanceObj = await customers.getCustomerBalance(req, userObj[0].id);
@@ -679,7 +681,7 @@ exports.sendGift = function (req, res) {
 
                         // res.json({ status: 200, message: 'Money Send Successfully' });
                         var string = encodeURIComponent(req.body.friend_id);
-                        res.redirect(200, './users/pushNotification/?receiver_id=' + string);
+                        res.redirect('../users/pushNotification/?receiver_id=' + string);
                     }
                 }
                 else {
@@ -740,7 +742,8 @@ exports.shareMoney = function (req, res) {
                         var updateReceivedObj = await customers.sendMoneyRec(req, req.body.friend_id, userObj[0].id);
 
 
-                        res.json({ status: 200, message: 'Money Shared Successfully' });
+                        var string = encodeURIComponent(req.body.friend_id);
+                        res.redirect('../users/pushNotification/?receiver_id=' + string);
                     }
                 }
                 else {

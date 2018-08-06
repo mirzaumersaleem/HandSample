@@ -8,7 +8,7 @@ var serviceAccount = require(".././raal-fff3f-firebase-adminsdk-g70m2-0b4686adb1
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://saisaliahrider.firebaseio.com"
+    databaseURL: "https://raal-fff3f.firebaseio.com"
 });
 
 class customer{

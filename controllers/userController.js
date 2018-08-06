@@ -29,7 +29,7 @@ exports.pushNotification = function (req, res) {
                     var notify = await customers.pushNotify(result[0].mobile_id);
                     res.json({
                         status: 200,
-                        message: result
+                        message: "Money Transfered"
                     });
                 }
                 else{
