@@ -64,7 +64,7 @@ passport.use('local-register', new localStrategy({
             // var verificationCode = Math.floor((Math.random() * 10000) + 1); 
             //Data of the new user
             var passwordSet = user.generatePasswordHash(req.body.password);
-            
+
             passwordSet = passwordSet.replace('$2a$', '$2y$');
             var newUser = {
                 name: req.body.name,
@@ -150,7 +150,9 @@ passport.use('local-signin', new localStrategy({
         var user = new User();
         user.findByEmail(username, function (err, result) {
             console.log("result -> ", result[0])
-           var finalNodeGeneratedHash = result[0].password.replace('$2y$', '$2a$');
+            if (result.length > 0) {
+                var finalNodeGeneratedHash = result[0].password.replace('$2y$', '$2a$');
+            }
             if (err) {
                 console.log(err);
                 return done(err);
