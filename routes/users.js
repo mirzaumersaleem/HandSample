@@ -11,7 +11,15 @@ var Product = require('../models/product');
 //     apiSecret: '1DfIoQeZRcWpopSI',
 //   });
   
-
+/* Send push notification */
+router.get('/pushNotification', function(req, res){
+    console.log("Inside Push");
+    var receiver_id = req.query.receiver_id;
+    console.log("receiver_id : ", receiver_id);
+    //req.checkBody("receiver_id").notEmpty();
+    req.body.receiver_id = receiver_id;
+    userController.pushNotification(req, res);
+});
 /* GET users listing. */
 router.get('/register', function (req, res) {
     res.render('signup', {});
@@ -84,6 +92,8 @@ router.get('/signin', function(req, res){
 router.post('/signin', function(req, res, next){
     req.assert("password", "Password field cannot be empty").notEmpty();
     req.assert("email", "Enter a valid email").isEmail().notEmpty();
+    req.checkBody("mobile_id");
+    console.log("sign in req body : ", req.body);
     var error = req.validationErrors(true);
     var errorValues = Object.keys(error);
     console.log("error length " + errorValues.length);
@@ -120,6 +130,8 @@ router.post('/signin', function(req, res, next){
                         message: err1
                     });
                 }
+                //setting mobile_id for push notification
+                userController.setMobileId(req, res);
                 return res.json({
                     status:200,
                     message: "Successful login",

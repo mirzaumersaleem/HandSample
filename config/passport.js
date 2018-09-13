@@ -63,12 +63,15 @@ passport.use('local-register', new localStrategy({
             //Generate a random number between 1 and 10000 and assign it as a verification
             // var verificationCode = Math.floor((Math.random() * 10000) + 1); 
             //Data of the new user
+            var passwordSet = user.generatePasswordHash(req.body.password);
+
+            passwordSet = passwordSet.replace('$2a$', '$2y$');
             var newUser = {
                 name: req.body.name,
                 mobile: req.body.mobile,
                 phone_number: req.body.phone_number,
                 email: req.body.email,
-                password: user.generatePasswordHash(req.body.password),
+                password: passwordSet,
                 address: req.body.address,
                 city: req.body.city,
                 identity_number: req.body.identity_number,
@@ -77,7 +80,7 @@ passport.use('local-register', new localStrategy({
                 name: req.body.name,//
                 phone_number: req.body.phone_number,//
                 email: req.body.email,//
-                password: user.generatePasswordHash(req.body.password),//
+                password: passwordSet,//
                 postal_code: req.body.postal_code,//
                 address: req.body.address,//
                 country: req.body.country,//
@@ -147,7 +150,10 @@ passport.use('local-signin', new localStrategy({
 
         var user = new User();
         user.findByEmail(username, function (err, result) {
-
+            console.log("result -> ", result[0])
+            if (result.length > 0) {
+                var finalNodeGeneratedHash = result[0].password.replace('$2y$', '$2a$');
+            }
             if (err) {
                 console.log(err);
                 return done(err);
@@ -157,8 +163,8 @@ passport.use('local-signin', new localStrategy({
                 console.log("No user found");
                 return done(null, false, { message: "No user found" });
             }
-            if (!user.validPassword(password, result[0].password)) {
-                console.log("password", password, "checking Password", result[0].password)
+            if (!user.validPassword(password, finalNodeGeneratedHash)) {
+                console.log("password", password, "checking Password", finalNodeGeneratedHash)
                 console.log("Incorrect password entered");
                 return done(null, false, { message: "Incorrect password" });
             }
