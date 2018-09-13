@@ -281,3 +281,71 @@ exports.getActiveCategoryController = function (req, res) {
         }
     })
 }
+exports.getMyOrderdetails = function (req, res) {
+    console.log("inside controller");
+    var products = new product();
+    products.getOrderHistory(req.query.Id, function (err, result) {
+        if (err) {
+            res.json({
+                status: 500,
+                message: "Err", err,
+            });
+        } else {
+            console.log("after", result);
+            if (result != 0) {
+                // for(var i=0 ;i<result.length;i++){
+                //     result[i].order_status="Pending";
+                // }
+                res.json({
+                    status: 200,
+                    data: result,
+                })
+            }
+            else {
+                res.json({
+                    status: 200,
+                    message: "No previous orders",
+                })
+            }
+        }
+    })
+}
+
+exports.getMyOrderdetailsproductwise = function (req, res) {
+    console.log("inside controller");
+    var products = new product();
+    let productData=[];
+    let OfferData =[];
+    var id = Number(req.query.id);
+    products.getOrderDetailHistory(id, function (err, result) {
+        if (err) {
+            res.json({
+                status: 500,
+                message: err,
+            });
+        } else {
+            console.log("after", result);
+            if (result != 0) {
+                for(var i=0 ;i<result.length;i++){
+                    if(result[i].product_id!=0){
+                        productData.push(result[i])
+                    }else{
+                        OfferData.push(result[i])
+                    }
+                }
+                res.json({
+                    status: 200,
+                    Products: productData , Offers:OfferData,
+                })
+            }
+            else {
+                res.json({
+                    status: 200,
+                    message: "No previous orders",
+                })
+            }
+
+        }
+    })
+
+}

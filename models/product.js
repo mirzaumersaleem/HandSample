@@ -246,5 +246,55 @@ class product {
             });
         });
     }
+    getOrderHistory(Id, callback) {
+
+        var query = 'select id,status,sub_total,total,created_at' +
+            ' from myraal_raal.orders ' +
+            ' where user_id = "' + Id + '" ';
+        console.log("query", query);
+        mySql.getConnection(function (err, connection) {
+            if (err) {
+                throw err;
+            }
+            connection.query(query, function (err, results) {
+                if (err) {
+                    console.log(err);
+                    throw err;
+                }
+                else {
+                    connection.release();
+                    console.log(results);
+                    callback(err, results);
+                }
+            });
+        });
+    }
+    getOrderDetailHistory(Id, callback) {
+        var query =  `SELECT o.id as order_id,o.created_at as order_date,
+        o.product_id,o.offer_id ,p.name as product_name,
+        p.arabic_name as product_arabic_name,p.price as product_prc,
+        p.qty as product_qty,p.image as product_img,f.name as offer_name,
+        f.arabic_name as offer_arabic_name,f.qty as offer_qty 
+        FROM order_items o left join products p on p.id=o.product_id 
+        left join offers f on f.id=o.offer_id 
+        where o.order_id=${Id}`
+         mySql.getConnection(function (err, connection) {
+            if (err) {
+                throw err;
+            }
+            connection.query(query, function (err, results) {
+                if (err) {
+                    console.log(err);
+                    throw err;
+                }
+                else {
+                    connection.release();
+                    console.log(results);
+                    callback(err, results);
+                }
+            });
+        });
+
+    }
 }
 module.exports = product;

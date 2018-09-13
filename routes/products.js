@@ -62,6 +62,12 @@ router.get('/getActiveCategories', function (req, res) {
 router.get('/offers', (req, res) => {
     console.log("Inside offers");
     productsController.getOffers(req, res);
+}); 
+router.get('/myOrder', function (req, res) {
+    productsController.getMyOrderdetails(req,res);
+}); 
+router.get('/myOrderDetails', function (req, res) {
+    productsController.getMyOrderdetailsproductwise(req,res);
 });
 
 module.exports = router;

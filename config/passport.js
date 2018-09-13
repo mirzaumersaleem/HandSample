@@ -90,6 +90,7 @@ passport.use('local-register', new localStrategy({
                 updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),//
                 created_at: moment().format('YYYY-MM-DD HH:mm:ss')//
             }
+            console.log("newUser",newUser.password);
             //Creating new user
             user.setNewUser(newUser, async function (err, newAddedUser) {
                 if (err) {
