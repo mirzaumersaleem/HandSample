@@ -246,14 +246,15 @@ class product {
             });
         });
     }
-    getOrderHistory(Id, callback) {
-
+    getOrderHistory(req,callback) {
+        //console.log("req.user[0].id ",req.user.id )
         var query = 'select id,status,sub_total,total,created_at' +
             ' from myraal_raal.orders ' +
-            ' where user_id = "' + Id + '" ';
-        console.log("query", query);
+            ' where user_id = "' + req.user.id+ '" ';
+       // console.log("query", req.user.id);
         mySql.getConnection(function (err, connection) {
             if (err) {
+                console.log(err);
                 throw err;
             }
             connection.query(query, function (err, results) {
@@ -263,7 +264,7 @@ class product {
                 }
                 else {
                     connection.release();
-                    console.log(results);
+                   // console.log(results);
                     callback(err, results);
                 }
             });
@@ -273,7 +274,7 @@ class product {
         var query =  `SELECT o.id as order_id,o.created_at as order_date,
         o.product_id,o.offer_id ,p.name as product_name,
         p.arabic_name as product_arabic_name,p.price as product_prc,
-        p.qty as product_qty,p.image as product_img,f.name as offer_name,
+        p.qty as product_qty,f.name as offer_name,
         f.arabic_name as offer_arabic_name,f.qty as offer_qty 
         FROM order_items o left join products p on p.id=o.product_id 
         left join offers f on f.id=o.offer_id 
@@ -294,7 +295,6 @@ class product {
                 }
             });
         });
-
     }
 }
 module.exports = product;

@@ -250,6 +250,8 @@ router.post('/verify', (req, res) => {
 
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){
+        console.log("user",req.user.id);
+       
         next();
     }
     else{

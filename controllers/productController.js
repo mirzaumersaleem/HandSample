@@ -282,9 +282,10 @@ exports.getActiveCategoryController = function (req, res) {
     })
 }
 exports.getMyOrderdetails = function (req, res) {
-    console.log("inside controller");
+    console.log("inside controller", );
+    //console.log("query", req.user.id);
     var products = new product();
-    products.getOrderHistory(req.query.Id, function (err, result) {
+    products.getOrderHistory(req,function (err, result) {
         if (err) {
             res.json({
                 status: 500,
