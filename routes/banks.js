@@ -180,6 +180,34 @@ router.post('/addMoney', isLoggedIn, (req, res) => {
 });
 
 
+router.post('/editUser', isLoggedIn, (req, res) => {
+
+    console.log("editUser controller executed");
+    customerController.editUser(req, res);
+
+});
+
+
+router.post('/editPin', isLoggedIn, (req, res) => {
+    req.checkBody('pin_code').notEmpty();
+    req.checkBody('new_pin_code').notEmpty();
+
+    console.log("editPin controller executed");
+    customerController.editPinCode(req, res);
+
+});
+
+router.post('/editPassword', isLoggedIn, (req, res) => {
+
+    req.checkBody('password').notEmpty();
+    req.checkBody('new_password').notEmpty();
+
+    console.log("editPassword controller executed");
+    customerController.editPassword(req, res);
+
+});
+
+
 router.post('/addMoneyVerified', isLoggedIn, (req, res) => {
     req.checkBody('amount').notEmpty();
     req.checkBody('ip_address').notEmpty();

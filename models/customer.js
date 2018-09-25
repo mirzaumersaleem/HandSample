@@ -1,5 +1,6 @@
 var mySql = require('../config/bank_db');
 var moment = require('moment');
+var mySql2 = require("../config/database");
 var encrypt = require("../models/encryption");
 
 var admin = require("firebase-admin");
@@ -31,7 +32,7 @@ class customer {
                     }
                     else {
                         connection.release();
-                        console.log("Promise going to be resolved");
+                        console.log("Get CustomerByEmail Executed");
 
                         resolve(rows);
                     }
@@ -963,6 +964,136 @@ class customer {
 
                         }
                         //console.log(results);
+                        resolve(results);
+                    }
+                });
+            });
+        });
+
+    }
+
+
+    editUser(req) {
+
+
+        return new Promise(function (resolve) {
+            // var query = `update myraal_raal.users set ? where id = ${req.user.id}`;
+            var query = `UPDATE myraal_raal.users SET phone_number = '${req.body.phone_number}', name = '${req.body.name}', email = '${req.body.email}', address = '${req.body.address}', identity_number = '${req.body.identity_number}', city = '${req.body.city}' WHERE users.id = '${req.user.id}'`;
+
+            console.log("logs query : ", query)
+            mySql2.getConnection(function (err, connection) {
+                if (err) {
+                    throw err;
+                }
+                connection.query(query, function (err, results) {
+                    if (err) {
+                        throw err;
+                    }
+                    else {
+                        connection.release();
+                        resolve(results);
+                    }
+                });
+            });
+        });
+
+    }
+
+
+    editUserBank(req) {
+
+        return new Promise(function (resolve) {
+            var query = `UPDATE myraal_bank.customers SET country = '${req.body.country}', postal_code = '${req.body.postal_code}', phone_number = '${req.body.phone_number}', name = '${req.body.name}', email = '${req.body.email}', address = '${req.body.address}', identity_number = '${req.body.identity_number}', city = '${req.body.city}' WHERE customers.email = '${req.user.email}'`;
+            console.log("this is email of bank user : ", query)
+            mySql.getConnection(function (err, connection) {
+                if (err) {
+                    throw err;
+                }
+
+                connection.query(query, function (err, results) {
+                    if (err) {
+                        // throw err;
+                        console.log(err)
+                    }
+                    else {
+                        connection.release();
+                        resolve(results);
+                    }
+                });
+            });
+        });
+
+    }
+
+    editPinCode(req) {
+
+        return new Promise(function (resolve) {
+            var query = `UPDATE myraal_bank.customers SET secret_password = '${req.body.new_pin_code}' WHERE customers.email = '${req.user.email}'`;
+            console.log("this is query of editPinCode : ", query)
+            mySql.getConnection(function (err, connection) {
+                if (err) {
+                    throw err;
+                }
+
+                connection.query(query, function (err, results) {
+                    if (err) {
+                        // throw err;
+                        console.log(err)
+                    }
+                    else {
+                        connection.release();
+                        resolve(results);
+                    }
+                });
+            });
+        });
+
+    }
+
+
+    editPassword(pass, req) {
+
+        return new Promise(function (resolve) {
+            var query = `UPDATE myraal_raal.users SET password = '${pass}' WHERE users.email = '${req.user.email}'`;
+            console.log("this is query of editPassword : ", query)
+            mySql2.getConnection(function (err, connection) {
+                if (err) {
+                    throw err;
+                }
+
+                connection.query(query, function (err, results) {
+                    if (err) {
+                        // throw err;
+                        console.log(err)
+                    }
+                    else {
+                        connection.release();
+                        resolve(results);
+                    }
+                });
+            });
+        });
+
+    }
+
+
+    editPasswordBank(pass, req) {
+
+        return new Promise(function (resolve) {
+            var query = `UPDATE myraal_bank.customers SET password = '${pass}' WHERE customers.email = '${req.user.email}'`;
+            console.log("this is query of editPasswordBank : ", query)
+            mySql.getConnection(function (err, connection) {
+                if (err) {
+                    throw err;
+                }
+
+                connection.query(query, function (err, results) {
+                    if (err) {
+                        // throw err;
+                        console.log(err)
+                    }
+                    else {
+                        connection.release();
                         resolve(results);
                     }
                 });

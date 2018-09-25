@@ -1,5 +1,5 @@
 var bank = require("../models/bank");
-var user = require("../models/user");
+var User = require("../models/user");
 var customer = require("../models/customer");
 var encrypt = require("../models/encryption");
 
@@ -304,6 +304,155 @@ exports.addMoney = function (req, res) {
                 res.json({
                     status: 301,
                     message: "No request found"
+                });
+            }
+        }
+    });
+
+}
+
+
+exports.editUser = function (req, res) {
+    var customers = new customer();
+    console.log("in editUser Controller");
+
+    customers.getEmail(req, async function (result, err) {
+        //console.log("type",typeof(err))
+        // console.log(err);
+        if (err) {
+            //console.log(err);
+            res.json({
+                status: 500,
+                message: "error in editUser: " + err
+            });
+        } else {
+            // console.log(result);
+            if (result.length != 0) {
+
+
+                //fetching logged in user's instance by email
+                var userObj = await customers.getCustomerByEmail(req.user.email);
+
+                var userBank = await customers.editUserBank(req);
+                var userRaal = await customers.editUser(req);
+                res.json({
+                    status: 200,
+                    message: "edited successfully"
+                });
+            } else {
+                res.json({
+                    status: 301,
+                    message: "No user found"
+                });
+            }
+        }
+    });
+
+}
+
+
+exports.editPinCode = function (req, res) {
+    var customers = new customer();
+    console.log("in editPinCode Controller");
+
+    customers.getEmail(req, async function (result, err) {
+        //console.log("type",typeof(err))
+        // console.log(err);
+        if (err) {
+            //console.log(err);
+            res.json({
+                status: 500,
+                message: "error in editPinCode: " + err
+            });
+        } else {
+            // console.log(result);
+            if (result.length != 0) {
+
+
+                console.log("1");
+                //fetching logged in user's instance by email
+                var userObj = await customers.getCustomerByEmail(req.user.email);
+                // console.log("1.5" , userObj[0]);
+                if (userObj[0].secret_password == req.body.pin_code) {
+
+                    // console.log("2");
+                    var pinCode = await customers.editPinCode(req);
+                    res.json({
+                        status: 200,
+                        message: "pin code edited successfully"
+                    });
+                } else {
+                    // console.log("3");
+                    res.json({
+                        status: 201,
+                        message: "Invalid pin-code"
+                    });
+
+                }
+                // console.log("4");
+            } else {
+                res.json({
+                    status: 301,
+                    message: "No user found"
+                });
+            }
+        }
+    });
+
+}
+
+
+exports.editPassword = function (req, res) {
+    var customers = new customer();
+    var user = new User();
+    var password = req.body.password;
+    console.log("in editPassword Controller");
+
+    customers.getEmail(req, async function (result, err) {
+        //console.log("type",typeof(err))
+        // console.log(err);
+        if (err) {
+            //console.log(err);
+            res.json({
+                status: 500,
+                message: "error in editPassword: " + err
+            });
+        } else {
+            // console.log(result);
+            if (result.length != 0) {
+
+
+                console.log("1");
+                //fetching logged in user's instance by email
+                var userObj = await customers.getCustomerByEmail(req.user.email);
+                if (userObj.length > 0) {
+                    var finalNodeGeneratedHash = userObj[0].password.replace('$2y$', '$2a$');
+                }
+                if (!user.validPassword(password, finalNodeGeneratedHash)) {
+                    console.log("password", password, "checking Password", finalNodeGeneratedHash)
+                    console.log("Incorrect password entered");
+                    res.json({
+                        status: 201,
+                        message: "Incorrect Password"
+                    });
+                }else{
+                    var passwordSet = user.generatePasswordHash(req.body.new_password);
+                    passwordSet = passwordSet.replace('$2a$', '$2y$');
+        
+                    var pass = await customers.editPassword(passwordSet,req);
+                    var passBank = await customers.editPasswordBank(passwordSet,req);
+                    res.json({
+                        status: 200,
+                        message: "password changed successfully"
+                    });
+
+                }
+
+                // console.log("4");
+            } else {
+                res.json({
+                    status: 301,
+                    message: "No user found"
                 });
             }
         }
