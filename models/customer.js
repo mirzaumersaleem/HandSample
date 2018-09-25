@@ -41,6 +41,31 @@ class customer {
         });
 
     }
+    //get a unique customer
+    getCustomerByEmails(email) {
+        return new Promise(function (resolve) {
+            var c_email = JSON.stringify(email);
+            var query = `select * from myraal_raal.users where email =${c_email}`
+            console.log(query);
+            mySql.getConnection(function (err, connection) {
+                if (err) {
+                    throw err;
+                }
+                connection.query(query, function (err, rows) {
+                    if (err) {
+                        throw err;
+                    }
+                    else {
+                        connection.release();
+                        console.log("Get CustomerByEmail Executed");
+
+                        resolve(rows);
+                    }
+                });
+            });
+        });
+
+    }
     getCustomerById(req, callback) {
         return new Promise(function (resolve) {
             //var c_email = JSON.stringify(id);

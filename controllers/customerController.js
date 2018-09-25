@@ -335,9 +335,10 @@ exports.editUser = function (req, res) {
 
                 var userBank = await customers.editUserBank(req);
                 var userRaal = await customers.editUser(req);
+                var userObj2 = await customers.getCustomerByEmail(req.body.email);
                 res.json({
                     status: 200,
-                    message: "edited successfully"
+                    message: userObj2
                 });
             } else {
                 res.json({
