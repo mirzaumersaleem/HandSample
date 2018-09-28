@@ -39,7 +39,6 @@ class Cart {
 		} else {
 			throw 1;
 		}
-
 	}
 	addOfferToCart(item, id, quantity, price, discount_price, req) {
 		var  _id = Number(id + 200);

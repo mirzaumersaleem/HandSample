@@ -156,7 +156,7 @@ exports.finalCheckoutController = function (req, res) {
         if (err) {
             res.json({
                 status: 500,
-                message: err
+                message: err 
             });
         }
         else {

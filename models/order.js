@@ -1,6 +1,6 @@
 var mySql = require('../config/database');
 var moment = require('moment');
-
+var Cart = require('./cart');
 class Order {
     constructor() {
         this.addOrderItems = function (cart, orderedId, callback) {
@@ -37,7 +37,7 @@ class Order {
         */
        //var cart = new Cart(req.session.cart);
         var productsInCart = cart.generateArray();
-        console.log("Inside add New Order model");
+        console.log("Inside add New Order model","cart",cart.cityId,cart.branchId);
         var productsInCart = cart.generateArray();
         addressRow = JSON.stringify(addressRow);
         var order_obj = {
@@ -48,6 +48,8 @@ class Order {
             status: 0,
             sub_total: sub_total,
             total: sub_total,
+            city_id:cart.cityId,
+            branch_id:cart.branchId,
             created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
         }
         var newOrderQuery = `INSERT INTO myraal_raal.orders set ?`
