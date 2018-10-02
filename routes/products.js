@@ -61,7 +61,7 @@ router.get('/getActiveCategories', function (req, res) {
 });
 router.get('/offers', (req, res) => {
     console.log("Inside offers");
-    productsController.getOffers(req, res);
+    productsController.getOffers(req, res); 
 }); 
 router.get('/myOrder', function (req, res) {
     productsController.getMyOrderdetails(req,res);

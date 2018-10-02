@@ -68,7 +68,7 @@ class product {
         var query = `select id from myraal_raal.branches where city_id=${req.query.city_id} and subcategory_id=${req.query.subcategory_id} `
         mySql.getConnection(function (err, connection) {
             if (err) {
-                throw err;
+                throw err; 
             }
             connection.query(query, function (err, rows, fields) {
                 connection.release()
