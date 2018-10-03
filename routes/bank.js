@@ -783,7 +783,7 @@ router.get("/getBankAccount", (req, res) => {
     console.log(req.session.cart);
   } else {
     console.log("cart.branch_id", req.session.cart.branchId);
-    const qry = `SELECT account_no FROM balances where admin_id IN (SELECT role_id from users where branch_id= ${req.session.cart.branchId})`;
+    const qry = `SELECT account_no FROM balances where admin_id IN (SELECT admin_id from users where branch_id= ${req.session.cart.branchId})`;
     mysql.getConnection(function(err, connection) {
       if (err) {
         throw err; 
