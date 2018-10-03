@@ -582,65 +582,66 @@ router.post("/verifyPinAddMoney", (req, res) => {
 });
 
 router.post("/payTransaction", (req, res) => {
-  req.checkBody("amount");
-  req.checkBody("customer_id"); //will get it from session
-  req.checkBody("ip_address");
-  req.checkBody("account_number");
-  req.checkBody("description");
-  let favData = {};
-  let upBalance = {};
-  let balanceObj = {};
-  let accountObj = {};
-  let blnObj = {};
-  let rcvObj = {};
-  Promise.using(mysql.getSqlConn(), conn => {
-    //console.log("name - > "+ req.body.name);
-    //searching on the basis of name
-    var status_value = 0;
-    select = `select * from balances where customer_id = ${
-      req.body.customer_id
-    }`;
-    conn.query(select).then(result => {
-      //res.json({ status: 200, message: 'balance added Successfully', upBalance });
+  // req.checkBody("amount");
+  // req.checkBody("customer_id"); //will get it from session
+  // req.checkBody("ip_address");
+  // req.checkBody("account_number");
+  // req.checkBody("description");
+  // let favData = {};
+  // let upBalance = {};
+  // let balanceObj = {};
+  // let accountObj = {};
+  // let blnObj = {};
+  // let rcvObj = {};
+  // console.log("id",req.user.id);
+  // Promise.using(mysql.getSqlConn(), conn => {
+  //   //console.log("name - > "+ req.body.name);
+  //   //searching on the basis of name
+  //   var status_value = 0;
+  //   select = `select * from balances where customer_id = ${
+  //     req.user.id
+  //   }`;
+  //   conn.query(select).then(result => {
+  //     //res.json({ status: 200, message: 'balance added Successfully', upBalance });
 
-      upBalance = {
-        amount: req.body.amount,
-        customer_id: req.body.customer_id,
-        previous_balance: result[0].previous_balance,
-        description: req.body.description,
-        ip_address: req.body.ip_address,
-        type: 2,
-        status: 0,
-        remaining_balance: result[0].previous_balance - req.body.amount,
-        updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
-        created_at: moment().format("YYYY-MM-DD HH:mm:ss")
-      };
-    });
+  //     upBalance = {
+  //       amount: req.body.amount,
+  //       customer_id: req.user.id,
+  //       previous_balance: result[0].previous_balance,
+  //       description: req.body.description,
+  //       ip_address: req.body.ip_address,
+  //       type: 2,
+  //       status: 0,
+  //       remaining_balance: result[0].previous_balance - req.body.amount,
+  //       updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+  //       created_at: moment().format("YYYY-MM-DD HH:mm:ss")
+  //     };
+  //   });
 
-    conn
-      .query(`insert update_balances set ?`, upBalance)
-      .then(res => {
-        return Promise.using(mysql.getSqlConn(), conn => {
-          balanceObj = {
-            update_balance_id: res.insertId,
-            ip_address: req.body.ip_address,
-            status: 0,
-            updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
-            created_at: moment().format("YYYY-MM-DD HH:mm:ss")
-          };
-          return conn.qry(`insert update_blance_request set ?`, balanceObj);
-        });
-        res.json({
-          status: 200,
-          message: "Transaction Succeed",
-          transaction_id: res.insertId,
-          account_no: req.body.account_no
-        });
-      })
-      .catch(err => {
-        res.json({ status: 500, message: "Error Occured", err });
-      });
-  });
+  //   conn
+  //     .query(`insert update_balances set ?`, upBalance)
+  //     .then(res => {
+  //       return Promise.using(mysql.getSqlConn(), conn => {
+  //         balanceObj = {
+  //           update_balance_id: res.insertId,
+  //           ip_address: req.body.ip_address,
+  //           status: 0,
+  //           updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+  //           created_at: moment().format("YYYY-MM-DD HH:mm:ss")
+  //         };
+  //         return conn.qry(`insert update_blance_request set ?`, balanceObj);
+  //       });
+  //       res.json({
+  //         status: 200,
+  //         message: "Transaction Succeed",
+  //         transaction_id: res.insertId,
+  //         account_no: req.body.account_no
+  //       });
+  //     })
+  //     .catch(err => {
+  //       res.json({ status: 500, message: "Error Occured", err });
+  //     });
+  // });
 });
 
 router.post("/verifyPinTransaction", (req, res) => {

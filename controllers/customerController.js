@@ -606,8 +606,10 @@ exports.payTransaction = function (req, res) {
                     //fetching balance instance from DB of user
                     // console.log("pinObj ====" , pinObj[0].pin);
                     var balanceObj = await customers.getCustomerBalance(req, userObj[0].id);
-                    if (balanceObj[0].balance - req.body.amount < 0 || !balanceObj[0].balance) {
-
+                    console.log("balanceObj",balanceObj.length);
+                    if(balanceObj.length!=0){
+                    if (balanceObj[0].balance - req.body.amount < 0 || balanceObj[0] !=undefined) {
+ 
                         res.json({ status: 200, message: 'Transaction Failed, insufficient balance' });
                     } else {
                         //updating "update_balances" table
@@ -629,6 +631,10 @@ exports.payTransaction = function (req, res) {
                         var string = encodeURIComponent(reveivedObj[0].customer_id);
                         res.redirect('../users/pushNotification/?receiver_id=' + string);
                     }
+                }else{
+                    res.json({ status: 200, message: 'Transaction Failed, No Account Found ' });
+                   
+                }
                 }
                 else {
                     res.json({ status: 500, message: 'Please enter valid pin..!' });
