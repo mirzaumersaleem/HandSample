@@ -604,7 +604,7 @@ exports.payTransaction = function (req, res) {
                 var pinObj = await customers.getPinVerification(userObj[0].id);
                 console.log("pinObj",pinObj)
                 console.log("userObj",userObj);
-                console.log("req.body",req,body);
+                console.log("req.body",req.body);
                 if (pinObj[0].pin == req.body.pin) {
                     //fetching balance instance from DB of user
                     // console.log("pinObj ====" , pinObj[0].pin);
