@@ -149,7 +149,7 @@ passport.use('local-signin', new localStrategy({
         console.log("Inside passport Strategy");
 
         var user = new User();
-        user.findByEmails(username, function (err, result) {
+        user.findByEmail(username, function (err, result) {
             console.log("result -> ", result[0])
             if (result.length > 0) {
                 var finalNodeGeneratedHash = result[0].password.replace('$2y$', '$2a$');
