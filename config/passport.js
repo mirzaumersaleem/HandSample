@@ -103,7 +103,7 @@ passport.use('local-register', new localStrategy({
                 } else {
                     //Callback function returned with the new user created
                     console.log(newAddedUser);
-                    console.log("Inside else block");
+                    console.log("Inside else block"); 
                     var bankUsers = await user.setBankUser(bankUser);
 
                     //Creating account table at the time of registration 
@@ -149,7 +149,7 @@ passport.use('local-signin', new localStrategy({
         console.log("Inside passport Strategy");
 
         var user = new User();
-        user.findByEmail(username, function (err, result) {
+        user.findByEmails(username, function (err, result) {
             console.log("result -> ", result[0])
             if (result.length > 0) {
                 var finalNodeGeneratedHash = result[0].password.replace('$2y$', '$2a$');
