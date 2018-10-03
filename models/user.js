@@ -62,10 +62,10 @@ class user {
 
     findByEmail(email, callback) {
         console.log("findByEmail mie agaya")
-        var query = ' select * from myraal_bank.customers ' +
+        var query = ' select * from myraal_raal.users ' +
             ' where email = "' + email + '" ';
         console.log("query", query);
-        mySql2.getConnection(function (err, connection) {
+        mySql.getConnection(function (err, connection) {
             if (err) {
                 console.log(" error agaya findByEmail <-")
                 throw err;
