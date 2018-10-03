@@ -52,7 +52,7 @@ passport.use('local-register', new localStrategy({
     else {
         console.log("In else passport ")
         var user = new User();
-        user.findByEmail(req.body.email, function (err, resultUser) {
+        user.findByEmails(req.body.email, function (err, resultUser) {
             if (err) {
                 console.log("error agaya", err);
                 return done(err);

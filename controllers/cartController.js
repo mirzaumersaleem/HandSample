@@ -161,8 +161,8 @@ exports.finalCheckoutController = function (req, res) {
         }
         else {
             order.addNewOrder(req, cart, req.user.id, addressId, addressRow[0].address1, shippingId, comments, sub_total, async function (err) {
-                if (err) {
-                    res.json({
+                if (err) { 
+                    res.json({ 
                         status: 500,
                         message: err
                     })
