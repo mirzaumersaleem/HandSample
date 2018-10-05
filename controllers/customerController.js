@@ -611,8 +611,8 @@ exports.payTransaction = function (req, res) {
                     var balanceObj = await customers.getCustomerBalance(req, userObj[0].id);
                     console.log("balanceObj",balanceObj.length);
                     if(balanceObj.length!=0){
-                    if (balanceObj[0].balance - req.body.amount < 0 || balanceObj[0] !=undefined) {
- 
+                    if (balanceObj[0].balance - req.body.amount < 0 || !balanceObj[0].balance) {
+                        // console.log("balance diff ", balanceObj[0].balance - req.body.amount);
                         res.json({ status: 204, message: 'Transaction Failed, insufficient balance' });
                     } else {
                         //updating "update_balances" table
