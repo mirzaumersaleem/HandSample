@@ -1,13 +1,13 @@
 {
-  "name": "aidaliah",
+  "name": "raal",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "start": "nodemon app.js"
   },
-  "description": "Aidaliah",
+  "description": "Raal",
   "author": {
-    "name": "Muhammad Hassam"
+    "name": "Atayyab Owais"
   },
   "dependencies": {
     "bcrypt": "^1.0.3",
