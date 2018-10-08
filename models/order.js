@@ -30,7 +30,7 @@ class Order {
             });
         }
     }
-    addNewOrder(req, cart, userId, address_id, shipping_id, comments,sub_total, callback) {
+    addNewOrder(req, cart, userId, comments,sub_total, callback) {
         /*
             The generate array in Cart class would return
             all the products present in the cart.
