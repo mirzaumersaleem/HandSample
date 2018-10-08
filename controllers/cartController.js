@@ -136,8 +136,8 @@ exports.shoppingCartController = function (req, res) {
     return;
 }
 exports.finalCheckoutController = function (req, res) {
-    var addressId = req.body.billing_id;
-    var shippingId = req.body.shipping_id;
+    // var addressId = req.body.billing_id;
+    // var shippingId = req.body.shipping_id;
     var comments = req.body.comments;
     var user = new User();
     var order = new Order();
@@ -151,7 +151,7 @@ exports.finalCheckoutController = function (req, res) {
     var ID = req.body.shippingId;
     var cart = new Cart(req.session.cart);
     var sub_total = cart.totalPrice;
-    user.getUserAddressById(addressId, async function (err, addressRow) {
+    user.getUserAddressById(req.user.id, async function (err, addressRow) {
         console.log("address", addressRow);
         if (err) {
             res.json({
@@ -160,7 +160,7 @@ exports.finalCheckoutController = function (req, res) {
             });
         }
         else {
-            order.addNewOrder(req, cart, req.user.id, addressId, addressRow[0].address1, shippingId, comments, sub_total, async function (err) {
+            order.addNewOrder(req, cart, req.user.id, addressId, shippingId, comments, sub_total, async function (err) {
                 if (err) { 
                     res.json({ 
                         status: 500,

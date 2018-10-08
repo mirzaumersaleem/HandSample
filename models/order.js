@@ -30,7 +30,7 @@ class Order {
             });
         }
     }
-    addNewOrder(req, cart, userId, address_id, addressRow, shipping_id, comments,sub_total, callback) {
+    addNewOrder(req, cart, userId, address_id, shipping_id, comments,sub_total, callback) {
         /*
             The generate array in Cart class would return
             all the products present in the cart.
@@ -42,8 +42,6 @@ class Order {
         addressRow = JSON.stringify(addressRow);
         var order_obj = {
             user_id: req.user.id,
-            shipping_address_id: address_id,
-            billing_address_id: shipping_id,
             comment: comments,
             status: 0,
             sub_total: sub_total,
