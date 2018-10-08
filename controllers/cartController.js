@@ -167,6 +167,8 @@ exports.finalCheckoutController = function (req, res) {
                         message: err
                     })
                 } else {
+                    
+                    req.user.branch_id = req.session.cart.branch_id;
                     req.session.cart = null;
                     res.json({
                         status: 200,

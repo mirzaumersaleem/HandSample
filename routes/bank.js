@@ -781,10 +781,10 @@ router.get("/getBankAccount", (req, res) => {
   if (req.session.cart == "undefined") {
     res.json({ status: 500, message: "Branch Id not found"  });
        
-    console.log(req.session.cart);
+    // console.log(req.user.branchId);
   } else {
-    console.log("cart.branch_id", req.session.cart.branchId);
-    const qry = `SELECT account_no FROM balances where admin_id IN (SELECT admin_id from users where branch_id= ${req.session.cart.branchId})`;
+    console.log("user.branch_id", req.user.branchId);
+    const qry = `SELECT account_no FROM balances where admin_id IN (SELECT admin_id from users where branch_id= ${req.user.branchId})`;
     mysql.getConnection(function(err, connection) {
       if (err) {
         throw err; 
