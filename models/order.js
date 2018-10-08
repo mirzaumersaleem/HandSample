@@ -39,7 +39,7 @@ class Order {
         var productsInCart = cart.generateArray();
         console.log("Inside add New Order model","cart",cart.cityId,cart.branchId);
         var productsInCart = cart.generateArray();
-        addressRow = JSON.stringify(addressRow);
+        // addressRow = JSON.stringify(addressRow);
         var order_obj = {
             user_id: req.user.id,
             comment: comments,

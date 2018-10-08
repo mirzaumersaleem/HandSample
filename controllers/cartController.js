@@ -152,7 +152,7 @@ exports.finalCheckoutController = function (req, res) {
     var cart = new Cart(req.session.cart);
     var sub_total = cart.totalPrice;
     user.getUserAddressById(req.user.id, async function (err, addressRow) {
-        console.log("address", addressRow);
+        // console.log("address", addressRow);
         if (err) {
             res.json({
                 status: 500,
