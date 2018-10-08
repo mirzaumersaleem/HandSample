@@ -160,7 +160,7 @@ exports.finalCheckoutController = function (req, res) {
             });
         }
         else {
-            order.addNewOrder(req, cart, req.user.id, addressId, shippingId, comments, sub_total, async function (err) {
+            order.addNewOrder(req, cart, req.user.id, comments, sub_total, async function (err) {
                 if (err) { 
                     res.json({ 
                         status: 500,
