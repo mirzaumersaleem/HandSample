@@ -4,6 +4,7 @@ var User = require('../models/user');
 var Order = require('../models/order');
 
 req.user.branch_id = req.session.cart.branchId;
+req.user.bank_id = req.session.cart.branchId;
 exports.addToCartController = function (req, res) {
     console.log("Inside add to cart controller");
     //req.assert("");
