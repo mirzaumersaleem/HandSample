@@ -3,8 +3,6 @@ var Cart = require('../models/cart');
 var User = require('../models/user');
 var Order = require('../models/order');
 
-req.user.branch_id = req.session.cart.branchId;
-req.user.bank_id = req.session.cart.branchId;
 exports.addToCartController = function (req, res) {
     console.log("Inside add to cart controller");
     //req.assert("");
@@ -172,6 +170,7 @@ exports.finalCheckoutController = function (req, res) {
                 } else {
                     
                     req.user.branch_id = req.session.cart.branchId;
+                    req.user.bank_id = req.session.cart.branchId;
                     console.log("this is my branch_id : ", req.user);
                     
                     console.log("this is my cart branch_id : ", req.session.cart.branchId);
