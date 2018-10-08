@@ -777,14 +777,14 @@ router.post("/verifyPinTransaction", (req, res) => {
 });
 
 router.get("/getBankAccount", (req, res) => {
-  // var cart = new Cart(req.session.cart);
+  var cart = new Cart(req.session.cart);
   if (req.session.cart == "undefined") {
     res.json({ status: 500, message: "Branch Id not found"  });
        
     // console.log(req.user.branchId);
   } else {
     console.log("user.branch_id", req.user);
-    const qry = `SELECT account_no FROM balances where admin_id IN (SELECT admin_id from users where branch_id= ${req.user.bank_id})`;
+    const qry = `SELECT account_no FROM balances where admin_id IN (SELECT admin_id from users where branch_id= ${req.session.cart.branchId})`;
     mysql.getConnection(function(err, connection) {
       if (err) {
         throw err; 
@@ -795,6 +795,7 @@ router.get("/getBankAccount", (req, res) => {
         if (err) {
           res.json({ status: 500, message: "Error " + err });
         } else {
+          req.session.cart=null
           res.json({ status: 200, data: rows });
         }
 
