@@ -168,7 +168,7 @@ exports.finalCheckoutController = function (req, res) {
                     })
                 } else {
                     
-                    req.user.branch_id = req.session.cart.branch_id;
+                    req.user.branch_id = req.session.cart.branchId;
                     req.session.cart = null;
                     res.json({
                         status: 200,
