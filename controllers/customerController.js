@@ -612,7 +612,6 @@ exports.payTransaction = function (req, res) {
                     console.log("balanceObj",balanceObj.length);
                     if(balanceObj.length!=0){
                     if (balanceObj[0].balance - req.body.amount < 0 || balanceObj[0] !=undefined) {
- 
                         res.json({ status: 200, message: 'Transaction Failed, insufficient balance' });
                     } else {
                         //updating "update_balances" table
@@ -629,8 +628,6 @@ exports.payTransaction = function (req, res) {
 
                         //  console.log("Check Obj ====" , reveivedObj[0].customer_id);
                         var updateReceivedObj = await customers.transReceiveSet(req, reveivedObj[0].customer_id, userObj[0].id);
-
-
                         var string = encodeURIComponent(reveivedObj[0].customer_id);
                         res.redirect('../users/pushNotification/?receiver_id=' + string);
                     }
@@ -650,10 +647,7 @@ exports.payTransaction = function (req, res) {
             }
         }
     });
-
 }
-
-
 exports.sendMoneyPage = function (req, res) {
     var customers = new customer();
     console.log("in sendMoneyPage Controller");
