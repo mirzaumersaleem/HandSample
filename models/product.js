@@ -274,7 +274,7 @@ class product {
         var query =  `SELECT o.id as order_id,o.created_at as order_date,
         o.product_id,o.offer_id ,p.name as product_name,
         p.arabic_name as product_arabic_name,o.unit_price as product_prc,
-        o.qty as product_qty,f.name as offer_name,
+        o.qty as product_qty,f.name as offer_name,f.image as offer_image,p.image as product_image,
         f.arabic_name as offer_arabic_name,f.qty as offer_qty 
         FROM order_items o left join products p on p.id=o.product_id 
         left join offers f on f.id=o.offer_id 
