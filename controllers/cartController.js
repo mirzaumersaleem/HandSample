@@ -2,6 +2,7 @@ var Product = require('../models/product');
 var Cart = require('../models/cart');
 var User = require('../models/user');
 var Order = require('../models/order');
+
 exports.addToCartController = function (req, res) {
     console.log("Inside add to cart controller");
     //req.assert("");
@@ -137,8 +138,8 @@ exports.shoppingCartController = function (req, res) {
 }
 
 exports.finalCheckoutController = function (req, res) {
-    var addressId = req.body.billing_id;
-    var shippingId = req.body.shipping_id;
+    // var addressId = req.body.billing_id;
+    // var shippingId = req.body.shipping_id;
     var comments = req.body.comments;
     var user = new User();
     var order = new Order();
@@ -152,8 +153,8 @@ exports.finalCheckoutController = function (req, res) {
     var ID = req.body.shippingId;
     var cart = new Cart(req.session.cart);
     var sub_total = cart.totalPrice;
-    user.getUserAddressById(addressId, async function (err, addressRow) {
-        console.log("address", addressRow);
+    user.getUserAddressById(req.user.id, async function (err, addressRow) {
+        // console.log("address", addressRow);
         if (err) {
             res.json({
                 status: 500,
@@ -161,14 +162,22 @@ exports.finalCheckoutController = function (req, res) {
             });
         }
         else {
-            order.addNewOrder(req, cart, req.user.id, addressId, addressRow[0].address1, shippingId, comments, sub_total, async function (err) {
+            order.addNewOrder(req, cart, req.user.id, comments, sub_total, async function (err) {
                 if (err) { 
                     res.json({ 
                         status: 500,
                         message: err
                     })
                 } else {
-                    req.session.cart = null;
+                    
+                    // req.user.branch_id = req.session.cart.branchId;
+                    // req.user.bank_id = req.session.cart.branchId;
+                    // console.log("this is my branch_id : ", req.user);
+                    
+                    // console.log("this is my cart branch_id : ", req.session.cart.branchId);
+                    
+                    // req.session.cart = null;
+                    // req.session.cart.branchId = req.user.branch_id;
                     res.json({
                         status: 200,
                         message: "order placed successfully"

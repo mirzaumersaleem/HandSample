@@ -8,7 +8,7 @@ var CryptoJS = require('crypto-js');
 const ENCRYPTION_KEY = "SoftjeddahWN27bha45c65jeraalbank";
 const IV_LENGTH = 16;
 
-function encrypt(text) {
+function encrypt_latest_old(text) {
     text = text.toString();
  let iv = crypto.randomBytes(IV_LENGTH);
  let cipher = crypto.createCipheriv('aes-256-cbc', new Buffer(ENCRYPTION_KEY), iv);
@@ -16,8 +16,13 @@ function encrypt(text) {
  encrypted = Buffer.concat([encrypted, cipher.final()]);
  return iv.toString('hex') + ':' + encrypted.toString('hex');
 }
-
-function decrypt(text) {
+function encrypt(text){
+    return text;
+}
+function decrypt(text){
+    return text;
+}
+function decrypt_latest_old(text) {
  let textParts = text.split(':');
  let iv = new Buffer(textParts.shift(), 'hex');
  let encryptedText = new Buffer(textParts.join(':'), 'hex');

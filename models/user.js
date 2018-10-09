@@ -230,7 +230,7 @@ class user {
     }
 
     getUserAddressById(addressId, callback) {
-        var query = "SELECT address_1 FROM myraal_raal.addresses\
+        var query = "SELECT * FROM myraal_raal.users\
         WHERE id = " + addressId;
         console.log("Above query executed");
 

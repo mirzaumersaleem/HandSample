@@ -611,8 +611,9 @@ exports.payTransaction = function (req, res) {
                     var balanceObj = await customers.getCustomerBalance(req, userObj[0].id);
                     console.log("balanceObj",balanceObj.length);
                     if(balanceObj.length!=0){
-                    if (balanceObj[0].balance - req.body.amount < 0 || balanceObj[0] !=undefined) {
-                        res.json({ status: 200, message: 'Transaction Failed, insufficient balance' });
+                    if (balanceObj[0].balance - req.body.amount < 0 || !balanceObj[0].balance) {
+                        // console.log("balance diff ", balanceObj[0].balance - req.body.amount);
+                        res.json({ status: 204, message: 'Transaction Failed, insufficient balance' });
                     } else {
                         //updating "update_balances" table
                         var balanceUpObj = await customers.transUpdateUBalance(req, userObj[0].id, balanceObj);
@@ -632,7 +633,7 @@ exports.payTransaction = function (req, res) {
                         res.redirect('../users/pushNotification/?receiver_id=' + string);
                     }
                 }else{
-                    res.json({ status: 200, message: 'Transaction Failed, No Account Found ' });
+                    res.json({ status: 204, message: 'Transaction Failed, No Account Found ' });
                    
                 }
                 }
@@ -752,7 +753,7 @@ exports.sendMoney = function (req, res) {
                     var balanceObj = await customers.getCustomerBalance(req, userObj[0].id);
                     if (balanceObj[0].balance - req.body.amount < 0 || !balanceObj[0].balance) {
 
-                        res.json({ status: 200, message: 'Transaction Failed, insufficient balance' });
+                        res.json({ status: 204, message: 'Transaction Failed, insufficient balance' });
                     } else {
                         //updating "update_balances" table
                         var balanceUpObj = await customers.sendUpdateUBalance(req, userObj[0].id, balanceObj);
@@ -815,7 +816,7 @@ exports.sendGift = function (req, res) {
                     var balanceObj = await customers.getCustomerBalance(req, userObj[0].id);
                     if (balanceObj[0].balance - req.body.amount < 0 || !balanceObj[0].balance) {
 
-                        res.json({ status: 200, message: 'Transaction Failed, insufficient balance' });
+                        res.json({ status: 204, message: 'Transaction Failed, insufficient balance' });
                     } else {
                         //updating "update_balances" table
                         var balanceUpObj = await customers.giftUpdateUBalance(req, userObj[0].id, balanceObj);
@@ -878,7 +879,7 @@ exports.shareMoney = function (req, res) {
                     var balanceObj = await customers.getCustomerBalance(req, userObj[0].id);
                     if (balanceObj[0].balance - req.body.amount < 0 || !balanceObj[0].balance) {
 
-                        res.json({ status: 200, message: 'Transaction Failed, insufficient balance' });
+                        res.json({ status: 204, message: 'Transaction Failed, insufficient balance' });
                     } else {
                         //updating "update_balances" table
                         var balanceUpObj = await customers.shareUpdateUBalance(req, userObj[0].id, balanceObj);
@@ -940,7 +941,7 @@ exports.withDrawMoney = function (req, res) {
                     var balanceObj = await customers.getCustomerBalance(req, userObj[0].id);
                     if (balanceObj[0].balance - req.body.amount < 0 || !balanceObj[0].balance) {
 
-                        res.json({ status: 200, message: 'Withdrawal Request Failed, insufficient balance' });
+                        res.json({ status: 204, message: 'Withdrawal Request Failed, insufficient balance' });
                     } else {
                         //updating "update_balances" table
                         var balanceUpObj = await customers.withdrawUpdateUBalance(req, userObj[0].id, balanceObj);
