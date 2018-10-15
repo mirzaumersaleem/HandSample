@@ -807,7 +807,8 @@ router.get("/getBankAccount", (req, res) => {
               if (err) {
                 res.json({ status: 500, message: "Error " + err });
               } else {
-                req.session.cart = null;
+                
+                console.log("session",req.session);
                 res.json({ status: 200, data: rows });
               }
             }); 
