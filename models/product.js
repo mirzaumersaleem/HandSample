@@ -257,7 +257,7 @@ class product {
                 console.log(err);
                 throw err;
             }
-            connection.query(query, function (err, results) {
+            connection.query(query, function (err, results){
                 if (err) {
                     console.log(err);
                     throw err;
