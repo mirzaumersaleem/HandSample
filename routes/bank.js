@@ -4,7 +4,7 @@
 var express = require("express");
 var router = express.Router();
 var User = require("../models/user");
-// var mysql = require('../../config/bank_db.js');
+var mysql_raal = require("../config/database");
 var mysql = require("../config/bank_db");
 
 var moment = require("moment");
@@ -603,7 +603,6 @@ router.post("/payTransaction", (req, res) => {
   //   }`;
   //   conn.query(select).then(result => {
   //     //res.json({ status: 200, message: 'balance added Successfully', upBalance });
-
   //     upBalance = {
   //       amount: req.body.amount,
   //       customer_id: req.user.id,
@@ -617,7 +616,6 @@ router.post("/payTransaction", (req, res) => {
   //       created_at: moment().format("YYYY-MM-DD HH:mm:ss")
   //     };
   //   });
-
   //   conn
   //     .query(`insert update_balances set ?`, upBalance)
   //     .then(res => {
@@ -778,31 +776,50 @@ router.post("/verifyPinTransaction", (req, res) => {
 
 router.get("/getBankAccount", (req, res) => {
   var cart = new Cart(req.session.cart);
+  let id = 0;
   if (req.session.cart == "undefined") {
-    res.json({ status: 500, message: "Branch Id not found"  });
-       
-    // console.log(req.user.branchId);
+    res.json({ status: 500, message: "Branch Id not found" });
   } else {
+    // id : else_1
     console.log("user.branch_id", req.user);
-    const qry = `SELECT account_no FROM balances where admin_id IN (SELECT admin_id from users where branch_id= ${req.session.cart.branchId})`;
-    mysql.getConnection(function(err, connection) {
+    const qry_raal = `select id from admins where branch_id=${
+      req.session.cart.branchId
+    }`;
+    mysql_raal.getConnection(function(err, connection) {
       if (err) {
-        throw err; 
+        throw err;
       }
-      connection.query(qry, (err, rows) => {
-        //connection.query(query2, function (err, rows2) { 
+      connection.query(qry_raal, (err, rows_raal) => {
         connection.release();
         if (err) {
           res.json({ status: 500, message: "Error " + err });
         } else {
-          req.session.cart=null
-          res.json({ status: 200, data: rows });
-        }
-
-        //});
+          if (rows_raal.length!=0){
+         // console.log("rows_raal", rows_raal[0].id);
+         const qry = `SELECT account_no FROM balances where customer_id IN (SELECT id from customers where admin_id= ${rows_raal[0].id})`;
+   
+          mysql.getConnection(function(err, connection) {
+            if (err) {
+              throw err;
+            }
+            connection.query(qry, (err, rows) => {
+              connection.release();
+              if (err) {
+                res.json({ status: 500, message: "Error " + err });
+              } else {
+                
+                console.log("session",req.session);
+                res.json({ status: 200, data: rows });
+              }
+            }); 
+          });
+          }else{
+            res.json({ status: 300, message: "No Account Found for selected branch" });
+          } // if close
+        } // else close
       });
     });
-  }
+  } // else_1 close
 });
 
 module.exports = router;

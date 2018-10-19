@@ -136,6 +136,7 @@ exports.shoppingCartController = function (req, res) {
     });
     return;
 }
+
 exports.finalCheckoutController = function (req, res) {
     // var addressId = req.body.billing_id;
     // var shippingId = req.body.shipping_id;
@@ -170,6 +171,10 @@ exports.finalCheckoutController = function (req, res) {
                 } else {
                     
                     
+                    // console.log("this is my cart branch_id : ", req.session.cart.branchId);
+                    
+                     req.session.cart = null;
+                    // req.session.cart.branchId = req.user.branch_id;
                     res.json({
                         status: 200,
                         message: "order placed successfully"
@@ -179,6 +184,7 @@ exports.finalCheckoutController = function (req, res) {
         }
     });
 }
+
 exports.editShoppingCartController = async function (req, res) {
     console.log("Inside Edit to cart controller");
     //req.assert("");

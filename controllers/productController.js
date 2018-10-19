@@ -341,8 +341,10 @@ exports.getMyOrderdetailsproductwise = function(req, res) {
       if (result != 0) {
         for (var i = 0; i < result.length; i++) {
           if (result[i].product_id != 0) {
+            result[i].product_image=JSON.parse(result[i].product_image);
             productData.push(result[i]);
           } else {
+            result[i].offer_image=JSON.parse(result[i].offer_image);
             OfferData.push(result[i]);
           }
         }
