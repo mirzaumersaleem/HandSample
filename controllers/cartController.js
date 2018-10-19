@@ -169,14 +169,7 @@ exports.finalCheckoutController = function (req, res) {
                     })
                 } else {
                     
-                    // req.user.branch_id = req.session.cart.branchId;
-                    // req.user.bank_id = req.session.cart.branchId;
-                    // console.log("this is my branch_id : ", req.user);
                     
-                    // console.log("this is my cart branch_id : ", req.session.cart.branchId);
-                    
-                    // req.session.cart = null;
-                    // req.session.cart.branchId = req.user.branch_id;
                     res.json({
                         status: 200,
                         message: "order placed successfully"
