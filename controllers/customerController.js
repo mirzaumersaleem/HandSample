@@ -3,6 +3,7 @@ var User = require("../models/user");
 var customer = require("../models/customer");
 var encrypt = require("../models/encryption");
 var telr = require("../node_modules/telr-payment-nodejs/lib/telr")("PQrMG~HwBf^9Bpxp", "20224", {
+    isTest: 1,
     currency: "sar"
 });
 exports.friendSearch = function (req, res) {
@@ -1053,12 +1054,44 @@ exports.paymentTestController = function (req, res) {
             });
         } else {
             telr.order({
-                orderId: 7383,
+                orderId: 7384,
                 amount: 4.5,
                 returnUrl: "https://google.com",
                 description: "Test description"
             }, function(err, response){
                 console.log(response);
+            });
+
+            res.json({
+                status: 200,
+                messages: "all OK"
+            });
+
+        }
+    });
+
+
+}
+
+exports.TransactionConfirmationController = function (req, res) {
+    var customers = new customer();
+    console.log("in paymentTest Controller");
+
+    // var userObj = await customers.encryptIt();
+    customers.getEmailer(req, async function (result, err) {
+        //console.log("type",typeof(err))
+        // console.log(err);
+        if (err) {
+            //console.log(err);
+            res.json({
+                status: 500,
+                message: "error in paymentTestController: " + err
+            });
+        } else {
+            
+            telr.status(req.body.orderReference, function(err, response){
+                var statusObj = JSON.parse(response);
+                console.log(statusObj.order.transaction.message);
             });
 
             res.json({
