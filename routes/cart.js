@@ -16,6 +16,9 @@ router.get('/AddOfferToCart', function(req, res){
     cartController.addOfferToCartController(req, res);
 });
 
+router.get('/addOrderType', function(req, res){
+    cartController.addOrderType(req, res);
+});
 router.post('/final-checkout', isLoggedIn, function(req, res){
     cartController.finalCheckoutController(req, res);
 });

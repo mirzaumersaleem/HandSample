@@ -117,6 +117,29 @@ exports.addOfferToCartController = function (req, res) {
         }
     })
 }
+exports.addOrderType = function (req, res) {
+    /*
+      If cart is already present in session then pass that old cart
+      into the new Cart obj. Else create a new cart and pass it to 
+      the new Cart 
+    */
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    console.log("this.query.type",req.query.type)
+    cart.EditFoodType(req.query.type, function (err, prod) {
+        console.log(prod,"err",err);
+        if (err) {
+            res.json({
+                status: 500,
+                message: err
+            });
+        } else {
+          res.json({
+            status: 200,
+            message: "type changed successfuly"
+       })
+        }
+    })
+}
 exports.shoppingCartController = function (req, res) {
     console.log("inside cart controller");
     if (!req.session.cart) {
@@ -126,7 +149,6 @@ exports.shoppingCartController = function (req, res) {
         });
         return;
     }
-
     var cart = new Cart(req.session.cart);
     res.json({
         status: 200,

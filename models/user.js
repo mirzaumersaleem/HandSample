@@ -83,7 +83,7 @@ class user {
             ' where email = "' + email + '" ';
         console.log("query", query);
         mySql2.getConnection(function (err, connection) {
-            if (err) {
+            if (err) { 
                 console.log(" error agaya findByEmail bank <-")
                 throw err;
             }

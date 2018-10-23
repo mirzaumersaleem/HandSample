@@ -10,6 +10,7 @@ class Cart {
 		this.totalPrice = oldCart.totalPrice || 0;
 		this.cityId = oldCart.cityId || 0;
 		this.branchId = oldCart.branchId || 0;
+		this.orderType= oldCart.orderType || 0;
 	}
 	addProductToCart(item, id, quantity, price, req) {
 		var storedItem = this.items[id];
@@ -106,6 +107,15 @@ class Cart {
 		}
 		console.log("Complete Cart", cart);
 	}
+	
+	EditFoodType(type, callback) {
+		let err = "Error"
+		
+		this.orderType = type
+		console.log("type",type,this.orderType);
+        
+      callback(this.orderType,err); //Passing results to callback function
+    }
 	generateArray() {
 		var arr = [];
 
