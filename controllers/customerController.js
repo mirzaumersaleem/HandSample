@@ -2,7 +2,10 @@ var bank = require("../models/bank");
 var User = require("../models/user");
 var customer = require("../models/customer");
 var encrypt = require("../models/encryption");
-
+var telr = require("../node_modules/telr-payment-nodejs/lib/telr")("PQrMG~HwBf^9Bpxp", "20224", {
+    isTest: 1,
+    currency: "sar"
+});
 exports.friendSearch = function (req, res) {
     var customers = new customer();
     console.log("in friendSearch Controller");
@@ -276,7 +279,7 @@ exports.acceptMoneyPage = function (req, res) {
 
 exports.addMoney = function (req, res) {
     var customers = new customer();
-    console.log("in acceptMoney Controller");
+    console.log("in addMoney Controller");
 
     customers.getEmail(req, async function (result, err) {
         //console.log("type",typeof(err))
@@ -285,7 +288,7 @@ exports.addMoney = function (req, res) {
             //console.log(err);
             res.json({
                 status: 500,
-                message: "error in acceptMoneyPage: " + err
+                message: "error in addMoneyPage: " + err
             });
         } else {
             // console.log(result);
@@ -296,6 +299,9 @@ exports.addMoney = function (req, res) {
                 var userObj = await customers.getCustomerByEmail(req.user.email);
                 //fetching balance instance from DB of user
                 var addMoneyObj = await customers.addMoney(req, userObj[0].id);
+                //calling Telr APIs
+
+                
                 res.json({
                     status: 200,
                     message: addMoneyObj
@@ -1013,7 +1019,7 @@ exports.testController2 = function (req, res) {
             //console.log(err);
             res.json({
                 status: 500,
-                message: "error in testController: " + err
+                message: "error in testController2: " + err
             });
         } else {
 
@@ -1023,6 +1029,74 @@ exports.testController2 = function (req, res) {
             res.json({
                 status: 200,
                 messages: userObj
+            });
+
+        }
+    });
+
+
+}
+
+
+exports.paymentTestController = function (req, res) {
+    var customers = new customer();
+    console.log("in paymentTest Controller");
+
+    // var userObj = await customers.encryptIt();
+    customers.getEmailer(req, async function (result, err) {
+        //console.log("type",typeof(err))
+        // console.log(err);
+        if (err) {
+            //console.log(err);
+            res.json({
+                status: 500,
+                message: "error in paymentTestController: " + err
+            });
+        } else {
+            telr.order({
+                orderId: 7384,
+                amount: 4.5,
+                returnUrl: "https://google.com",
+                description: "Test description"
+            }, function(err, response){
+                console.log(response);
+            });
+
+            res.json({
+                status: 200,
+                messages: "all OK"
+            });
+
+        }
+    });
+
+
+}
+
+exports.TransactionConfirmationController = function (req, res) {
+    var customers = new customer();
+    console.log("in paymentTest Controller");
+
+    // var userObj = await customers.encryptIt();
+    customers.getEmailer(req, async function (result, err) {
+        //console.log("type",typeof(err))
+        // console.log(err);
+        if (err) {
+            //console.log(err);
+            res.json({
+                status: 500,
+                message: "error in paymentTestController: " + err
+            });
+        } else {
+            
+            telr.status(req.body.orderReference, function(err, response){
+                var statusObj = JSON.parse(response);
+                console.log(statusObj.order.transaction.message);
+            });
+
+            res.json({
+                status: 200,
+                messages: "all OK"
             });
 
         }
