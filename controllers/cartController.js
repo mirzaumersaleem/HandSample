@@ -2,7 +2,7 @@ var Product = require('../models/product');
 var Cart = require('../models/cart');
 var User = require('../models/user');
 var Order = require('../models/order');
-
+var types= "";
 exports.addToCartController = function (req, res) {
     console.log("Inside add to cart controller");
     //req.assert("");
@@ -118,43 +118,45 @@ exports.addOfferToCartController = function (req, res) {
     })
 }
 exports.addOrderType = function (req, res) {
+
     /*
       If cart is already present in session then pass that old cart
       into the new Cart obj. Else create a new cart and pass it to 
       the new Cart 
     */
+
     var cart = new Cart(req.session.cart ? req.session.cart : {});
-    console.log("this.query.type",req.query.type)
-    cart.EditFoodType(req.query.type, function (err, prod) {
-        console.log(prod,"err",err);
-        if (err) {
-            res.json({
-                status: 500,
-                message: err
-            });
-        } else {
-          res.json({
-            status: 200,
-            message: "type changed successfuly"
-       })
-        }
-    })
+    var type= Number(req.query.type);
+     cart.EditFoodType(type);
+    // if(id!=null){
+        res.json({
+                    status: 200,
+                    message: "type changed successfuly",cart
+               })
+    // }else{
+    //     res.json({
+    //                 status: 500,
+    //                 message: "Error"
+    //            })
+    // }
 }
 exports.shoppingCartController = function (req, res) {
     console.log("inside cart controller");
     if (!req.session.cart) {
-        res.json({
+        res.json({ 
             status: 200,
             cartProducts: { products: null }
         });
         return;
-    }
-    var cart = new Cart(req.session.cart);
+    } 
+    var cart = new Cart(req.session.cart? req.session.cart : {});
+    console.log("cart",cart);
     res.json({
         status: 200,
         cartProducts: cart.generateArray(),
         totalQty: cart.totalQty,
-        totalPrice: cart.totalPrice
+        totalPrice: cart.totalPrice,
+        type:cart.orderType
     });
     return;
 }
@@ -185,7 +187,7 @@ exports.finalCheckoutController = function (req, res) {
         }
         else {
             order.addNewOrder(req, cart, req.user.id, comments, sub_total, async function (err) {
-                if (err) { 
+                if (err) {
                     res.json({ 
                         status: 500,
                         message: err

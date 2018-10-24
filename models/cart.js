@@ -11,11 +11,12 @@ class Cart {
 		this.cityId = oldCart.cityId || 0;
 		this.branchId = oldCart.branchId || 0;
 		this.orderType= oldCart.orderType || 0;
+		console.log("Old Cart",oldCart);
 	}
 	addProductToCart(item, id, quantity, price, req) {
 		var storedItem = this.items[id];
 		var count = 0;
-		console.log("this.items", item);
+		//console.log("this.items", item);
 		//Create a new item if its not present in items list
 		if (!storedItem) {
 			if (this.cityId == 0 && this.branchId == 0) {
@@ -44,7 +45,7 @@ class Cart {
 	addOfferToCart(item, id, quantity, price, discount_price, req) {
 		var  _id = Number(id + 200);
 		var storedItem = this.items[_id];
-		console.log("this.items[id+200]", _id);
+		//console.log("this.items[id+200]", _id);
 		//Create a new item if its not present in items list
 		if (!storedItem) {
 			if (this.cityId == 0 && this.branchId == 0) {
@@ -57,7 +58,7 @@ class Cart {
 				this.totalPrice += Number(discount_price) * quantity;
 				throw 2;
 			} else {
-				console.log("city id there");
+			//	console.log("city id there");
 				if ((this.cityId == req.query.city_id) && (this.branchId == req.query.branch_id)) {
 					item.price = Number(discount_price)
 					item.id=_id;
@@ -93,8 +94,8 @@ class Cart {
 	editProductfromCart(id, changeQty, cart) {
 		var storedItem = this.items[id];
 		var qty_decission = 0;
-		console.log("in edit cart model ", typeof (id), id);
-		console.log(storedItem, "storedItem")
+		//console.log("in edit cart model ", typeof (id), id);
+		//console.log(storedItem, "storedItem")
 		if (storedItem) {
 			this.totalQty -= storedItem.qty;
 			this.totalPrice -= storedItem.item.price * storedItem.qty;
@@ -103,22 +104,23 @@ class Cart {
 			this.totalQty += storedItem.qty;
 			this.totalPrice += storedItem.item.price * storedItem.qty;
 		} else {
-			console.log("do nothig")
+		//	console.log("do nothig")
 		}
 		console.log("Complete Cart", cart);
 	}
 	
-	EditFoodType(type, callback) {
-		let err = "Error"
-		
-		this.orderType = type
-		console.log("type",type,this.orderType);
-        
-      callback(this.orderType,err); //Passing results to callback function
-    }
+	// EditFoodType(type, callback) {
+	//   this.orderType = type
+    //   callback(this.orderType); //Passing results to callback function
+	// }
+	EditFoodType(orderType) {
+		console.log("Log",this.orderType);
+		this.orderType = orderType
+		///  1;
+	}
 	generateArray() {
+		console.log("cart",this.orderType)
 		var arr = [];
-
 		for (var id in this.items) {
 			arr.push(this.items[id]);
 		}
