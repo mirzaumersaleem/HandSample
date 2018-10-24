@@ -117,6 +117,27 @@ exports.addOfferToCartController = function (req, res) {
         }
     })
 }
+
+exports.shoppingCartController = function (req, res) {
+    console.log("inside cart controller");
+    if (!req.session.cart) {
+        res.json({ 
+            status: 200,
+            cartProducts: { products: null }
+        });
+        return;
+    } 
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    console.log("cart",cart);
+    res.json({
+        status: 200,
+        cartProducts: cart.generateArray(),
+        totalQty: cart.totalQty,
+        totalPrice: cart.totalPrice,
+        type:cart.orderType
+    });
+    return;
+}
 exports.addOrderType = function (req, res) {
 
     /*
@@ -127,38 +148,22 @@ exports.addOrderType = function (req, res) {
 
     var cart = new Cart(req.session.cart ? req.session.cart : {});
     var type= Number(req.query.type);
-     cart.EditFoodType(type);
+    var id =  cart.EditFoodType(type);
+    console.log("id in main",req.session.cart )
+    req.session.cart.orderType = type;
+    console.log("id in main",req.session.cart )
     // if(id!=null){
         res.json({
                     status: 200,
                     message: "type changed successfuly",cart
                })
+               return;
     // }else{
     //     res.json({
     //                 status: 500,
     //                 message: "Error"
     //            })
     // }
-}
-exports.shoppingCartController = function (req, res) {
-    console.log("inside cart controller");
-    if (!req.session.cart) {
-        res.json({ 
-            status: 200,
-            cartProducts: { products: null }
-        });
-        return;
-    } 
-    var cart = new Cart(req.session.cart? req.session.cart : {});
-    console.log("cart",cart);
-    res.json({
-        status: 200,
-        cartProducts: cart.generateArray(),
-        totalQty: cart.totalQty,
-        totalPrice: cart.totalPrice,
-        type:cart.orderType
-    });
-    return;
 }
 
 exports.finalCheckoutController = function (req, res) {

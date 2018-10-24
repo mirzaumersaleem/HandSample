@@ -114,9 +114,10 @@ class Cart {
     //   callback(this.orderType); //Passing results to callback function
 	// }
 	EditFoodType(orderType) {
-		console.log("Log",this.orderType);
-		this.orderType = orderType
-		///  1;
+		console.log("Log 1",this.orderType);
+		this.orderType = orderType;
+		console.log("Log 2",this.orderType);
+		return 1;
 	}
 	generateArray() {
 		console.log("cart",this.orderType)

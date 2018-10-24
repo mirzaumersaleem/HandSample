@@ -48,6 +48,7 @@ class Order {
             total: sub_total,
             city_id:cart.cityId,
             branch_id:cart.branchId,
+            order_type:cart.orderType,
             created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
         }
         var newOrderQuery = `INSERT INTO myraal_raal.orders set ?`
