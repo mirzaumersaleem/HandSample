@@ -782,7 +782,7 @@ router.get("/getBankAccount", (req, res) => {
   } else {
     // id : else_1
     console.log("user.branch_id", req.user);
-    const qry_raal = `select id from admins where branch_id=${
+    const qry_raal = `SELECT  a.id, b.name FROM admins a right JOIN branches b on b.id=a.branch_id where a.branch_id =${
       req.session.cart.branchId
     }`;
     mysql_raal.getConnection(function(err, connection) {
@@ -794,8 +794,9 @@ router.get("/getBankAccount", (req, res) => {
         if (err) {
           res.json({ status: 500, message: "Error " + err });
         } else {
+          console.log("rows_raal", rows_raal);
           if (rows_raal.length!=0){
-         // console.log("rows_raal", rows_raal[0].id);
+          console.log("rows_raal", rows_raal);
          const qry = `SELECT account_no FROM balances where customer_id IN (SELECT id from customers where admin_id= ${rows_raal[0].id})`;
    
           mysql.getConnection(function(err, connection) {
@@ -809,7 +810,7 @@ router.get("/getBankAccount", (req, res) => {
               } else {
                 
                 console.log("session",req.session);
-                res.json({ status: 200, data: rows });
+                res.json({ status: 200, data: rows ,rows_raal});
               }
             }); 
           });
